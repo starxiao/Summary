@@ -41,3 +41,12 @@
         })();
 </code>
 
+2. 变量声明提升
+
+<code>
+
+    console.log(username); //undefined
+    var username = 1231231232;
+    console.log(username);  //1231231232
+</code>
+
