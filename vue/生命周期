@@ -1,0 +1,35 @@
+
+
+
+vue 生命周期
+
+      
+beforeCreate ==> created ==> beforeMount ==> mounted ==> beforeUpdate ==> updated ==> beforeDestroy ==> destroyed
+
+	  (init Event & lifecycle)  
+new Vue() ==================> beforeCreate
+
+
+	  (injection & reactivity props methods data computed)  
+beforeCreate ==================> created
+
+	  (init "el" & compile template)  
+created ==================> beforeMount
+
+	   (挂载template into "el")
+beforeMount ============> mounted  (this.$nextTick DOM render end)
+
+		(data has change)
+beforeUpdate ===========> updated
+
+			beforeCreate ==> created ==> beforeMount ==> mounted ==> beforeDestroy ==> destroyed
+
+this.$el        no             no           no              yes          yes              yes
+
+this.data       no             yes          yes             yes          yes              yes
+
+this.prop       no             yes          yes             yes          yes              yes
+
+this.method     no             yes          yes             yes          yes              yes
+
+this.computed   no             yes          yes             yes          yes              yes

@@ -1,0 +1,26 @@
+
+
+vue Virtual DOM
+
+var div = document.querySelector('#app'),str;
+for(var key in div){str += key;}
+可以看到输出的str的属性非常多。
+
+DOM元素是非常的庞大，当频繁更新DOM的时候会产生性能问题。
+
+
+vue 使用Vnode是因为Vue的响应式更新。
+		  
+		  data	
+	watch ====> update(vnode) ====> diff ====> render
+
+
+Vue的渲染路径:
+
+	1、组件实例初始化创建DOM   ---> 对应生命周期函数 mounted
+
+	2、组件数据更新刷新DOM     ---> updated
+
+
+
+

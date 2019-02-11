@@ -1,0 +1,231 @@
+
+vue 服务端渲染(ssr)
+
+
+一、什么是服务端渲染
+     服务端渲染指的是在服务端把完整的html内容直接输出到浏览器上显示。vue.js是构建客户端应用程序的框架，在默认情况下，可以在浏览器上输出vue组件，进行生成DOM和操作DOM。然而也将一个vue组件渲染为服务端的HTML字符串，再将他们发送到浏览器。
+
+二、为啥使用服务端渲染
+
+     与传统的单页面应用（SPA）相比，SSR具有以下的好处：
+
+	*      支持seo,搜索引擎和爬虫抓取工具更好抓取到完整的页面。
+	*      更快的到达时间，因为ssr已经将完整的html直接输出到浏览器展示。而不需要加载js之后再ajax请求数据
+
+
+     ssr带来的一些问题:
+
+	*      开发限制，比如有些只属于浏览器生命周期函数
+	*      涉及的配置和要求更严格，比如需要nodejs server
+	*      更多的服务端资源，因为在服务端完全渲染的，所以会消耗更多的服务端cpu资源。
+
+
+     如果只是一些页面需要支持seo等，可以考虑预渲染功能 -prerender-spa-plugin
+
+
+
+在使用vue+webpack时，需要注意的地方
+
+<!DOCTYPE html>
+<html lang="en">
+  <head><title>Hello</title></head>
+  <body>
+    <!--vue-ssr-outlet-->
+  </body>
+</html>
+
+注意 <!--vue-ssr-outlet--> 注释 -- 这里将是应用程序 HTML 标记注入的地方。 在模版里面必须要加这段
+
+
+一、服务端渲染和客户端渲染
+
+1.编写通用代码 --即可运行在服务端和客户端的代码。
+
+2.服务端上的数据响应
+
+	在纯客户端应用程序中，每个用户会在他们各自的浏览器中使用新的应用程序实例.
+	服务端渲染的每个请求应该都是全新的，独立的应用程序实例，以便不会有交叉请求造成的状态污染.
+
+	在服务端渲染是禁止响应式数据的-即没有动态更新数据。
+
+3.组件生命周期钩子函数
+
+	只有beforecreate和created会在服务端渲染的过程中调用。mounted只会在客户端执行。避免在这beforeCreate和created生命周期产生全局副作用的代码。
+	比如使用setInterval设置timer
+
+4.访问特定平台API
+
+	只有客户端才有的对象window和document
+
+	第三方lib库(axios)
+
+5.自定义指令
+
+	因为指令都是直接操作DOM的，推荐使用组件作为抽象机制，运行在虚拟DOM层。(directives)的服务端版本
+
+
+二、服务端渲染避免状态单例，都会在每个请求创建一个新的根实例
+
+
+三、路由和代码分割
+
+	1.为每个请求创建一个新的路由实例
+
+	<script type="text/javascript">
+		import Vue from 'vue';
+		import App from './app.vue';
+		import {createRouter} from './router.js';
+
+		export function createApp(){
+			const router = createRouter();
+			const app = new Vue({
+				router,
+				render: h => h(App)
+			});
+			return {app,router};
+		}
+	</script>
+
+	2.异步加载组件
+
+	<script type="text/javascript">
+		const Foo = () => import('./Foo.vue')
+	</script>
+
+
+四、数据预取和状态
+
+	1.服务端渲染之前，需要先预取和解析好数据
+
+	2.在mounted到客户端应用程序之前，需要获取到与服务器应用程序完全相同的数据。否则error (目前为止不知道什么情况会导致数据不同，从而导致混合失败)。
+
+	服务端fetch的数据先放在store里。通过在组件实例中暴露一个asyncData方法去dispatch action 异步请求数据
+
+	<script>
+		asyncData({store,route}){
+			return store.dispatch('fetchItem');
+		}
+	</script>
+
+	客户端在init store 的时候通过 __INITIAL_STATE__去更新服务端取得的数据,这样就保证了服务端和客户端取得的数据是一样的
+	客户端也不用再去请求一次数据。
+
+	<script type="text/javascript">
+		if(window.__INITIAL_STATE__){
+			store.replaceState(window.__INITIAL_STATE__);
+		}
+	</script>
+
+
+	3.服务端预取数据，客户端数据预取有两种方法一种是在路由导航之前解析数据，还有就是渲染组件后异步请求数据
+
+	在entry-server.js中可以通过router.getMatchedComponents()获得相匹配的组件，如果该组件暴露asyncData就去fetch数据
+	并将解析完成的状态附加到渲染上下文中(context)
+	<script type="text/javascript">
+		//code 
+		https://ssr.vuejs.org/zh/guide/data.html#%E6%9C%8D%E5%8A%A1%E5%99%A8%E7%AB%AF%E6%95%B0%E6%8D%AE%E9%A2%84%E5%8F%96-server-data-fetchi
+	</script>
+
+	4.store code splitting
+
+		state 必须是一个函数。
+		<script type="text/javascript">
+			namespaced: true,
+			state(){
+				return{
+					count: 0
+				}
+			},
+			mutations:{
+				addCount: state => state.count++
+			}
+		</script>
+
+		module.vue
+		<script type="text/javascript">
+			import module from '../store/modules/module.js';
+			asyncData({store}){
+				store.registerModule('module',module);
+				return store.commit('module/addCount');
+			},
+
+			// 避免在客户端重复注册模块。
+			destroyed () {
+				this.$store.unregisterModule('module');
+			},
+		</script>
+
+	路由组件的 asyncData 钩子函数中，使用 store.registerModule 惰性注册(lazy-register)这个模块
+
+五、客户端激活
+
+	1.所谓客户端激活，指的是 Vue 在浏览器端接管由服务端发送的静态 HTML，使其变为由 Vue 管理的动态 DOM 的过程。
+
+	<div id="app" data-server-rendered="true"></div>
+
+	2.使用「SSR + 客户端混合」时，需要了解的一件事是，浏览器可能会更改的一些特殊的 HTML 结构
+
+		比如浏览器在<table>注入<tbody></tbody>、<p>标签包含<div>
+
+六、管理css
+	
+	1. webpack 4以上版本使用:https://github.com/webpack-contrib/mini-css-extract-plugin
+
+七、缓存
+	
+	1.页面级别缓存  --lcu-cahce  缓存最近使用的
+
+	const microcache = LRU({
+    	max: 100,              //缓存最大条条数
+    	maxAge: 1000           //缓存的时间 ms
+	});
+
+
+三、构建步骤
+
+
+1.对于客户端应用程序和服务器应用程序，我们都要使用 webpack 打包 - 服务器需要「服务器 bundle」然后用于服务器端渲染(SSR)，而「客户端 bundle」会发送给浏览器，用于混合静态标记。
+
+
+2. config 分为三个文件 webpack.base.config.js webpack.client.config.js webpack.server.config.js
+
+3.webpack.server.config.js 配置
+
+
+服务端渲染跟客户端渲染代码结构
+
+config  --- webpack 配置文件
+	
+	setup-dev-server.js    --- 开发模式的热加载
+	webpack.base.config.js
+	webpack.client.config.js
+	webpack.server.config.js
+
+dist   --- webpack打包出的文件
+
+src  --- 业务代码
+
+	App.vue --- base component
+
+	app.js  ---  universal entry
+
+	entry-client.js  --- 仅运行于浏览器
+
+	entry-server.js  --- 仅运行于服务器
+
+	router.js      ---  路由文件
+
+	index.template.html  --- 基本模板
+
+	store   --- vuex 模块
+
+	components  --- 公共组件
+
+	pages      --- 页面组件
+
+server.js --- node 服务代码
+
+
+
+
+	

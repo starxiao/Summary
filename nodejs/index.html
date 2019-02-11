@@ -1,0 +1,121 @@
+
+
+nodejs 学习笔记
+
+
+nodejs 核心机制 event-driven(事件驱动) non-blocking I/O (非阻塞I/O) model(单线程)
+
+
+1. 单线程
+
+javascript 一开始就是单线程的，不存在多线程的原因是会带来同步问题，比如同时操作dom。
+HTML5提出了web worker标准，允许javascript创建多个线程，但是子线程完全收主线程控制，且不得操作DOM。
+
+任务队列：
+
+ 单线程就意味着所有的任务都要排队，前一个任务结束，才会执行后一个任务。如果前一个任务耗时很长，后一个任务就在一直等待执行。
+
+ 同步任务：在主线程上排队执行的任务，只有前一个任务执行完才会执行后一个任务。
+
+ 异步任务：不进入主线程，而是进入“任务队列”的任务，只有“任务队列”通知到主线程，某个异步任务可以执行了，该任务才会进入主线程执行。
+
+
+
+
+
+2. 非阻塞I/O
+
+3. 事件驱动
+
+主线程从“任务队列”中读取事件，这个过程是循环不断的，所以整个的这种运行机制又称为event loop（事件循环）
+
+
+setTimeout setInterval setImmediate process.nextTick
+
+
+process.nextTick > setTimeout || setImmediate
+
+process.nextTick 是把回调函数放到“任务队列”的首部。
+
+setImmediate和setTimeout 是把回调函数放到“任务队列”的尾部。
+
+
+
+
+4. global 对象和 process对象
+
+5. 模块系统
+
+require: 加载一个文件从而形成一个模块，每个模块都会暴露一个空对象。
+
+exports: 在暴露的空对象里面添加属性。
+
+module.exports = object;   对外暴露一个对象。
+
+
+6. 事件   events.EventEmitter  -- 进行事件的监听和分发
+
+var events = require('events'),
+	a = new events.EventEmitter(),
+	b = new events.EventEmitter();
+
+b.on('click',function(){
+	console.log('recive b click events');
+});
+
+a.on('click',function(){       
+	console.log('recive a click events');
+});
+
+a.emit('click');
+
+b.emit('click');
+
+
+7. HTTP 模块
+
+var http = require('http');
+http.createServer(function(req,res){
+	res.end('hello xiaoxx');
+	console.log('bug');
+}).listen(405);
+
+http 可以监听多个端口。
+http.listen(404); http.listen(405)都是有效的。
+
+参数req,res分别是http.IncomingMessage和http.ServerResponse的实例。
+
+http.IncomingMessage是http请求的信息，http请求一般可以分为两部分：请求头和请求体
+
+data: 当请求数据到来时，该事件被触发。
+
+end: 当请求数据传输完成，事件被触发。
+
+close: 用户结束当前请求。
+
+
+http.ServerResponse是返回给客户端的信息。
+
+res.writeHead: 向请求的客户端发送响应头
+
+res.write: 向客户端发送内容，可以在res.end调用之前调用多次。
+
+res.end: 结束响应，必需被调用一次
+
+bug1: 为什么console.log()会执行两次，因为浏览器默认一次会请求favicon.ico。
+
+
+
+http 客户端
+
+http.request 和 http.get
+
+https.request(options,function(res){
+
+});
+
+options: 表示请求的参数，主要有hostname,port,data,path,method,headers,
+
+
+
+

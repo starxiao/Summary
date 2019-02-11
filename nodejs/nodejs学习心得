@@ -1,0 +1,10 @@
+
+nodejs 学习心得
+
+
+
+1. nodejs 不是一门语言也不是框架，而是基于google v8 引擎的JavaScript 运行环境，结合Libuv扩展了javascript io/fs的特性
+
+2. 事件驱动(event-driven),非阻塞I/O模型
+
+

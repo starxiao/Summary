@@ -1,0 +1,101 @@
+1. 小程序包含一个主体和多个描述各自页面的page.
+
+2. 主体部分由三个文件组成，而且必须放在项目的根目录下.
+    
+```
+
+    app.js                 小程序主逻辑
+    
+    app.json               公共配置
+    
+    app.wxss               公共样式
+    
+    
+```
+app.js   主要由App()函数用来注册一个小程序。接受一个object参数，指定了小程序的生命周期函数
+
+App({
+
+	onLaunch: function(){},                    小程序初始化完成,全局只触发onLaunch一次
+	onShow: function(){},					   小程序启动或者从后台进入前台显示
+	onHide: function(){},					   从前台进入后台
+	onError: function(){},					   脚本错误,或者调用api失败
+	onPageNotFound: function(){},			   小程序打开页面不存在的情况
+	userFunction: function(){},					
+	userData:{},								全局函数和全局变量		
+});
+
+全局函数getApp()可以用来获取到小程序实例
+
+var app = getApp();
+console.log(app.userData);
+
+App() 必须在 app.js 中注册，且不能注册多个。
+不要在定义于 App() 内的函数中调用 getApp() ，使用 this 就可以拿到 app 实例。
+不要在 onLaunch 的时候调用 getCurrentPages()，此时 page 还没有生成。
+通过 getApp() 获取实例之后，不要私自调用生命周期函数。
+
+
+3. page页面由四个文件组成
+
+
+```
+
+js                         页面逻辑
+
+wxml                       页面结构
+
+wxss                       页面样式
+
+json                       页面配置
+
+```
+
+4. Page()函数用来注册一个页面，接收object参数，指定页面的初始数据、生命周期函数、事件处理函数
+
+
+5. 页面路由以页面栈的形式维护了当前的所有页面。
+
+
+6. 文件作用域
+
+在javascript 文件中声明的变量和函数只在该文件中有效，不同的文件中可以声明相同名字的变量和函数。
+
+可以通过全局函数getApp()可以获取全局的应用实例。
+
+可以使用module.exports 或者 exports 对外暴露接口
+
+common.js
+
+function sayHello(){
+	console.log('sayHello');
+}
+
+module.exports.sayHello = sayHello;
+
+app.js
+
+var common = require('common.js');
+
+common.sayHello();
+
+
+7. 视图层 --- wxml
+
+	数据绑定    双括号 {{}}
+
+	列表渲染    wx:for   默认下标变量名为index 默认当前项为item  wx:for-index="key" wx:for-item="value"
+
+	条件渲染    wx:if wx:elif wx:else
+
+	模板        template
+
+	声明： <template name="msgAlert"><view>alert</view></template>   使用:<template is="msgAlert"></template>    
+
+	引用   import include
+	
+
+
+
+
+

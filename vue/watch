@@ -1,0 +1,46 @@
+
+
+
+watch   属性
+
+用来观察和响应Vue实例上的数据变化
+
+watch:{
+
+	'string': 'someMethod' | Function | Object | Array
+}
+
+'someMethod'  => 对应的是methdos的方法
+
+Function  => 回调函数function handler(next,pre){
+	
+	next  =>  表示是新的值
+
+	pre   =>  表示是旧值
+}
+
+Object:{
+	handler:function(){},    => 函数名只能是 handler
+	deep: true,              => 对应watch object里的属性
+	immediate: true          => data observer 开始后立即调用
+}
+
+Array: [
+	function handler1(){},
+	function handler2(){}
+]
+
+
+具体例子 watch '$route' 路由对象
+
+watch:{
+	'$route': function(next,pre){
+
+
+		next   ==> 匹配到的当前路由对象
+
+		pre    ==> 之前的路由对象
+	}
+}
+
+

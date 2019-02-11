@@ -1,0 +1,123 @@
+
+
+大型单页面(spa)是加载单个HTML页面并在用户与应用程序交互时动态更新该页面的web应用程序
+
+加载了必需的资源，css,html,js
+
+采用前端路由系统，通过改变URL，在不重新请求页面的情况下，动态更新页面视图。
+
+优缺点:
+	(1) 动态更新页面，体验好
+	(2) 减轻服务器压力
+	(3) 前后端分离，后端只负责数据
+	(4) 不会重复加载公共的资源
+	
+	(5) 无html seo不友好
+	(6) 初次加载耗费资源较多
+	(7) 需要类似vue-router管理导航
+
+前端路由的实现原理
+	
+	(1) 利用url的hash(#)
+
+	(2) 利用history interface HTML5新增的方法
+	
+
+hash
+
+	(1) 在url地址的#号后面的字符串 http://www.xiaoxx.coom/#/hash  window.location.hash => '#/hash'
+	(2) #号本来的作用指定网页的具体位置
+	(3) hash虽然在url中，但不会包含在http请求中，所以hash只存在于浏览器中。
+	(4) 改变hash值不会重新加载页面
+	(5) window.addEventListener('hashchange',(e)=>{console.log(e)});
+	(6) 改变一次hash值都会给history添加一条记录。
+
+正因为hash也以上的特点，所以可以用来实现在不重新加载页面的情况下更新视图
+
+
+hash路由的原理
+
+直接访问 http://www.xiaoxx.com/#/user
+
+	(1) router在初始化的时候，会取当前的url的hash值
+	(2) 调用tansitionTo(hash)
+	(3) updateRoute(hash)
+	(4) 赋值_route = hash,根据相应的hash值匹配相应的组件。
+
+从http://www.xiaoxx.com/#/user -> http://www.xiaoxx.com/#/home
+
+<a href="#/home">jumpUrl</a>
+
+location.hash = '#/home';
+
+this.$router.push('/home');
+
+实现原理
+
+this.$router.push('/home'); => HashHistory.push()  => History.transitionTo() => History.updateRoute() => 
+
+app._route = route  => vm.render()  
+
+Vue.util.defineReactive()定义了响应式的_route属性,当_route变换的时候，调用视图渲染
+
+updateRoute (support history.pushState ? pushState : location.hash);
+
+
+改变  location.hash:
+
+直接改变url的hash(不同)地址也能响应组件变化，因为添加了window.addEventListener('hashchange')事件
+
+
+
+history
+
+	(1) 新增了两个接口pushState(),replaceState()，都可以改变url地址而不重新加载页面。
+	(2) 也会向history添加一条记录，不会发送新的http请求.
+
+
+history模式下调用this.$router.push跟hash模式实现路由跳转的原理是一样的。
+
+只是改变url地址是通过history.pushState({},'','/home');
+
+而要直接在浏览器改变url地址匹配相应的路由需要在服务端配置，它跟hash模式不同点是hash#后面的字符串不会出现在http请求的url地址上。
+
+http://www.xiaoxx.com/#/user/id   -> 发送到服务端的url地址是http://www.xiaoxx.com
+
+而history模式  http://www.xiaoxx.com/user/id   -> http://www.xiaoxx.com/user/id
+
+
+在nginx上配置全部的请求都达到index.html上，然后在通过router初始化操作去匹配相应的组件。
+
+或者在nodejs createServer上读取index.html返回
+
+问题就是这样服务器不会返回404错误页面  所以需要在routes上加个404页面
+
+
+
+后端路由
+
+http://zx.500.com/index.php 会直接访问该地址对应路径下的文件
+
+
+http://zx.500.com/index.php -> http://zx.500.com/leitai/index.php
+
+会刷新页面，重新加载对应的文件，重新加载资源(js,css）如果存在相同的资源的时候也就会耗费资源重新加载。
+
+
+
+php 路由实现
+
+在Esunphp中
+								
+http://m.bitour.com/user/login  等同于(php内部做了重写) => http://m.bitour.com/?c=user&a=login
+
+就相当于访问controller目录下的User.php和里面的login方法
+
+而在login函数 $this -> render() 渲染相应views目录下的user/login.php文件
+
+
+
+
+
+
+

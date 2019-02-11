@@ -1,0 +1,33 @@
+
+
+linux 常用命令
+
+查看网络进程
+
+查看nginx运行情况        ps -ef | grep nginx
+
+重启nginx   cd /usr/local/nginx/sbin/   ./nginx -t ==> 查看nginx.conf配置文件语法 ./nginx -s reload ==> nginx重启
+
+查看端口占用情况			netstat -nlp | grep 80
+
+查看apache运行情况       ps -ef | grep httpd   如果有-f就能看到了，没有就要执行相应目录下的httpd /usr/sbin/httpd -S  service httpd restart
+
+改变文件所属用户组       chown -R www:www /html/huodong.500.com
+
+改变文件的权限        chmod 664 index.php    -rw-rw-r   r-4 w-2 x-1
+
+删除文件夹无需要提示(慎用慎用)      rm -rf huodong.500.com
+
+修改用户密码					passwd xiaoxx
+
+
+
+webstorm
+
+git版建议版本控制快捷键
+ctrl+K	提交代码
+ctrl+shift+k	向远程版本库推送修改git push
+ctrl+t	向远程版本库下载更新git pull
+
+svn版建议版本控制快捷键
+ctrl+K	提交代码

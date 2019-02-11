@@ -1,0 +1,46 @@
+
+
+滚动穿透:
+
+	1.定义
+		移动端弹出fixed弹窗的话，在弹窗上滑动会导致下层的页面跟着滚动，这个叫作"滚动穿透"
+
+	2.解决办法:
+
+		(1)在弹出层设置touchmove事件中设置e.preventDefault (适应于弹出层没有滚动);
+
+		(2)设置滚动元素{position:fixed;height:100%;overflow-y:hidden},在弹出弹窗之前需要记住body的滚动位置，关闭弹窗之后需要恢复。
+
+		.toastFixed{
+			position: fixed; (添加position:fixed是禁止touch浏览器页面自带的上下滚动效果)
+			height: 100%;
+			overflow-y: hidden;
+		}
+
+		<script type="text/javascript">
+			var scrollbodyScrollTop = 0;
+			//全局滚动--body滚动
+			open.onclick = function(){
+				//先获取滚动位置
+				scrollbodyScrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+				//添加样式
+				document.body.classList = 'toastFixed';
+				//设置body的top(如果添加toastFixed样式会使滚动位置变化，则需要设置body的top值)
+				document.body.style.top = -scrollbodyScrollTop + 'px';
+				mask.style.display = 'block';
+			}
+
+			close.onclick = function(){
+				//清除样式
+				document.body.classList = '';
+				//恢复之前的滚动位置
+				document.body.scrollTop = document.documentElement.scrollTop = scrollbodyScrollTop;
+				mask.style.display = 'none';
+			}
+		</script>
+
+
+
+
+
+	

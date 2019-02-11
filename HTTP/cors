@@ -1,0 +1,79 @@
+
+
+1.cors 全称: 跨域资源共享 -- 解决ajax跨域的一种策略，需要服务端和前端 一起设置。
+
+2.浏览器一旦发现AJAX请求跨源，就会自动添加一些附加的头信息，有时还会多出一次附加的请求，但用户不会有感觉。
+
+3.低于IE10，不支持CORS。
+
+4.CORS有两种请求，一种是简单请求和非简单请求：
+
+简单请求包括
+
+HEAD GET POST
+
+http的头信息不超过
+Accept  Accept-Language Content-Language Last-Event-ID  
+
+Content-Type: 只限三个值 application/x-www-form-urlencoded
+multipart/form-data text/plain
+
+
+简单请求的流程
+
+浏览器发现这次跨域ajax请求是简单请求的时候，就会自动在头信息中添加一个origin字段
+
+
+request header
+
+Host: ets.500.com
+Origin: http://huodong.500.com
+Referer: http://huodong.500.com/2018/wcjk/touch.php
+
+
+reponse header
+
+Access-Control-Allow-Credentials: true
+Access-Control-Allow-Origin: http://huodong.500.com
+
+Access-Control-Allow-Origin: * 为星号的时候表示接受任意域名的请求
+
+Access-Control-Allow-Credentials 为true的时候表示允许发送Cookie。
+需要服务端和客户端同时设置才会生效。如果要发送cookie到服务器，Access-Control-Allow-Origin不
+能为*。只能是一个具体的域名
+
+
+Access-Control-Expose-Headers: 
+
+XMLHttpRequest对象getResponseHeader()方法只能拿到基本6个字段。如果要获取
+其他字段，必须在这里设置。
+
+非简单请求
+
+非简单请求是对那种服务器有特殊要求的请求，比如请求方法是PUT或者DELETE，或者Content-Type字段的类型是application/json.
+
+非简单请求的CORS请求，会在正式通信之前增加一次HTTP查询请求，也就是预检请求 --options请求
+
+浏览器先询问服务器，当前网页所在的域名是否在服务器的许可名单之中，以及可以使用哪些HTTP动词和头信息字段。只有得到肯定答复，浏览器才会发出正式的XMLHttpRequest请求，否则就报错。
+
+options 请求
+
+request
+
+Origin: http://api.bob.com
+Access-Control-Request-Method: PUT、POST、GET
+
+response
+
+ccess-Control-Allow-Methods: GET, POST, PUT  必需
+Access-Control-Allow-Headers: X-Custom-Header
+Access-Control-Allow-Credentials: true
+
+
+Origin
+
+Origin 头部字段表示预检请求或实际请求的源站。
+Access-Control-Request-Method
+Access-Control-Request-Method 头部字段用于预检请求。其作用是，将实际请求所使用的 HTTP 方法告诉服务器。
+Access-Control-Request-Headers
+Access-Control-Request-Headers 头部字段用于预检请求。其作用是，将实际请求所携带的首部字段告诉服务器。

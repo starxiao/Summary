@@ -1,0 +1,21 @@
+
+
+proxy: 在对象上做一层拦截,外界对这层对象的访问之前都必须通过这层拦截，也就是对外界的访问进行过滤和重写。
+
+let proxy = new Proxy(target,handler)
+
+target ===> 表示要拦截的对象
+handler ===> 表示拦截行为
+
+<script type="text/javascript">
+	
+	var obj = new Proxy({},{
+		get: function(target,key,receiver){
+			console.log('receivereturn key' + key);
+			return 'hello';
+		},
+		set: function(target,key,value,receiver){
+			console.log('world!');
+		}
+	})
+</script>

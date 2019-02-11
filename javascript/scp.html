@@ -1,0 +1,29 @@
+
+
+Content Security Policy -- SCP 策略
+
+跨域脚本攻击xss(Cross Site Scripting)是最常见、危害最大的网页安全漏洞。
+
+CSP 的实质就是白名单制度，开发者明确告诉客户端，哪些外部资源可以加载和执行，等同于提供白名单。它的实现和执行全部由浏览器完成，开发者只需提供配置。
+
+存在两种方法设置CSP。一种是在HTTP头信息添加Content-Security-Policy字段，还有就是页面的<meta>标签
+
+<meta http-equiv="Content-Security-Policy" content="script-src 'self'; object-src 'none'; style-src cdn.example.org third-party.org; child-src https:">
+
+
+script-src：外部脚本
+style-src：样式表
+img-src：图像
+media-src：媒体文件（音频和视频）
+font-src：字体文件
+object-src：插件（比如 Flash）
+child-src：框架
+frame-ancestors：嵌入的外部资源（比如<frame>、<iframe>、<embed>和<applet>）
+connect-src：HTTP 连接（通过 XHR、WebSockets、EventSource等）
+worker-src：worker脚本
+manifest-src：manifest 文件
+
+Content-Security-Policy: default-src 'self'      --上面代码限制所有的外部资源，都只能从当前域名加载。
+
+
+HTTPS 网页不得加载 <HTTP 资源>（浏览器已经默认开启）

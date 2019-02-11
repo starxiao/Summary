@@ -1,0 +1,108 @@
+
+如何能写出高质量的代码，除了本身的基础能力外，代码规范也是不可或缺的一部分。
+
+1.source file basics
+
+	1.1 file name: 必须是小写，可以包含.号或者_.
+
+	1.2 file encoding: utf-8
+
+2. variable
+	
+	2.1 尽量用const 和 let 去声明变量，并且声明时赋值。
+	<script type="text/javascript">
+		const Base_Cache = 'www.500cache.com';
+
+		let str = 'xiaoxx'; 
+	</script> 
+
+	2.2 定义object
+	<script type="text/javascript">
+		let obj = {};
+
+		//能尽量用es6新特性
+		obj = {
+			value: 1,
+
+			addValue(){
+				return obj.value  + value;
+			}
+		}
+
+		return {
+			addValue,
+		}
+
+		使用 hasOwnProperty  应该是Object.prototype.hasOwnProperty.call(obj,key);
+
+		对象复制要区分浅拷贝和深拷贝
+	</script>
+
+	2.3 定义array
+	<script type="text/javascript">
+		let arr = [];
+
+		尽量不用操作的array的length
+
+		let arrCopy = [...arr];    ---浅拷贝
+
+		将不能循环的类数组转化
+		let dom = document.querySelectorAll('.cur');
+
+		let doms = [...dom];
+
+	</script>
+
+	2.4 使用解构赋值
+	<script type="text/javascript">
+
+		对象解构
+		function getFullName({firstName,lastName}){
+			return `${firstName} ${lastName}`;
+		}
+
+		数组解构
+		let arr = [1,2,3,4];
+
+		let [first,second] = arr;
+
+		以对象的形式返回
+		function returnData(input){
+			return{input1,input2,input3};
+		}
+		let {input1,input2,input3} = returnData(input);
+
+	</script>
+
+	2.5 字符串使用单引号 '' 和 模板使用``;
+	<script type="text/javascript">
+		let str = 'xiaoxx';
+		let template = `<div class='container'>${str}</div>`;
+	</script>
+
+	2.6 函数
+	<script type="text/javascript">
+		不要使用arguments,尽量使用...
+		function create(...args){
+			return args.join('');
+		}
+		
+		使用默认参数,并且让默认参数放到最后
+		function create(str='xiaoxx'){
+			return str.split('');
+		}
+
+		不要直接操作参数为对象时的key
+		function create(obj){
+			let key = Object.prototype.hasOwnProperty.call(obj,'key') ? obj.key : 1;
+		}
+
+		可以使用...代替apply
+		console.log.apply(console,[1,2,3,4,5]);
+		console.log(...[1,2,3,4,5]);
+	</script>
+
+	2.7 箭头函数
+
+
+

@@ -1,0 +1,42 @@
+
+
+js 实现全屏的方法
+
+<script type="text/javascript">
+//全屏
+function fullScreen() {
+    var inFullScreen = false;
+    $('#fullScreen').click(function() {
+        var docElm = document.documentElement;
+        if (!inFullScreen) {
+            if (docElm.requestFullscreen) {
+                docElm.requestFullscreen();
+            }
+            //FireFox
+            else if (docElm.mozRequestFullScreen) {
+                docElm.mozRequestFullScreen();
+            }
+            //Chrome等
+            else if (docElm.webkitRequestFullScreen) {
+                docElm.webkitRequestFullScreen();
+            }
+            //IE11
+            else if (docElm.msRequestFullscreen) {
+                docElm.msRequestFullscreen();
+            }
+            inFullScreen = true;
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            } else if (document.msExitFullscreen) {
+                document.msExitFullscreen();
+            } else if (document.mozCancelFullScreen) {
+                document.mozCancelFullScreen();
+            } else if (document.webkitCancelFullScreen) {
+                document.webkitCancelFullScreen();
+            }
+            inFullScreen = false;
+        }
+    });
+}   
+</script>

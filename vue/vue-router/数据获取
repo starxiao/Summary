@@ -1,0 +1,15 @@
+
+数据获取
+
+
+	(1) afterRouteEnterGetList
+
+		导航完成之后获取数据，会在vue生命周期里面再ajax，
+
+		created或者在mounted里面ajax。但建议在mounted里面fetchData，因为页面返回的时候不会触发created
+	
+	(2) beforeRouteEnterGetList
+
+		导航之前获取数据，在组件的beforeRouteEnter中获取数据,再调用next方法更新数据
+
+		

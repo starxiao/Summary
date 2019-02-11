@@ -1,0 +1,86 @@
+
+js 数据类型
+
+
+6种基本数据类型
+
+Boolean  true or false
+
+Null 表明null值的特殊关键字 表示一个空对象指针
+
+Underfiend 变量未定义时的属性 当一个变量声明后，未初始化，则该值为undefined
+
+Number  数字  42 or 4.14
+
+String  字符串 'hello world!'
+
+Symbol  es6新增，它的实例是唯一且不可改变
+
+引用类型
+Object  对象 包含 Array / Date / RegExp / Math / Function
+
+引用类型的值是保存在内存中的对象。与其他语言不同的是javascript不允许直接访问内存的中位置，也就是说不能直接操作对象的内存空间(也就是没有指针)。在操作对象时,实际上是在操作对象的引用而不是实际的对象。
+
+javascript的变量的存储方式 stack(栈) 和 heap(堆)
+
+栈: 自动分配内存空间，系统自动释放，里面存放的是基本类型的值   和   引用类型的地址。
+
+堆:　动态分配的内存，大小不定，也不会自动释放。里面存放引用类型的值。
+
+
+
+
+typeof 和 instanceOf 
+
+
+typeof 操作符返回一个字符串。表示未经计算的操作数的类型
+
+typeof 能返回的类型有:
+
+'number'   'string'  'function' undefined' 'symbol' 'object' 'boolean'  共七种
+
+
+typeof      123456     'number'
+
+typeof      3.14       'number'
+
+typeof      NaN        'number'
+
+typeof     Infinity    'number'
+
+typeof     Math.PI     'number'
+
+typeof     'xiaoxx'     'string'
+
+typeof      true        'boolean'
+
+typeof      Symbol('foo')  'symbol'
+
+typeof      undefined      'undefined'
+
+typeof     {a:1}       'object'
+
+typeof     var fun = function(){}  'function'
+
+typeof     obj.fun     'function'
+
+typeof     null         'object'
+
+
+
+instanceof 判断具体的对象类型
+
+[] instanceof  Array
+
+new Date() instanceof  Date
+
+var fun = function(){}  instanceof  Function
+
+
+
+判断具体对象类型的一种方法
+
+
+function isType(param,type){
+    return Object.prototype.toString.call(param).slice(8,-1).toLowerCase() === type;
+}

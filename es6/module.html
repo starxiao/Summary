@@ -1,0 +1,32 @@
+
+
+es6 ---> module
+
+es6模块功能主要由两个命令构成 export 和 import 
+
+export: 用于规定模块的对外接口。
+
+import: 用于输入其他模块提供的功能。是在编译阶段执行的，在代码运行之前。
+
+可以用as对变量重命名
+
+
+
+
+export出去的接口import的时候一定要使用大括号
+
+export default: 为模块指定默认输出,import的时候就可以指定任意名字，并且不使用大括号
+并且export default 对于一个模块只能使用一次。
+
+export * from 'module' : 表示输出module模块的所有属性和方法。
+
+
+
+import(path) 函数用于动态加载模块   --- 返回一个promise对象
+
+
+1. 按需加载    window.onload = function(){import()}
+
+2. 条件加载       if(){import()}
+
+3. 动态的模块路径 import(f())

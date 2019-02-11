@@ -1,0 +1,57 @@
+
+
+url: https://www.google.com/translate/?type=12/#/name
+
+location.href  ==> https://www.google.com/translate
+
+location.protocal ==> https:
+
+location.hostname ==> www.google.com
+
+location.pathname ==> /translate
+
+location.search ==> ?type=12
+
+location.hash ==> #/name
+
+location.href -可读写属性
+
+location.reload(boolean)   -- 重新加载当前的url资源,boolean为true时，引发的刷新会从服务器上加载数据，否则从缓存当中加载页面。
+
+location.replace(url) repla
+<script type="text/javascript">
+	console.log(location.href) 返回当前url地址
+
+	location.href = 'http://www.google.com';(必须加上协议) 在当前窗口跳转
+
+	location.href = 'www.google.com'; 跳转到(location.protocal +'//' + location.hostname + location.pathname + '/www.google.com')
+
+
+	location.reload() 在android的微信浏览器中存在不刷新页面。因为微信浏览器默认识别有缓存的就不会重新加载
+
+	解决办法就是给url地址加时间戳强制刷新
+	function updateUrl(url,key){
+        var key= (key || 't') +'=';  //默认是"t"
+        var reg=new RegExp(key+'\\d+');  //正则：t=1472286066028
+        var timestamp=+new Date();
+        if(url.indexOf(key)>-1){ //有时间戳，直接更新
+            return url.replace(reg,key+timestamp);
+        }else{  //没有时间戳，加上时间戳
+            if(url.indexOf('\?')>-1){
+                var urlArr=url.split('\?');
+                if(urlArr[1]){
+                    return urlArr[0]+'?'+key+timestamp+'&'+urlArr[1];
+                }else{
+                    return urlArr[0]+'?'+key+timestamp;
+                }
+            }else{
+                if(url.indexOf('#')>-1){
+                    return url.split('#')[0]+'?'+key+timestamp+location.hash;
+                }else{
+                    return url+'?'+key+timestamp;
+                }
+            }
+        }
+    }
+</script>
+

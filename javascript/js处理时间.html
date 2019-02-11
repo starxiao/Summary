@@ -1,0 +1,83 @@
+
+js 处理时间
+
+/* js 处理date 字符串兼容性bug */
+
+new Date('2018-10-10 12:12:12')   --在ios上不支持
+
+使用处理时间字符串全部要转成('2018/10/10 12:32:33')
+
+<script type="text/javascript">
+	date.replace(/\-/g,'/');
+</script>
+
+一、Date对象是js获取时间一个对象，可以通过Date.prototype添加Date对象的属性和方法
+
+二、Date对象构造时间
+
+var date = new Date() --- 返回当前时间 精确到秒 var date = new Date('2017/10/16') ---返回2017/10/16相对于0时的时间 Mon Oct 16 2017 00:00:00 GMT+0800 (中国标准时间) var date = new Date('2017-10-16') ---返回2017-10-16相对于8时的时间 Mon Oct 16 2017 08:00:00 GMT+0800 (中国标准时间)
+
+new Date('2017-10-16'); 在ios的浏览器不支持
+
+var d = new Date(); var d = new Date(milliseconds); var d = new Date(dateString); var d = new Date(year, month, day, hours, minutes, seconds, milliseconds);
+
+new Date('2017-10-16 18:00:00') === new Date('2017/10/16 18:00:00'); Mon Oct 16 2017 18:00:00 GMT+0800 (中国标准时间)_
+
+Date.now() --返回当前时间戳
+
+三、返回时间相当于 GMT 时间 1970 年 1 月 1 日午夜的毫秒数
+
+var date = new Date(); date.getTime(); --- 返回本机的本地时间。也就是返回东八区的中国时间。 ---常用这个 date.UTC(); --- 返回世界时，他们一般相差8个小时
+
+四、获取中国时间的具体年月份
+
+date.getFullYear(); --返回四位数年
+
+date.getMonth(); -- 返回月份 0-11
+
+date.getDate(); -- 返回一个月的具体某一天 1-31
+
+date.getHours(); -- 0-23
+
+date.getMinutes(); -- 0-59
+
+date.getSeconds(); -- 0-59
+
+date.getMilliseconds(); -- 毫秒 0-999
+
+date.getDay(); 返回一周的某一天 0-6 表示周日到周六
+
+五、获取每个月的天数
+
+<script type="text/javascript">
+	function returnDay() {
+	    var date = new Date();
+	    var year = date.getFullYear();
+	    var month = date.getMonth() + 1;
+	    if (month === 2) {
+	        return year % 4 === 0 ? 29 : 28;
+	    } else if (month === 1 || month === 3 || month === 5 || month === 7 || month === 8 || month === 10 || month === 12) {
+	        return 31;
+	    } else {
+	        return 30;
+	    }
+	}
+</script>
+
+
+六、获取与特定时间相差的天数，小时，分秒。
+
+<script type="text/javascript">
+function countTime(str) {
+    var date = new Date();
+    var date1 = new Date('2017/10/16 18:00:00');
+    var day = parseInt((date.getTime() - date1.getTime()) / (2460601000));
+    var hoursTemp = (date.getTime() - date1.getTime()) % (2460601000);
+    var hours = parseInt(hoursTemp / (60601000));
+    var minutesTemp = hoursTemp % (60601000);
+    var minutes = parseInt(minutesTemp / (601000));
+    var secondsTemp = minutesTemp % (601000);
+    var seconds = parseInt(secondsTemp / 1000);
+    console.log('day:' + day + 'hours:' + hours + 'minutes' + minutes + 'seconds' + seconds);
+}
+</script>

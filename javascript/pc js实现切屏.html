@@ -1,0 +1,62 @@
+
+pc js 实现滚动切换屏幕
+
+主要是通过监听全局事件 onmousewheel 判断e.wheelDelta > 0向上滚动,e.wheelDelta < 0向下滚动.
+
+<ul class="scroll-list">
+	<li class="cur"></li>
+	<li></li>
+	<li></li>
+<ul>
+<div class="panel0"></div>
+<div class="panel1"></div>
+<div class="panel2"></div>
+<script type="text/javascript">
+	 	//切屏
+        var scrolling = false,
+            scrollFunc = function (e) {
+            if(scrolling){
+                return false;
+            }
+            //向下滚动
+            if(e.wheelDelta < 0 || e.detail > 0){
+                $('.scroll-list li').each(function (index) {
+                    if ($(this).hasClass('cur')) {
+                        if (index == 9) {
+                            return false;
+                        }
+                        var dom = 'panel' + (index + 1);
+                        var h = $("." + dom).offset().top-50;
+                        scrolling = true;
+                        $("html,body").animate({scrollTop: h}, 500,function () {
+                            scrolling = false;
+                        });
+                        $('.scroll-list li').removeClass('cur').eq(index + 1).addClass('cur');
+                        return false;
+                    }
+                });
+            }
+            //向上滚动
+            if(e.wheelDelta > 0 || e.detail < 0){
+                $('.scroll-list li').each(function (index) {
+                    if ($(this).hasClass('cur')) {
+                        if (index == 0) {
+                            return false;
+                        }
+                        var dom = 'panel' + (index - 1);
+                        var h = $("." + dom).offset().top-50;
+                        scrolling = true;
+                        $("html,body").animate({scrollTop: h}, 500,function () {
+                            scrolling = false;
+                        });
+                        $('.scroll-list li').removeClass('cur').eq(index - 1).addClass('cur');
+                        return false;
+                    }
+                });
+            }
+        };
+        window.onmousewheel = document.onmousewheel = scrollFunc;
+        if(document.addEventListener){
+            document.addEventListener('DOMMouseScroll', scrollFunc, false);
+        }
+</script>

@@ -1,0 +1,9 @@
+
+
+记住滚动行为
+
+	vue-router提供的这个功能值能在支持history.pushState
+
+	scrollBehavior(to,from,savePosition){
+		
+	}

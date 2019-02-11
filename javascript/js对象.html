@@ -1,0 +1,65 @@
+
+js 对象
+
+<script type="text/javascript">
+	var obj = {
+		a: 'xiaoxx',
+		get b(){
+			return this._b_;        _b_是一个中间变量
+		},
+		set b(e){
+			this._b_ = e;
+		}
+	}
+</script>
+
+对象obj的属性a称为数据属性，它只是一个简单的值。像属性b这种使用了getter和setter方法定义的属性为存取器属性
+
+存取器属性定义为一个或两个与属性同名的函数。这个函数没有function关键字，而是使用set和get
+
+当查询存取器属性的值时，就会调用get方法，该方法的返回值就是该属性的值。
+
+当设置存取器属性的值，就会调用set方法，就赋值的值传参入方法。
+
+对象的存取器属性会忽略value和writeable，而是采用configurable和enumerable;
+
+存取器属性也会被继承
+
+defineProperty  --给对象添加新的属性
+<script type="text/javascript">
+	Object.defineProperty(obj,'c',{
+		get(){
+			console.log('监听获取属性c的值');
+			return this._c_;
+		}
+		set(val){
+			console.log('监听设置属性c');
+			this._c_ = val;
+		}
+	})
+</script>
+
+对象里目前存在的属性描述符有两种主要形式：数据描述符和存取描述符。数据描述符是一个具有值的属性，该值可能是可写的，也可能不是可写的。存取描述符是由getter-setter函数对描述的属性。
+
+数据属性和存取器属性都存在的属性
+
+configurable: true时,特性表示对象的属性是否可以被删除，以及除writable特性外的其他特性是否可以被修改。  默认false该属性不可被修改
+
+enumerable: true时，才能出现在对象的枚举属性中 默认false不可在for...in和Object.keys()被枚举
+
+数据属性才存在的
+
+value: 属性对应的值(any)，默认undefined
+
+writable: true时value才能被改变。默认false;
+
+存取器属性
+
+get 访问该属性，方法会执行 默认undefined;
+ 
+set 属性被修改，方法会被执行 默认undefined;
+
+
+
+
+

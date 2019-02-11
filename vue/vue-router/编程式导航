@@ -1,0 +1,23 @@
+
+
+编程式导航
+
+<router-link :to="">
+
+this.$router.push(url);  这个方法会向history栈添加一个新的记录
+
+
+url可以是一个字符串路径，也可以是一个描述地址的对象
+
+this.$router.push('home',onCom,onAbort);  
+
+this.$router.push({path:'home'});
+
+this.$router.replace(url,onCom,onAbort);  这个方法不会向history添加新记录
+
+this.$router.go(n);
+
+是模仿window.history.pushState window.history.replaceState window.history.go
+
+
+

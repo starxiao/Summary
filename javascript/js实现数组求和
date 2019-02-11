@@ -1,0 +1,24 @@
+
+
+js 实现数组求和 ，求积
+
+var total = 0,arr = [1,23,42];
+
+arr.forEach(function(v){
+	total +=v;
+	return true;
+});
+
+total = arr.reduce(function(total,v){
+	return total + v;
+});
+
+var multiply = 1, arr = [1,23,42];
+
+arr.forEach(function(v){
+	multiply *= v;
+});
+
+multiply = arr.reduce(function(multiply,v){
+	return multiply * v;
+});

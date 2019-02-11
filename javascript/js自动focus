@@ -1,0 +1,27 @@
+
+
+js input textarea 自动focus
+
+
+input 自动聚焦 有h5的一个新属性 autofocus,这个属性只能聚焦而不能调起键盘
+
+1.<input autofocus="autofocus" id="comment-input"> 
+
+2.js focus()
+	
+	document.querySelector('#comment-input').focus();
+
+因为存在ios的安全机制,在ios中一定是要触发的用户的手势事件比如click事件并且不能异步执行focus比如在setTimeout里面执行，才能自动聚焦和调取键盘
+	
+	document.querySelector('btn').addEventListener('click',function(e){
+		document.querySelector('#comment-input').focus();
+
+		window.setTimeout(function(){
+			document.querySelector('#comment-input').focus();    --- 这样也是无效的
+		},0);
+	});
+
+在vue里面的使用v-show 或者 v-if控制显示的弹窗。在调用focus()之前，一定要手动设置这个元素为display为block;
+
+document.querySelector('#comment-input').style.display = 'block';
+document.querySelector('#comment-input').focus();

@@ -1,0 +1,62 @@
+
+
+h5 前端性能优化
+
+
+client 打开页面的流程
+
+
+
+client =====> m.500.com/openplatform/ =====> DNS =====> TCP =====> nginx =====> PHP =====> html =====> DOM render  =====> css request
+
+ ===== html template request =====> main js request =====> css/image/js request =====> vue DOM render
+
+
+
+ DNS TCP SLL(https): 尽量是在同域名下的资源，避免更多的DNS解析、TCP连接、SLL签名
+
+ PHP: 尽量不包含lib库，去掉Eas接口，纯php语言写简单判断。能在js判断的尽量在js判断
+
+ html: 把头跟导航拿出来，不必用vue渲染
+
+ css: css压缩合并加载
+
+ template: 首屏只加当前的页面的template，其他模板文件异步加载
+
+ js: 主要js压缩合并加载(js里面加载的css/html可以提取出来异步加载)   次要文件异步最后加载(支付、统计)
+
+ image: 预加载小图片 data-src填充
+
+ vue DOM:
+
+ (1): ajax 接口尽量合并(尽量是ets接口)
+
+ (2): 长列表layzLoad
+
+ (3): 避免多次操作DOM节点 避免重绘
+
+ (4): js尽量用forEach循环 不要使用闭包 直接操作数组
+
+ (5): v-show与v-if
+
+ (6): 循环列表带上:key="index"
+
+
+
+目标 没有cache的情况下首屏1200ms 有cache的情况下首屏800ms
+
+
+
+
+
+
+
+具体措施   
+
+1. 主页的template 异步加载 (相同的代码，集卡活动的文件大小更小，但是 FFTB 跟 content download时间还是差不多的);
+
+2. header 跟 nav 提到最外面 (css渲染依赖flexible,也就是要增加额外的http，例外header逻辑跟nav 滑动逻辑需要重写)
+
+3. 支付模块js share css 延迟加载 (ajax请求template并不会影响首频时间。css也是)
+
+5. 长列表lazyload

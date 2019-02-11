@@ -1,0 +1,59 @@
+
+
+promise  --- 抽象异步处理对象以及对其进行各种操作的组件。
+
+1.基本操作
+<script type="text/javascript">
+	var promise = new Promise(function(resolve,reject){
+
+		//异步处理
+		//处理结束后调用resolve 或reject
+
+	})
+
+	promise.then(function(val){
+		//success
+		console.log(val);
+	},function(err){
+		//error
+		console.log(err);
+	});
+
+	promise.then(function(val){
+		//success
+		console.log(val);
+	}).catch(function(err){
+		//error
+		console.log(err);
+	});
+</script>
+
+
+2.promise 会返回三种状态 
+
+	resolved --- 异步成功返回
+	rejected --- 异步失败返回
+	pending  --- promise 初始化的状态
+
+promise对象的状态，从Pending转换为Fulfilled或Rejected之后， 这个promise对象的状态就不会再发生任何变化。
+
+也就是说，Promise与Event等不同，在.then 后执行的函数可以肯定地说只会被<strong>调用一次</strong>。
+
+另外，Fulfilled和Rejected这两个中的任一状态都可以表示为Settled(不变的)。
+
+3. .then方法里面的操作是异步的
+
+<script type="text/javascript">
+	var promise = new Promise(function(resolve){
+		cnosole.log('inner promise');
+		resolve(34);
+	});
+	promise.then(function(val){
+		console.log(val);
+	});
+	console.log('outer promise');
+
+	inner promise  -- 1
+	outer promise  -- 2
+	34             -- 3
+</script>

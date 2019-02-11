@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script type="text/javascript" src="https://www.500cache.com/mobile/touch/js/flexible.js"></script>
+</head>
+<style type="text/css">
+	html,body{
+		width: 100%;
+		height: 100%;
+		padding: 0;
+		margin: 0;
+		overflow-y: scroll;
+		overflow-x: hidden;
+	}
+	.container ul{
+		padding: 0
+	}
+	.container ul li{
+		height: 300px;
+		margin: 20px 20px;
+		color: #fff;
+		background-color: #333;
+		padding: 20px 20px;
+		list-style: none;
+		border-radius: 10px;
+	}
+	.container .header{
+		position: fixed;
+	    bottom: 50%;
+	    left: 20px;
+	    z-index: 1;
+	    background-color: #fff;
+		margin-top: 50px;
+		padding: 20px 20px;
+		text-align: center;
+	}
+	.toast{
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		z-index: 3;
+	}
+	.toast .layer{
+		position: fixed;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		background-color: #333;
+		opacity: .5;
+		z-index: 2
+	}
+	.toast .ul{
+    	width: 500px;
+    	height: 400px;
+		position: fixed;
+		top: 0;
+		left: 0;
+		right: 0;
+		bottom: 0;
+		margin: auto;
+		background-color: #fff;
+    	border-radius: 10px;
+    	overflow-y:scroll;
+    	z-index: 5;
+	}
+	body.toastFixed{
+		position: fixed;
+		height: 100%;
+		overflow-y: hidden;
+	}
+	.hide{
+		display: none;
+	}
+</style>
+<body>
+	<div class="container">
+		<div class="header">
+			点击显示弹窗
+		</div>
+		<ul>
+			<li>body1</li>
+			<li>body2</li>
+			<li>body3</li>
+			<li>body4</li>
+			<li>body5</li>
+		</ul>
+	</div>
+	<div class="toast hide">
+		<div class="layer"></div>
+		<ul class="ul">
+			<p>toast</p>
+			<p>toast</p>
+			<p>toast</p>
+			<p>toast</p>
+			<p>toast</p>
+			<p>toast</p>
+			<p>toast</p>
+			<p>toast</p>
+			<p>toast</p>
+			<p>toast</p>
+			<p>toast</p>
+			<p>toast</p>
+			<p>toast</p>
+			<p>toast</p>
+			<p>toast</p>
+			<p>toast</p>
+			<p>toast</p>
+			<p>toast</p>
+			<p>toast</p>
+		</ul>
+	</div>
+</body>
+<script type="text/javascript">
+	(function(){
+
+		var scrollbodyScrollTop = 0;
+		document.querySelector('.header').addEventListener('click',function(){
+			//先获取滚动位置
+			scrollbodyScrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+			//添加样式
+			document.body.classList = 'toastFixed';
+			
+			document.querySelector('.toast').classList = 'toast';
+		});
+		document.querySelector('.layer').addEventListener('click',function(){
+			document.body.classList = '';
+			document.body.scrollTop = document.documentElement.scrollTop = scrollbodyScrollTop;
+			document.querySelector('.toast').classList = 'toast hide';
+		});
+	})();
+</script>
+</html>

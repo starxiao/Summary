@@ -1,0 +1,45 @@
+
+
+css-position
+
+position: static/relative/absolute/fixed/sticky/inherit 其中static(静态定位)是默认的
+
+文档流:
+	dom元素自上而下排成一行行，按照html的顺序排放元素即为文档流。
+
+1. static: 元素的默认定位方式,遵循正常温度文档流对象，top,right,bottom,left,z-index都是无效的。
+
+2. relative: 
+
+	(1) relative 遵循正常的文档流
+	(2) 相对定位相对的是它（原本在文档流中）的位置而进行的偏移
+	(3) 还占有文档空间，占据的文档空间不会随top,right,bottom,left等属性的偏移而发生变动。
+	(4) 只会导致自身位置的相对变化，并不会影响到其他元素的位置，大小变化。
+	(5) margin padding 会让该文档空间产生偏移
+
+3. absoulte:
+	
+	(1) 脱离正常的文档流
+	(2) 只能根据非static属性的父元素进行定位
+	(3) 如果父元素无非static属性，就会依次向上寻找元素值到html,因为absolute已经脱离了body文档流(relative会根据body文档流定位)
+	(4) 设置了absolute之后，必须给该元素设置top,right,bottom,left才可以脱离文档流
+	(5) 如果top和bottom一同存在的话，那么只有top生效。如果left和right一同存在的话，那么只有left生效。
+	(6) 父元素的margin会使absolute的子元素产生偏移，而padding不会
+
+4. fixed:
+
+	(1) 脱离正常的文档流
+	(2)fixed是根据窗口为原点进行偏移定位，就不会根据滚动条的滚动而偏移。
+
+5. sticky:
+
+	(1) 当元素距离页面视口（Viewport，也就是fixed定位的参照）顶部距离大于 0px 时，元素以 relative 定位表现，而当元素距离页面视口小于 0px 时，元素表现为 fixed 定位，也就会固定在顶部。
+	(2) android 兼容性不好
+	(3) 父元素overflow不可为hidden
+
+
+
+
+bug:
+
+	(1) 父元素的高度小于子元素的高度时，子元素设置为absolute脱离了文档流，而父元素设置了overflow-y:scroll(如果设置了hidden就不会);在ios上就会出现白屏的问题(存在dom，可点击)。因为没有hidden掉那一层，就会浮出来遮住子元素

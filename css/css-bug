@@ -1,0 +1,22 @@
+
+
+css-bug
+
+
+1. filter: css滤镜属性提供图形特效，像模糊，元素变色，过滤器通常被用于调整图片，背景，边界的渲染。
+
+	(1) filter: blur(5px) 给图像设置高斯模糊，'radius' 值越大越模糊
+
+导致的bug: 在页面滚动(scroll)的时候，突然向上滚到给图像设置filter的时候，会出现div错乱，图片显示不全
+
+
+2. 在ios使用touchslide 切换tab的时候，如果左右两个tab的height相差太大，会导致浏览器崩溃。
+
+解决办法: <div class="tempWrap forapptogetregion" style="min-height:20rem;"></div> 在最外层加上一个最小高度
+在有些浏览器的rem不支持的话可以用body的高度来设置
+
+if(document.querySelector('.pro-content .tempWrap')){
+    var winClient = document.body.clientHeight || document.documentElement.clientHeight,
+        topClient = document.querySelector('.bg-pro').clientHeight;
+    document.querySelector('.pro-content .tempWrap').style.minHeight = winClient - topClient + 'px';
+}

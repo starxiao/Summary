@@ -1,0 +1,18 @@
+
+
+
+
+<router-view></router-view>
+
+<router-view>组件是一个functional组件，渲染路径匹配到的视图组件。<router-view>渲染的组件内可以嵌套自己的<router-view>
+
+因为它也是一个组件，可以配合<transition>和<keep-alive>使用。也可以使用props和$emit传递参数和方法
+
+
+commHeader.vue
+
+<router-view :baseCache="baseCache" @jumpUrl="jumpUrl"></router-view>
+
+在commHeader的data中定义baseCache变量和在method中定义jumpUrl方法
+
+在<router-view>匹配的子组件中使用props获取传递的变量，在method中使用$emit分发对应的方法。

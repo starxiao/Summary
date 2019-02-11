@@ -1,0 +1,155 @@
+
+
+前端跨域
+
+前端跨域是限制在浏览器端发起的http请求,在服务器上比如php curl是不存在跨域的.
+
+
+一、同源策略（same origin policy）
+
+    同源策略限制从一个源加载的文档或脚本如何与来自另一个源的资源进行交互。这是一个用于隔离潜在恶意文件的关键的安全机制。
+
+二、同源的定义:如果协议，端口（如果指定了一个）和域名对于两个页面是相同的，则两个页面具有相同的源。
+
+http://api.xiaoxx.com/index.html   href = http://(协议、protocol) + api.xiaoxx.com(域名、hostname) + :80(端口、port,80端口默认不显示) + path
+
+http://api.xiaoxx.com/path/index.php          同源
+
+https://api.xiaoxx.com/index.php              协议不同，不同源
+
+http://boss.xiaoxx.com/path/index.html        域名不同，不同源
+
+http://api.xiaoxx.com:8080/index.html         端口不同，不同源
+
+三、同源限制与放开
+
+A域名与B域名存在跨域：
+	1. 那么A域名不能读取B域名的cookie，localStorage等存储性内容。
+	2. 那么A域名不能读写B域名下的DOM节点。
+	3. A域名不能发ajax请求B域名下的资源
+
+但A域名可以通过<script>标签请求B域名下的js资源
+
+<script src=''></script>
+
+<link rel='stylesheet' href=''>
+
+<img src='img'>   
+
+<iframe> </iframe>
+
+
+四、跨域解决方案
+	
+	1. iframe + form  实现跨域无刷新提交POST    (只解决主域相同，子域不同的跨域问题)
+
+	原理就是form提交数据的时候，先提交到iframe，再由iframe提交到服务。在iframe返回到数据后执行回调函数
+
+	<form action="http://ets.500.com/submi" target="uploadiframe" method="post">
+		<input id="uploadfm">
+	</form>
+	<iframe name="uploadiframe" style="display:none"></iframe>
+
+	document.getElementById('uploadfm').submit();
+
+	在iframe里面接到data后
+	if(typeof parent.window['success'] === 'function'){
+		parent.window['success'](data);
+	})
+
+
+
+	2. jsonp 需要前后端一起配合，请求方法只能是GET，数据是在URL。Cookie在服务端也能接收到。
+
+     	jsonp 是一种解决跨域访问的一种方式，它允许客户端发送一个回调函数名到服务器，服务器接收到这个回调函数名后，将json数据包含在这个回调函数里面，接着输出回调函数javascript脚本，在客户端直接执行js。
+
+		在客户端
+
+		<script type="text/javascript">
+
+		function callback(data){
+		     console.log(data);
+		}
+		</script>
+
+		<script type="text/javascript" src="/api/?jsonp=callback"></script>   callback函数要先jsonp请求定义
+
+		function jsonp(url,cb){
+		     var name = 'jsonpCallback';
+		     var script = document.createElement('script');
+		     script.src = url + '?=' + Date.now() + '&callback=' + name;
+		     window[name] = function(){
+		          cb.apply(null,arguments);
+		          window[name] = null;
+		          document.head.removeChild(script);
+		     }
+		     
+		     document.head.appendChild(script);
+		}
+		在服务端 如 php
+
+		$jsonp = $_GET['jsonp']  --获取回调函数名
+		$data = array('username'=>'xiaoxx','password'=>'123');
+
+		header('Content-type:application/x-javascipt')  -- 设置http头表示返回js脚本
+
+		echo $jsonp."(".json_encode($data).")";exit()    --输出执行回调函数
+
+
+	3. CORS（cross origin resource sharing） 跨域资源共享,需要前后端配合，后端要设置http header
+       
+    Access-Control-Allow-Origin: url | '*' (不能同时存在*和url地址)
+
+    origin 参数的值指定了允许访问该资源的外域 URI。对于不需要携带身份凭证(比如cookies)的请求，服务器可以指定该字段的值为通配符，表示允许来自所有域的请求。
+
+    Access-Control-Allow-Credentials: true | false 指定了当浏览器的credentials设置为true时是否允许浏览器读取response的内容。如果没有设置，则浏览器不会显示response的内容
+
+    Access-Control-Expose-Headers: X-my-header
+
+    在跨域访问时，XMLHttpRequest对象的getResponseHeader()方法只能拿到一些最基本的响应头，Cache-Control、Content-Language、Content-Type、Expires、Last-Modified、Pragma，如果要访问其他头，则需要服务器设置本响应头。
+    
+
+    4. nginx 反向代理处理跨域(因为服务器端请求不存在跨域) 性能损耗也比较小
+           req             proxy   
+    浏览器 ====> 代理服务器 ====> 服务器
+    	  <====			  <====
+    					  	res  
+
+    前端项目站点wx.500.com ajax的域名访问ets.500.com/api/ => 全部改成wx.500.com/api/
+
+    wx.500.com 站点下的nginx.conf
+
+   	proxy server
+
+    location ^~/api/ {	
+    	proxy_pass http://ets.500.com/
+    } 
+
+
+    5. nodejs 中间插件代理 http-proxy-middleware 
+
+
+
+    webpack的 webpack-dev-server也是利用了http-proxy-middleware处理跨域
+
+    var proxy = require('http-proxy-middleware')
+
+	var apiProxy = proxy('/api', { target: 'http://ets.500.com' });
+
+	wx.500.com/api -> 访问到本地dev-server proxy，本地server代理到ets.500.com
+
+
+    6.window.postMessage  
+
+
+
+
+
+
+
+
+
+
+
+
+

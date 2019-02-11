@@ -1,0 +1,176 @@
+
+
+nginx 讲解
+
+
+
+1. 线程、进程、以及并发连接数
+
+	进程是具有一定独立功能的程序，关于某个数据集合上的一次运行活动，进程是系统进行资源分配和调度的一个独立单位。
+
+	线程是进程的一个实体，是CPU调度和分派的基本单位，他是比进程更小的独立运行的基本单位。它可以与同属一个进程的其他的线程共享进程所拥有的全部资源。
+
+	进程和线程的主要差别在于，进程有独立的地址空间，一个进程崩溃后，在保护模式不会对其他进程产生影响，而线程只是一个进程中的不同执行路径。线程有自己的堆栈和局部变量，但线程之间没有单独的地址空间，一个线程死掉就等于整个进程死掉。
+
+	最大并发连接数是服务器同一时间能处理最大会话数量（http请求）。
+
+
+2.nginx 配置文件(nginx.conf);
+
+nginx 配置文件主要分为4部分: main server upstream location 
+
+main  ----      main部分设置的指令会影响到其他所有设置
+
+server ----     server部分的指令主要用于指定主机和端口
+
+upstream  ----  主要用于负载均衡
+
+location  ----  location 用于匹配网页位置
+
+server 继承main   location继承server  upstream既不会继承其他设置也不会被继承
+
+
+3.server 虚拟主机配置
+
+一般将虚拟主机进行配置的内容写到一个文件里，然后通过include命令包含过来（include /etc/nginx/conf.d/ *.conf）
+
+server{
+	listen			80;
+	server_name		192.168.50.45		www.xiaoxx.com;
+	index index.html index.htm index.php;
+	root			/web/www/www.xiaoxx.com
+	charset			gbk;
+	access_log		/var/log/nginx/www.xiaoxx.com.access_log	main;
+	error_log		/var/log/nginx/www.xiaoxx.com.error_log		main;
+}
+
+server  	标志定义虚拟主机开始;
+
+listen		用于指定虚拟主机的服务器端口;
+
+server_name		用来指定IP地址或者域名，多个域名之间用空格分开;
+
+index		用于设定访问的默认首页地址;
+
+root		用于指定虚拟主机的网页根目录，这个目录可以是相对路径，也可以是绝对路径;
+
+charset		用于设置网页的默认编码格式;
+
+access_log		用来指定此虚拟主机的访问日志存放路径。最后的main用于指定访问日志的输出格式;
+
+error_log		用来指定此虚拟主机的错误日志存放路径;
+
+
+4. url地址匹配设置
+
+	url地址匹配是nginx配置中最灵活的部分，location支持正则表达式匹配，也支持条件判断匹配，用户可以通过location指令实现nginx对动、静态页面的过滤处理
+
+
+格式  location [ = | ~ | ~* | ^~ ] url {}
+
+location = www.xiaoxx.com : 精确匹配指定的路径，不包括子路径。只对当前资源生效;
+
+location ^~ url{} : 不使用正则表达式
+
+location ~ url{}, location ~* url{} : 模式匹配url,此处的url可使用正则表达式，~区分字符大小写,~*不区分字符大小写。
+
+location www.xiaoxx.com	: 对当前路径及子路径下的所有对象都生效;
+
+优先级从 location = url 开始依次向下
+
+5. nginx 反向代理
+
+
+
+正向代理是代理客户端，为客户端收发请求，使真实客户端对服务器不可见，而反向代理是代理服务器端，为服务器收发请求，使真实服务器对客户端不可见。
+
+是否指定目标服务器
+客户端是否要做设置
+
+正向代理用途是为了在防火墙内的局域网提供访问internet的途径。另外还可以使用缓冲特性减少网络使用率
+反向代理：反向代理的用途是将防火墙后面的服务器提供给internet用户访问。同时还可以完成诸如负载均衡等功能
+
+
+6. 配置http反向代理 --- proxy_pass
+
+proxy_pass url   这个指令设置被代理服务器的地址和被映射的url,地址可以使用主机名或者IP加端口号的形式。
+
+proxy_pass	http://localhost:8080/url/;
+
+proxy_set_header	header value
+
+默认值: Host and Connection
+
+
+7.nginx 负载均衡
+
+upstream 是nginx的http upstream模块，这个模块通过一个简单的调度算法来实现客户端IP到后端服务器的负载均衡。
+
+upstream www.xiaoxx.com{
+	ip_hash;
+	server 192.168.50.45;
+	server 192.168.50.46;
+	server 192.168.50.47 down;
+
+}
+
+upstream 支持的负载均衡算法
+
+	轮询（默认）	每个请求按照时间顺序逐一分配到不同的后端服务器。
+	ip_hash			每个请求按照访问IP的hash结果分配，这样同一个IP的访客固定访问同一个后端服务器，有效解决了动态网页存在的session共享问题。
+	fair			可以依据页面大小和加载时间长短智能地进行负载均衡，也就是根据后端服务器的响应时间来分配请求，响应时间短的优先分配。
+	url_hash		可以按照访问url的hash结果来分配请求，每个url定向到同一个都断服务器，可以进一步提高后端缓存服务器的效率。
+
+
+
+
+linux 500本地服务器同时存在nginx和apache的访问流程
+
+linux + nginx + apache + php
+
+client => news.500boss.com => nginx(80) => proxy(代理8080) => apache(8080 自带解析php器) => root(/home/www/html/news.500.com/html)
+
+
+linux + nginx + nodejs
+
+client => live.m.500.com => nginx(80) => proxy(代理8888) => nodejs(8888)
+
+
+linux 500线上
+
+linux +　nginx + php-fpm(php-fastcgi) + php 
+
+php-fpm: php-fpm只是一个php-fastcgi的管理器，为php提供管理服务。
+
+php-fastcgi: 只是一个cgi程序,只会解析php请求，并且返回结果，不会管理(因此才出现的php-fpm)
+
+
+
+
+
+apache 配置 SSI
+
+SSI 也就是允许静态文件包含其他.html .php .shtml 文件
+
+在apache httpd.conf 里面设置
+
+AddType text/css .css
+AddType text/html .shtml .html .htm .js .php
+#AddHandler server-parsed .shtml .html .css
+AddOutputFilter INCLUDES .shtml .html .htm  .text .js
+#AddHandler php5-script .js .php .css .shtml
+
+
+Options Indexes FollowSymLinks INCLUDES IncludesNOEXEC
+
+
+nginx 配置预先跨域
+
+location /js/ {
+    concat on;
+    concat_max_files 20;
+    if ($http_origin ~* ((http|https)?://.*\.500.*\.com$)) {
+        add_header 'Access-Control-Allow-Origin' $http_origin;
+        add_header 'Access-Control-Allow-Credentials' 'true';
+    }
+}

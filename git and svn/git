@@ -1,0 +1,124 @@
+
+
+1. git 查看当前git仓库地址
+
+$ git remote -v
+origin  git@10.0.1.115:zixun.git (fetch)
+origin  git@10.0.1.115:zixun.git (push)
+
+
+2. 迁git库到本地目录
+
+              仓库地址                  本地目录
+git clone git@10.0.1.15:huodong.500.com.git huodong.500.com
+
+
+3. linux搭建git服务器
+
+	1. 安装git yun install git
+
+	2. 创建git用户组 useradd git
+
+	3. 在/home/git/ 下创建文件夹 test.git
+
+	4. 改变文件夹的用户所属 chown -R git:git test.git
+
+	5. git init --bare test.git   这样就创建了一个git服务
+
+	6. 在window上迁库git clone git@:10.0.1.15:test.git
+
+		因为git可以采用ssh协议
+		git@:10.0.1.15:test.git ------>  (linux用户)@:(服务IP地址):(linux用户路径下的文件夹)
+
+		如果是www用户,git仓库地址可以为:
+		www@10.0.1.15:git/test.git
+
+	7. 在window迁库之后添加文件index.html -> git add index.html -> git commit -m"test" -> git push
+	在另一个仓库下git fetch origin  -> git merge origin/master 
+
+
+4. jenkins
+	
+	Jenkins 是一个可扩展的持续集成引擎。
+
+	可用于持续、自动地构建/测试软件项目。监控一些定时执行的任务。
+
+	tmd 就是一个发代码的工具
+
+	本地jenkins 结合 git仓库 --- http://10.0.1.115:8001/jenkins/
+
+
+	首页创建一个新的项目后。需要添加配置
+
+		源码管理 添加git或者svn仓库地址，如果仓库地址跟jenkins是在同台服务器上的，就不需要添加Credentials
+
+		如何添加Credentials
+
+			1. 首页左下侧有个Credentials
+
+
+npm install
+npm run build:prod
+tar --exclude node_modules --exclude embdenadmin.prod.tar.gz -zcf embdenadmin.prod.tar.gz *
+sshpass -p 123456 scp embdenadmin.prod.tar.gz  nodejs@10.0.0.58:~/tmp/embdenadmin.prod.tar.gz
+sshpass -p 123456 ssh nodejs@10.0.0.58 'cd ~/embdenadmin.500.com && tar -zxf ~/tmp/embdenadmin.prod.tar.gz -C .'
+sshpass -p 123456 ssh nodejs@10.0.0.58 'cd ~/embdenadmin.500.com && svn delete dist/  --force  && svn ci -m "delete before version"'
+sshpass -p 123456 ssh nodejs@10.0.0.58 'cd ~/embdenadmin.500.com && svn add * --force && svn ci -m "brand app admin "'
+
+
+
+npm install 
+npm run build
+tar --exclude src --exclude node_modules --exclude yarn.lock --exclude lottery.master.tar.gz -zcf lottery.master.tar.gz *
+scp lottery.master.tar.gz nodejs@10.0.1.115:~/tmp/lottery.master.tar.gz
+ssh nodejs@10.0.1.115 'cd ~/lottery && npm run clean-before && tar -zxf ~/tmp/lottery.master.tar.gz -C .'
+ssh nodejs@10.0.1.115 'cd ~/lottery && svn add * --force && svn ci -m "brand new lottery vue reconstruct" *'
+
+
+npm install
+npm run build
+tar --exclude node_modules --exclude src --exclude lottery_dev.tar.bz2 -jcf lottery_dev.tar.bz2 *
+scp lottery_dev.tar.bz2 nodejs@10.0.1.115:~/tmp/lottery_dev.tar.bz2
+ssh nodejs@10.0.1.115 'rm -rf ~/lottery_dev/dist/*'
+ssh nodejs@10.0.1.115 'cd ~/lottery_dev &&  pm2 startOrRestart lottery.config.js '
+
+
+
+
+npm install
+npm run build
+tar --exclude node_modules --exclude src --exclude lottery_dev.tar.bz2 -jcf lottery_dev.tar.bz2 *
+scp lottery_dev.tar.bz2 nodejs@10.0.1.115:~/tmp/lottery_dev.tar.bz2
+ssh nodejs@10.0.1.115 'rm -rf ~/lottery_dev/dist/*'
+ssh nodejs@10.0.1.115 'cd ~/lottery_dev &&  pm2 startOrRestart lottery.config.js '
+
+
+
+npm install 
+npm run build
+tar --exclude src --exclude node_modules --exclude yarn.lock --exclude lottery.master.tar.gz -zcf lottery.master.tar.gz *
+scp lottery.master.tar.gz nodejs@10.0.1.115:~/tmp/lottery.master.tar.gz
+ssh nodejs@10.0.1.115 'cd ~/lottery && npm run clean-before && tar -zxf ~/tmp/lottery.master.tar.gz -C .'
+ssh nodejs@10.0.1.115 'cd ~/lottery && svn add * --force && svn ci -m "brand new lottery vue reconstruct" *'
+
+
+
+
+
+npm install
+npm run build
+tar --exclude node_modules --exclude src --exclude openplatform.500.com.tar.gz -zcf openplatform.500.com.tar.gz *
+sshpass -p 123456 scp openplatform.500.com.tar.gz nodejs@10.0.1.15:~/tmp/openplatform.500.com.tar.gz
+sshpass -p 123456 ssh nodejs@10.0.1.15 'cd ~/openplatform.500.com && npm run clean && tar -zxf ~/tmp/openplatform.500.com.tar.gz -C .'
+sshpass -p 123456 ssh nodejs@10.0.1.15 'cd ~/openplatform.500.com && npm run start'
+
+
+
+
+
+
+npm install
+npm run build
+tar --exclude node_modules --exclude src --exclude openplatform.500.com.tar.gz -zcf openplatform.500.com.tar.gz *
+sshpass -p 123456 scp openplatform.500.com.tar.gz nodejs@10.0.1.15:~/tmp/openplatform.500.com.tar.gz
+sshpass -p 123456 ssh nodejs@10.0.1.15 'cd ~/openplatform.500.com && npm run clean && tar -zxf ~/tmp/openplatform.500.com.tar.gz -C .'

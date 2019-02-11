@@ -1,0 +1,27 @@
+
+
+linux安装nodejs
+
+
+wget https://nodejs.org/dist/v6.9.2/node-v6.9.2-linux-x64.tar.xz  --下载
+
+    xz -d node-v6.9.2-linux-x64.tar.xz --解压为tar类型
+
+    tar -xvf node-v6.9.2-linux-x64.tar  --解压
+
+解压完成后pwd查看当前下载目录，并执行以下命令设置全局：
+
+    ln -sf /usr/local/n/versions/node/10.8.0/bin/node /usr/local/bin/node
+
+    ln -sf /usr/local/n/versions/node/10.8.0/bin/npm /usr/local/bin/npm
+
+修改环境变量
+
+vim etc/profile
+
+#set for nodejs
+export NODE_HOME=/usr/local/n/versions/node/10.8.0    ---修改当前路径为新安装的路径
+export PATH=$NODE_HOME/bin:$PATH
+export PATH USER LOGNAME MAIL HOSTNAME HISTSIZE HISTCONTROL
+
+source　/etc/profile   ---生效 

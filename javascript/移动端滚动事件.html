@@ -1,0 +1,123 @@
+
+
+移动端滚动事件
+
+与window对象相关的4个属性: scrollX scrollY scrollTo scroll
+
+与element对象下: scrollWidth scrollHeight scrollLeft scrollTop
+
+				clientHeight clientWidth clientLeft clientTop
+
+				offsetHeight offsetWidth offsetTop  offsetLeft
+
+clientHeight: 元素可视区域的高度  clientHieght = height + padding
+                                                                           inline的元素这个属性一直是0
+offsetHeight: 包括padding、border、水平滚动条
+
+offsetTop: 当前元素顶部距离(最近父元素)顶部的距离,和有没有滚动条没有关系。单位px，只读元素。 
+
+scrollHeight: 代表包括当前不可见部分的元素的高度 
+
+滚动条的出现: 父元素的height + overflow:scroll < 子元素的height
+
+
+滚动事件: 父元素的height + overflow:scroll < 子元素的height
+
+
+/*  onscroll   */
+
+window.onscroll
+
+document.onscroll
+
+document.documentElement.onscroll
+
+documemt.body.onscroll
+
+上面四个目前感觉都会触发，只是浏览器兼容性不同
+
+document.querySelector('.dom').onscroll
+
+
+/*  scrollTop   */
+ 
+一个元素(必须是dom节点，window和document都是无)的 scrollTop 值是这个元素的顶部到它的最顶部可见内容（的顶部）的距离的度量
+
+window.scrollTop  = document.scrollTop = undefined;
+
+window.scrollY = document.documentElement.scrollTop (标准模式下)
+
+window.scrollY = document.body.scrollTop
+
+document.body.scrollTop 在html元素设置了overflow:scroll之后才会有值
+
+document.querySelector('.dom').scrollTop存在的的条件是.dom的height<.dom子元素的height跟设置了overflow:scroll
+
+
+/*   scrollTo    */ 
+window.scrollTo(x,y)  也要是window存在滚动事件的情况下
+
+document.querySelector('.dom').scrollTo(x,y);  
+
+scrollTo 存在兼容性
+if(document.querySelector('.dom').scrollTo){
+	document.querySelector('.dom').scrollTo(x,y);
+}else{
+	document.querySelector('.dom').scrollTop = y;
+}
+
+
+/*           scroll 的一个bug      */
+
+html,body{
+	height: 100%;
+	overflow: auto;
+	overflow-x: hidden;
+}
+
+window.onscroll  or  document.body.onscroll 都兼听不到。因为浏览器存在了两个滚动条
+
+<script>
+	var el = docuemt.getElementById('id');
+	console.log(el.scrollTop);   获取这个元素的scrollTop
+
+	el.scrollTop = 0;  设置scrollTop
+</script>
+
+
+
+/* window scroll 下拉刷新*/
+
+判定元素是否滚动到底
+element.scrollHeight - element.scrollTop === element.clientHeight
+
+<script type="text/javascript">
+	
+	window.onscroll = function(){
+		var bHeight = document.body.clientHeight,
+			wHeight = window.innerHeight,
+			scrollTop = documemt.body.scrollTop || documemt.documentElement.scrollTop,
+			isScrollBottom = bHeight - (wHeight + scrollTop) < 30 ? true : false;
+
+		if(isScrollBottom){
+			getlist;
+		}
+
+	}
+</script>
+
+
+/* window 吸顶效果 */
+
+<script type="text/javascript">
+	window.onscroll = function(){
+		var headerHeight = document.querySelector('.header').clientHeight,
+			scrollTop = documemt.body.scrollTop || documemt.documentElement.scrollTop;
+		if(scrollTop > headerHeight){
+			documemt.querySelector('ul').classList.add('fixed');
+		}else{
+			documemt.querySelector('ul').classList.remove('fixed');
+		}
+	}
+</script>
+

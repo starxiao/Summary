@@ -1,0 +1,21 @@
+
+
+命名视图
+
+同级的路由需要展示多个视图，
+
+
+<router-view class="one"></router-view>
+<router-view class="two" name="two"></router-view>
+<router-view class="three" name="three"></router-view>
+
+routes:[
+	{
+		path: '/',
+		components:{
+			default: One,
+			two: Two,
+			three: Three
+		}
+	}
+]
