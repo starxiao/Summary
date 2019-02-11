@@ -1,0 +1,82 @@
+
+es6 是一个泛指，涵盖es2015,es2016,es2017
+
+
+
+let / var / const 
+
+
+
+var 声明的变量存在提升
+
+1. js代码执行过程，首先在为fun函数创建一个代码{}空间。
+
+2. 检测到var 关键字，将var x 声明并初始化为undefined。
+
+3. 而后将x赋值为123。
+<script type="text/javascript">	
+	function fun(){
+		console.log(x);        -- undefined
+		var x = 123;
+		console.log(x);        -- 123
+
+
+		console.log(y);            -- y is not defined
+		y = 234;
+		console.log(y);            -- 234
+		console.log(window.y);     -- 234
+	}
+
+	因为没有使用var关键字声明变量，所以不存在变量提升，所以会保y is not defined
+
+	在赋值时，会为y声明为全局变量，所以 window.y 存在
+</script>
+
+let 声明的变量不存在变量提升，且不允许在相同作用域({})重复声明
+
+1. js代码执行过程，首先在为fun函数创建一个代码{}空间。
+
+2. 检测到let关键字, let会声明一个变量a 但不会初始化该值 (与var 不同的是let 不会初始化该值)；
+
+(在a没有初始化时，a将会是处于暂时性死区状态，在这里调用会直接报错，所以也就不会存在变量提升的原因)
+
+3. 执行let a; 会初始化该值为undefined;
+
+4. 执行a=123; 将a赋值123
+
+<script type="text/javascript">
+	function foo(){
+
+		console.log(a);
+		let a;
+		a=123;
+		console.log(a);
+	}
+</script>
+
+
+块级作用域
+
+<script type="text/javascript">
+	var temp = 123;
+
+	(function(){
+		console.log(temp);    存在变量提升输出undefined;
+		
+		var temp = 'hello world';
+		console.log(temp);
+	})();
+</script>
+
+const 命令
+
+const 与let不同的是 const声明的变量是一个只读的，在声明的同时并初始化
+
+const 声明的复杂类型的变量实际保存的是一个地址，这个地址不可变，但可以为该变量添加值
+
+
+顶层对象 与全局变量是等价的。
+
+在浏览器环境下 window
+
+在node环境下  global

@@ -1,0 +1,66 @@
+
+
+数组和对象的解构赋值
+
+let [a,b,c] = [1,2,3];
+
+let [x=1,y=x] = [2];   可以使用变量，但变量必须要声明 
+
+var [e,d] = [4,5];
+
+console.log(a);
+
+console.log(e);
+
+let [x=1] = [];  x=1默认值   默认值生效的条件是数组值 === undefined (全等)
+
+跟使用let、var声明的变量是相同的。
+
+
+let {foo,bar} = {bar:'hello',foo:'xiaoxx'};  
+
+等同于 let {foo:foo,bar:bar} = {bar:'hello',foo:'xiaoxx'};
+
+对象的解构赋值是无序的，按照属性来取值
+
+属性名不同与变量名时
+
+let {foo:bar} = {foo:123};
+
+bar => 123  变量
+
+foo => foo is not defined;
+
+let {foo=123} = {};  默认值生效的条件是对象的属性值 === undefined (全等)
+
+
+
+字符串的解构赋值
+
+因为字符串被转换成类数组对象了 let [a,b,c] = 'xxx';
+
+
+用途:
+
+1. 交换值
+
+2. 从函数取得返回数组或者对象的值
+
+3. 提取JSON数据
+
+4.遍历Map结构
+
+5. 加载模块指定的方法
+
+
+
+
+
+
+
+
+
+
+
+
+

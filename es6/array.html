@@ -1,0 +1,26 @@
+
+
+Array 
+
+1. 扩展运算符   ...  将一个数组转为用逗号分隔的参数序列
+
+<script type="text/javascript">
+	console.log(...[1,23,23,324,32]);	
+</script>
+
+	可以代替数组的apply方法
+<script type="text/javascript">
+	function f(x,y,z){}
+	f.aplly(null,[1,23,4]);
+
+	es6
+	f(...[1,23,4]);
+
+	合并数组
+
+	let arr1 = [1,23,3],
+		arr2 = [2,3];
+
+	let arr3 = [...arr1,...arr2]
+</script>
+

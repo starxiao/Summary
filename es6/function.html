@@ -1,0 +1,27 @@
+
+function
+
+
+js 条件判断为false的几种情况： 0,-0,null,undefined,'',false,NaN
+
+函数的默认值
+
+通常写法
+
+function foo(x,y){
+	y = y || 'hello';
+}
+
+foo(x,''); foo(x,0);  这样y也会传入默认值
+
+function foo(x,y){
+	
+	y = typeof y === 'undefined' ? 'hello' : y;
+	console.log(y);
+}
+
+es6 写法
+function foo(x,y='hello'){
+	
+}
+
