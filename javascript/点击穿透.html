@@ -8,7 +8,65 @@ touch事件按钮点击穿透
 
 	一次点击行为，事件的触发过程: mousedown/mouseup/click
 
-	touch网页不存在鼠标的事件，只存在touchstart/touchmove/touchend。touch并不存在tap事件
+	touch网页不存在鼠标的事件，只存在touchstart/touchmove/touchend。touch并不存在(tap事件),zpeto的tap事件是模拟出来的
 
-	
+	在手机上响应click事件会有300ms的延迟，原因就是在手机上触发touchEnd的后悔等待约300ms去判断用户是否有双击的行为。如果没有double tap
 
+	行为就触发click事件。而zepto的tap事件是在touchEnd响应250ms无操作后触发的
+
+2. 代码
+
+<div class="container">
+	<div class="header">点击显示弹窗</div>
+	<ul>
+		<li>body1</li>
+		<li>body2</li>
+		<li>body3</li>
+		<li>body4</li>
+		<li>body5</li>
+	</ul>
+</div>
+<div class="toast hide">
+	<div class="layer"></div>
+	<div class="ul">
+		<div class="btn">关闭</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="http://cdn.bootcss.com/zepto/1.0rc1/zepto.min.js"></script>
+<script type="text/javascript">
+	$('.header').click(function(){
+		$('.toast').removeClass('hide');
+	})
+
+	$('.toast .btn').on('tap',function(){
+		console.log('tap');
+		$('.toast').addClass('hide');
+	});
+
+	$('.toast .btn').on('click',function(){
+		console.log('click');
+		$('.toast').addClass('hide');
+	});
+
+	$('.container ul li').on('click',function(item){
+		console.log(item);
+		console.log('bottom click event');
+	})
+</script>
+
+页面点击按钮触发弹窗，为弹窗下的底层元素绑定click事件，而关闭弹窗绑定tap事件。
+
+点击关闭按钮，touchend首先触发tap，弹窗和layer都隐藏咯。touchend后等待300ms后发现不其他行为咯，则会继续触发click,
+弹窗已经消失，当前的click事件的target就在底层元素咯，就触发底层元素绑定的click事件。整个事件触发过程
+touchend -> tap -> click
+
+
+3. 解决办法
+
+	(1) 因为弹窗点击关闭click事件在300ms后才会触发，但在之前弹窗已经消失了，所以才会触发点击穿透到下层元素。
+		所以解决方法就是在300ms之后弹窗才消失，给弹窗添加隐藏动画。
+
+	(2) fastClick
+
+	(3) vue-tap

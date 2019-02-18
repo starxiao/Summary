@@ -84,36 +84,56 @@
 <div class="container">
 	<div class="header">点击显示弹窗</div>
 	<ul>
-			<li>body1</li>
-			<li>body2</li>
-			<li>body3</li>
-			<li>body4</li>
-			<li>body5</li>
-		</ul>
+		<li>body1</li>
+		<li>body2</li>
+		<li>body3</li>
+		<li>body4</li>
+		<li>body5</li>
+	</ul>
 </div>
-	<div class="toast hide">
-		<div class="layer"></div>
-		<div class="ul">
-			<div class="btn">关闭</div>
-		</div>
+<div class="toast hide">
+	<div class="layer"></div>
+	<div class="ul">
+		<div class="btn">关闭</div>
 	</div>
-<script src="https://cdn.bootcss.com/zepto/1.2.0/zepto.js"></script>
+</div>
+<script type="text/javascript" src="http://cdn.bootcss.com/zepto/1.0rc1/zepto.min.js"></script>
 <script type="text/javascript">
 
-	document.querySelector('.header').onclick = function(){
-		document.querySelector('.toast').classList = 'toast';
-	}
+	// document.querySelector('.header').onclick = function(){
+	// 	document.querySelector('.toast').classList = 'toast';
+	// }
 
-	$('.toast .btn').tap(function(){
-		document.querySelector('.toast').classList = 'toast hide';
-	}
-
-	document.querySelectorAll('.container ul li').forEach(function(item){
-		item.onclick = function(){
-			console.log(item);
-			alert(item.innerHTML);
-		}
+	$('.header').click(function(){
+		$('.toast').removeClass('hide');
 	})
+
+	$('.toast .btn').on('tap',function(e){
+		console.log('tap');
+		window.setTimeout(function(){
+			$('.toast').addClass('hide');
+		},10);
+		console.log(new Date().getTime())
+	});
+
+	// $('.toast .btn').on('click',function(){
+	// 	console.log('click');
+	// 	$('.toast').addClass('hide');
+	// 	console.log(new Date().getTime())
+	// });
+
+	$('.container ul li').on('click',function(item){
+		console.log(item);
+		console.log('bottom click event');
+		console.log(new Date().getTime())
+
+	})
+	// document.querySelectorAll('.container ul li').forEach(function(item){
+	// 	item.onclick = function(){
+	// 		console.log(item);
+	// 		alert(item.innerHTML);
+	// 	}
+	// })
 
 
 
