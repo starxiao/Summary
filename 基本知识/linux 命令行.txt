@@ -1,0 +1,24 @@
+借助securtCRT,可以使用sz命令下载文件到本地，使用rz上传文件到服务器
+
+
+sz: 下载文件到本地，只能下载文件,要下载文件夹，要先压缩
+
+rz: 上传文件到服务器，上传文件夹，要先压缩
+
+
+压缩一个文件夹： sudo tar czvf filename.tar.gz dir1   一定要sudo
+
+解压一个文件： sudo tar xzvf filename.t  可以不用sudo
+
+
+
+./ 当前目录
+../ 父级目录
+/ 根目录
+
+
+useradd xiaoxx 添加新用户
+
+passwd xiaoxx 设置登录密码
+
+4 -read 2-write 1 - excute  7 --rwx

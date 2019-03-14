@@ -1,0 +1,29 @@
+CTRL+Z        倒退(代码后退)
+
+CTRL+SHIFT+Z  向前
+
+CTRL+ALT+L  格式化代码
+
+
+CIRL+B   找变量的来源，跳到变量申明处
+
+
+CTRL+J   自动代码提示，自动补全
+
+CTRL+Q   显示代码注释
+
+
+Ctrl + /，单行注释
+
+
+
+Ctrl + Shift + /，多行注释
+
+
+Shift + Enter   :跳到下一行
+
+
+ctrl +R     文件内代码替换
+
+
+http://my.oschina.net/u/2478265/blog/513324
