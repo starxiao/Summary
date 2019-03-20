@@ -2,7 +2,7 @@
 
 nginx 讲解
 
-
+nginx 重启 cd /usr/nginx/sbin/  ./nginx -s reload
 
 1. 线程、进程、以及并发连接数
 
@@ -17,7 +17,7 @@ nginx 讲解
 
 2.nginx 配置文件(nginx.conf);
 
-nginx 配置文件主要分为4部分: main server upstream location 
+nginx 配置文件主要分为4部分: main server upstream location
 
 main  ----      main部分设置的指令会影响到其他所有设置
 
@@ -138,7 +138,7 @@ client => live.m.500.com => nginx(80) => proxy(代理8888) => nodejs(8888)
 
 linux 500线上
 
-linux +　nginx + php-fpm(php-fastcgi) + php 
+linux +　nginx + php-fpm(php-fastcgi) + php
 
 php-fpm: php-fpm只是一个php-fastcgi的管理器，为php提供管理服务。
 

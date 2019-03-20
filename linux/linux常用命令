@@ -1,6 +1,6 @@
 
 
-linux 常用命令
+linux 常用命令     http://man.linuxde.net/
 
 查看网络进程
 
@@ -19,6 +19,29 @@ linux 常用命令
 删除文件夹无需要提示(慎用慎用)      rm -rf huodong.500.com
 
 修改用户密码					passwd xiaoxx
+
+
+
+
+
+
+linux  添加定时任务   --- crontab
+
+
+1. 添加shell脚本或者python脚本
+
+2. 编辑计时器  crontab -e   --- 编辑该用户的计时器设置
+
+3. 切换root重启crond  service crond restart
+
+
+
+
+
+
+
+
+
 
 
 

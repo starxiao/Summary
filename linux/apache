@@ -1,0 +1,76 @@
+
+
+apache 设置
+
+apache 重启  service httpd restart
+
+1. apache配置文件:httpd.conf
+
+    1.ServerRoot "/etc/httpd/" #你的apache软件安装的位置，其他指定的目录如果没有指定绝对路径，则目录是相对于该目录。
+
+    2.Listen 80 #服务器监听的端口号
+
+    3.ServerName www.xiaoxx.com:80 #主站点名称
+
+    4.ServerAdmin xiao774548488@qq.com #管理员的邮件地址
+
+    5.DocumentRoot "/home/www/html" #主站点的网页存储的位置
+
+    6.对主站点的目录进行访问控制:
+
+    <directory "/home/www/html">
+
+    Options FollowSymLinks AllowOverride None Order allow,deny Allow from all
+
+    </directory>
+    options 配置在特定的目录使用哪些特性，常用的值和基本含义如下:
+
+    ExecCGI:在该目录下允许执行CGI脚本.
+
+    FollowSymLinks:在该目录下以允许文件系统使用符号连接
+
+    Indexes:当用户访问该目录时，如果用户找不到DirectoryIndex指定的为主页文件(index.html)则返回该目录下的文件列表给用户。
+
+    AllowOverride: 允许存在于.htaccess文件中的指令类型，None 不搜索该目录下的.htaccess文件
+
+    Order：控制在访问时Allow和Deny两个访问规则哪个优先
+
+    Allow：允许访问的主机列表(可用域名和IP)
+
+    Deny：拒绝访问的主机列表。
+
+    DirectoryIndex index.html index.htm index.php 主页文件的设置
+
+    KeepAlive On #开启持久性连接功能，即当客户端没有连接到服务器，下载完数据后仍保持连接状态
+
+    MaxKeepAliveRequests 100 #一次连接服务的最多请求次数
+
+    KeepAliveTimeOut 30 #持续连接多长时间，该连接没有再请求数据，则断开该连接
+
+2. 个人主页的设置
+
+    <IfModule mod_userdir.c>
+    # UserDir is disabled by default since it can confirm the presence
+    # of a username on the system (depending on home directory
+    # permissions).
+    #
+    UserDir disabled
+
+    #
+    # To enable requests to /~user/ to serve the user's public_html
+    # directory, remove the "UserDir disabled" line above, and uncomment
+    # the following line instead:
+    #
+    #UserDir public_html
+    </IfModule>
+
+3. 访问网页中文乱码
+
+    1. apache 默认设置为utf8编码 在httpd.conf 搜索 AddDefaultCharset UTF-8
+
+    #AddDefaultCharset UTF-8
+    php_value default_charset None
+
+
+
+
