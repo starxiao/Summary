@@ -1,0 +1,61 @@
+
+js 上传图片
+
+// php 取到图片信息
+$imgpath = $_FILES["image"]['tmp_name'];
+$type = $_FILES["image"]['type'];
+
+
+1. h5 formdata上传(新技术，局部更新，但是在PC上存在兼容性问题)
+<input type="file" name="imgupload" accept="imaeg/png,image/jpg,image/jpeg,image/bmp" v-bind:change="uploadImg">
+
+<script type="text/javascript">
+
+	//使用axios插件
+	uploadImg: function (e) {
+		var data = new FormData(),
+			files = e.tartget.files,
+			config = {headers:{'content-type':'multipart/form-data'}};
+
+		data.append('image',files[0]);
+
+		axios.post('/img/upload.php',data,config).then(function(res){
+			console.log(res);
+		})
+
+	}
+</script>
+
+2. form表单提交（兼容性好，但页面会刷新or需要跳转地址。(加iframe解决)）
+	1.上传文件要指定enctype="multipart/form-data" action=上传文件地址
+	<form method="post" action="/img/upload.php" name="form" id="upload"
+		enctype="multipart/form-data">
+		<input type="file" name="image" accept="image/png,image/jpeg,image/jpg,image/bmp">
+		<button type="submit">提交</button>
+	</form>
+
+	2.添加iframe
+	//php返回jsonp的数据
+	echo '<script>window.parent.'.$_GET['callback'].'('.json_encode(array('data'=>array('link'=>$result['link']))).')</script>';exit();
+
+	target: 表示服务返回数据处理的地址
+	<form method="post" action="/img/upload.php?callback=callbackUploadImg" name="form" id="upload"
+		enctype="multipart/form-data" target="uploadImg">
+		<iframe name="uploadImg" style="display: none"></iframe>
+		<input type="file" name="image" accept="image/png,image/jpeg,image/jpg,image/bmp">
+		<button type="submit">提交</button>
+	</form>
+	添加全局方法jsonp 处理方法
+	<script type="text/javascript">
+		function callbackUploadImg(data){
+			console.log(data);
+		}
+	</script>
+
+
+
+
+
+
+
+
