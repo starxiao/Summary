@@ -36,8 +36,13 @@ git clone git@10.0.1.15:huodong.500.com.git huodong.500.com
 	7. 在window迁库之后添加文件index.html -> git add index.html -> git commit -m"test" -> git push
 	在另一个仓库下git fetch origin  -> git merge origin/master 
 
+4. git command
 
-4. jenkins
+	1. git bash 支持中文 --> git config --global core.quotepath false
+
+	2. git diff 对比文件修改
+
+5. jenkins
 	
 	Jenkins 是一个可扩展的持续集成引擎。
 
