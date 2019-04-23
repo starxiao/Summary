@@ -11,51 +11,177 @@ webpack 总结
 			"dev": "webpack",
 			"build": "webpack --config webpack.prod.config.js"    ---编译不同点文件名
 		}
-	2. 基本点webpack.config.js
 
-	const path = require('path');
+	2. 基本webpack.config.js
 
-	module.exports = {
-		mode: 'production',   'production' | 'development' | 'none'   --配置是开发环境还是生产环境
+		const path = require('path');
 
-		entry: './src/index.js'  string | object | array   打包的入口
+		module.exports = {
+			mode: 'production',   'production' | 'development' | 'none'   --配置是开发环境还是生产环境
 
-		output:{
+			entry: './src/index.js'  string | object | array   打包的入口
 
+			output:{
+
+			}
 		}
-	}
 
-		1. entry:  app的入口 每个 HTML 页面都有一个入口起点。单页应用(SPA)：一个入口起点，多页应用(MPA)：多个入口起点。
+	1. entry:  app的入口 每个 HTML 页面都有一个入口起点。单页应用(SPA)：一个入口起点，多页应用(MPA)：多个入口起点。
 
-		spa -- entry: './src/index.js' mpa  -- entry:{home:'./src/home.js',about:'./src/about.js'}
+		spa -- entry: './src/index.js' mpa  -- entry:{home:'./src/home.js',about:'./src/about.js'}  -- 入口文件路径必须是绝对路径
 
-		2. output:  app的输出选项
+	2. output:  app的输出选项
 
-			path: path.resolve(__dirname,'build'), string 所有输出文件的目标路径，必须是绝对路径。
+		path: path.resolve(__dirname,'build'), string 所有输出文件的目标路径，必须是绝对路径。
 
-			filename: 'build.js' 每个输出bundle的名字，这些文件将会写入到output.path指定点目录下。
-					  '[name].[chunkhash].js' 如果是多个入口文件(entry)、代码拆分或用过plugin创建的多个bundle点
+		filename: 'build.js' 每个输出bundle的名字，这些文件将会写入到output.path指定点目录下。
+				  '[name].[chunkhash].js' 如果是多个入口文件(entry)、代码拆分或用过plugin创建的多个bundle点
 
-			publicPath: 对于按需加载或加载外部资源来说相对于path。webpack-dev-server 也会默认从 publicPath 为基准，使用它来决定在哪个目录下启用服务
+		publicPath: 对于按需加载或加载外部资源来说相对于path。webpack-dev-server 也会默认从 publicPath 为基准，使用它来决定在哪个目录下启用服务
 
-		3. module:
+	3. module:
 
-				1. noParse: /node_module/ 忽略webpack解析的文件
+			1. noParse: /lib/ 忽略webpack解析的文件(node_modules里面用到的模块)
 
-				2. rules: 创建模块的时候，匹配请求的规则数组。
+			2. rules: 创建模块的时候，匹配请求的规则数组。
 
-					module:{
-						rules:[
-							{
-								test: '/.js$/',
-								use:{
-									loader: 'babel-loader',
-									options:{
-										presets:['@babel-preset-env','@vue/babel-preset-app']
-									}
+				module:{
+					rules:[
+						{
+							test: '/.js$/',
+							use:{
+								loader: 'babel-loader',
+								options:{
+									presets:['@babel-preset-env','@vue/babel-preset-app']
 								}
 							}
-						]
+						}
+					]
+				}
+			3. rule: 具体的某一条规则,包括 条件、结果、嵌套规则
+
+				条件包含: 1.resource (请求文件的绝对路径) 2.issuer (请求者的文件绝对路径)  example: 在app.js import style.css resource-> app.js issuer -> style.css.
+
+				结果: 应用的loader -> 应用resource匹配的loader数组
+
+				条件： string | reg | function | array | object
+
+				{
+					test： 匹配特定条件，一般是正则表达式，
+					include: 匹配特定条件
+					exclude: 排除特定条件
+
+					use: [
+						{
+							loader: 'vue-loader',   -> 应用的loader
+							options:{               -> loader的更多选项
+
+							}
+						}
+					]
+				}
+
+	4. resolve -> 当引用的模块是相对路径的时候需要进行解析
+
+		module.exports = {
+			resolve:{
+				alias:   import 或者 require 路径的别名
+
+				alias:{
+					'~': path.resolve(__dirname, '../src'), 
+            		'~static': path.resolve(__dirname, '../static'),
+             		'~components': path.resolve(__dirname, '../src/components')
+             		'assets': path.resolve(__dirname, '../assets'),        (重点说明) vue css中图片地址 vue css url 地址要使用~标识绝对地址
+             		example --> background: url(~assets/images/animate/bg-animate.jpg) no-repeat;  ~assets的别名是 assets 并不是 ~assets 因为~是vue css的标识绝对地址
+             		'~assets': path.resolve(__dirname,'../assets') 
+				}
+			}
+		}
+
+	5. optimization  -> 优化
+
+		module.exports = {
+			minimizer: [new UglifyJSPlugin()]    -- 使用uglifyjs-webpack-plugin压缩文件
+		}
+
+	6. devServer   --> 本地服务器
+
+		module.exports = {
+			devServer：{
+				headers:{},
+		        contentBase: path.resolve(__dirname,'../dist'),
+		        compress: true,
+		        host: 'huodong.500boss.com',
+		        allowedHosts: ['huodong.500boss.com'],
+		        hot: true,
+		        port: 80,
+		        https: true,
+		        proxy:{
+		            "/api": {
+		                target:"http://10.0.1.15/~xiaoxx",
+		                // secure: false
+		            },
+		        },
+			}
+		}
+
+	7. plugin:
+
+		1.splitChunksPlugin(webpack4 才有的 webpack3->CommonsChunkPlugin)
+
+		2. 默认splitChunksPlugin config
+		module.exports = {
+
+			//webpack 默认配置
+			optimization:{
+				splitChunks:{
+					chunks: 'async',    -- 'all'/ 'async' /'initial'
+					minSize: 30000,     -- 最小文件大小，当文件大于minSize时才会匹配
+					maxSize: 0,         -- 最大文件
+					minChunks: 1,       -- 最小文件引用数，当文件被引用次数大于minChunks才会匹配
+					maxAsyncRequests: 5,  
+					maxInitialRequests: 3,   
+					automaticNameDelimiter: '~',  
+					name: true,
+					cacheGroups: {
+						vendors:{
+							test: /[\\/]node_modules[\\/]/,
+							priority: -10
+						},
+						default:{
+							minChunks: 2,
+							priority: -20,
+							reuseExistingChunk: true
+						}
 					}
+				}
+			}
+
+			optimization:{
+	        	splitChunks: {
+		            minSize: 0,     
+		            automaticNameDelimiter: '-',
+		            cacheGroups: {
+		                libs: {
+		                    test: /[\\/]node_modules[\\/]/,--打包node_modules里面的公共模块 [\\/]匹配路径/node 或者 \node 兼容win linux path
+		                    chunks: 'all', 
+		                    name: 'libs',
+		                    priority: -10,
+		                },
+		                commons:{
+		                    test: /[\\/]commons[\\/]index\.js/,
+		                    minSize: 0,   （-- 当文件小于minSize的时，不会匹配，也就不会打包 webpack默认minSize是30k，所以当公共文件小于30k的时候，也就不会打包了，所以要设置该值为)
+		                    chunks: 'all',
+		                    name: 'commons',
+		                    priority: -20
+		                }
+		            }
+		        }
+	    	},
+		}
+
+
+
+
 
 
