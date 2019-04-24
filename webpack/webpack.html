@@ -127,57 +127,115 @@ webpack 总结
 
 	7. plugin:
 
-		1.splitChunksPlugin(webpack4 才有的 webpack3->CommonsChunkPlugin)
+		1. splitChunksPlugin(webpack4 才有的 webpack3->CommonsChunkPlugin)
 
 		2. 默认splitChunksPlugin config
-		module.exports = {
+			module.exports = {
 
-			//webpack 默认配置
-			optimization:{
-				splitChunks:{
-					chunks: 'async',    -- 'all'/ 'async' /'initial'
-					minSize: 30000,     -- 最小文件大小，当文件大于minSize时才会匹配
-					maxSize: 0,         -- 最大文件
-					minChunks: 1,       -- 最小文件引用数，当文件被引用次数大于minChunks才会匹配
-					maxAsyncRequests: 5,  
-					maxInitialRequests: 3,   
-					automaticNameDelimiter: '~',  
-					name: true,
-					cacheGroups: {
-						vendors:{
-							test: /[\\/]node_modules[\\/]/,
-							priority: -10
-						},
-						default:{
-							minChunks: 2,
-							priority: -20,
-							reuseExistingChunk: true
+				//webpack 默认配置
+				optimization:{
+					splitChunks:{
+						chunks: 'async',    -- 'all'/ 'async' /'initial'
+						minSize: 30000,     -- 最小文件大小，当文件大于minSize时才会匹配
+						maxSize: 0,         -- 最大文件
+						minChunks: 1,       -- 最小文件引用数，当文件被引用次数大于minChunks才会匹配
+						maxAsyncRequests: 5,  
+						maxInitialRequests: 3,   
+						automaticNameDelimiter: '~',  
+						name: true,
+						cacheGroups: {
+							vendors:{
+								test: /[\\/]node_modules[\\/]/,
+								priority: -10
+							},
+							default:{
+								minChunks: 2,
+								priority: -20,
+								reuseExistingChunk: true
+							}
 						}
 					}
 				}
+
+				optimization:{
+		        	splitChunks: {
+			            minSize: 0,     
+			            automaticNameDelimiter: '-',
+			            cacheGroups: {
+			                libs: {
+			                    test: /[\\/]node_modules[\\/]/,--打包node_modules里面的公共模块 [\\/]匹配路径/node 或者 \node 兼容win linux path
+			                    chunks: 'all', 
+			                    name: 'libs',
+			                    priority: -10,
+			                },
+			                commons:{
+			                    test: /[\\/]commons[\\/]index\.js/,
+			                    minSize: 0,   （-- 当文件小于minSize的时，不会匹配，也就不会打包 webpack默认minSize是30k，所以当公共文件小于30k的时候，也就不会打包了，所以要设置该值为)
+			                    chunks: 'all',
+			                    name: 'commons',
+			                    priority: -20
+			                }
+			            }
+			        }
+		    	},
 			}
 
-			optimization:{
-	        	splitChunks: {
-		            minSize: 0,     
-		            automaticNameDelimiter: '-',
-		            cacheGroups: {
-		                libs: {
-		                    test: /[\\/]node_modules[\\/]/,--打包node_modules里面的公共模块 [\\/]匹配路径/node 或者 \node 兼容win linux path
-		                    chunks: 'all', 
-		                    name: 'libs',
-		                    priority: -10,
-		                },
-		                commons:{
-		                    test: /[\\/]commons[\\/]index\.js/,
-		                    minSize: 0,   （-- 当文件小于minSize的时，不会匹配，也就不会打包 webpack默认minSize是30k，所以当公共文件小于30k的时候，也就不会打包了，所以要设置该值为)
-		                    chunks: 'all',
-		                    name: 'commons',
-		                    priority: -20
-		                }
-		            }
-		        }
-	    	},
+		3. code split 代码分离 --> 懒加载(按需加载)
+
+			vue-router
+
+			const Home = () => import('./home.vue', /* webpackChunkName: 'home' */)
+			routes:[{path:'/home',component: Home}]
+
+			vue-component
+
+			Vue.component('Home',() => import('./home.vue'));
+
+			components:{
+				'toast-component': ()=> import('./toast.vue', /* webpackPrefetch: true */)   -- prefetch
+			}
+
+			prefetch: 在父组件加载完成之后再加载子组件
+
+			preload: 在加载父组件的同时并行加载子组件
+
+
+
+		4. webpack-bundle-analyzer   --> webpack module 打包依赖关系
+
+		4. 
+
+	8. devtool  -> 配置compiler后的代码形式
+
+		生产环境是不需要的
+
+		devtool: isProd ? 'none' : 'cheap-module-eval-source-map'
+
+	9. target: 'none' || 'web'(default)
+
+	10. watch 
+
+		modules.exports = {
+			watchOptions:{
+				ignored: /node_modules/     --> 忽略监听 node_modules 文件的变化
+			}
+		}
+
+	11. externals -> 防止import的包打包到bundle。而是运行时再去从外部获取这些模块。比如外部加载jquery
+
+		modules.exports = {
+			externales:{
+				jquery: 'jQuery'
+			}
+		}
+
+	12. performace -> 如何展示性能
+
+		module.exports = {
+			performance: {
+				hints: 'warning' | 'error' | false,
+				maxAssetSize: 250000 单个资源体积
+			}
 		}
 
 
