@@ -54,3 +54,11 @@ ctrl+t	向远程版本库下载更新git pull
 
 svn版建议版本控制快捷键
 ctrl+K	提交代码
+
+
+
+window
+
+	ctrl + alt 同时选中多行
+
+	shfit + <-   鼠标向左选中

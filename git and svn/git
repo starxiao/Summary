@@ -42,6 +42,10 @@ git clone git@10.0.1.15:huodong.500.com.git huodong.500.com
 
 	2. git diff 对比文件修改
 
+	3. 直接删除.git就可以脱离原来的分支
+
+	4. git 版本1.7 后  sparse checkout 支持clone某个目录
+
 5. jenkins
 	
 	Jenkins 是一个可扩展的持续集成引擎。

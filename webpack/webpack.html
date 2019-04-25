@@ -174,7 +174,14 @@ webpack 总结
 			                    chunks: 'all',
 			                    name: 'commons',
 			                    priority: -20
-			                }
+			                },
+			                styles: {   ---> 在组件中通过import的外部css进行整合,通过import组件的方式，不能打包vue 的style在同一个css file
+			                    name: 'styles',
+			                    test: /\.css$/,
+			                    chunks: 'all',
+			                    priority: -30,
+			                    enforce: true,
+			                },
 			            }
 			        }
 		    	},
@@ -203,7 +210,7 @@ webpack 总结
 
 		4. webpack-bundle-analyzer   --> webpack module 打包依赖关系
 
-		4. 
+		5. mini-css-extract-plugin   --> 打包css
 
 	8. devtool  -> 配置compiler后的代码形式
 
