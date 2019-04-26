@@ -30,3 +30,62 @@ import(path) 函数用于动态加载模块   --- 返回一个promise对象
 2. 条件加载       if(){import()}
 
 3. 动态的模块路径 import(f())
+
+
+javascrpit module 系统 (模块内的变量都是私有的)
+
+	1. es6  模块新模式
+
+		import 和 export
+
+	2. CommonJS (CMD规范的一种) 适用于服务器的规范，同步加载模块
+
+		math.js
+		var add = function(x,y){
+			return x+y;
+		}
+		module.exports.add = add;
+
+		var Math = require('math');   --必须要等要match模块加载完成才能执行，是同步操作
+			Math.add(1,2);
+
+	3. AMD 适用于浏览器端，异步加载模块
+
+		define('math',dep,function(){    -->必须要等所有的dep加载和执行
+
+			function add(x,y){
+				return x+y;
+			}
+			return{
+				add: add
+			}
+		});
+
+		require('math',function(math){    -- 异步加载模块，后面的代码不必等math模块加载完成才执行
+			math.add(x+y);
+		})
+
+	4. CMD -> 在定义模块的时候有依赖别的模块时，加载完模块并不执行，只有遇到reuire的时候才去执行模块代码
+
+		define(require,exports,module){
+
+			var a = require('a');            -- require的时候才会执行a, 跟AMD的区别就是定义新模块依赖老的模块的加载方式
+
+			return{
+				math: a.math
+			}
+		}
+
+		seajs.use(['math'],function(math){
+			math.add(x,y);
+		})
+
+	5. UMD 一种规范兼容Commonjs/AMD/全局变量模式
+
+		if(typeof module.exports === 'object'){
+			CommonJS
+		}elseif(typeof define === 'function'){
+			AMD
+		}else{
+			window['module'] = fun   全局变量
+		}
