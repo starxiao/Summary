@@ -246,7 +246,17 @@ webpack 总结
 		}
 
 
+2. webpack 模块打包原理
 
 
+	1. window['webpackJsonp']将所有的模块按照[moduleid,module.exports]保存
+
+	2. 通过__webpack__require(moduleid)加载模块内容，然后执行模块里的代码，执行当前的返回的值，即运行了业务代码。
+
+	3. installedModules[moduleid] 全局已经加载了的模块，如果已加载过的模块就直接返回
+
+	4. __webpack_require__.e 类似jsonp的加载异步模块，然后接下来的操作跟同步模块是一样的
+
+	5. 通过各种的loader将代码转换成想要的代码，比如babel-loader将es6->es5
 
 
