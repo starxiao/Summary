@@ -15,7 +15,7 @@ git clone git@10.0.1.15:huodong.500.com.git huodong.500.com
 
 3. linux搭建git服务器
 
-	1. 安装git yun install git
+	1. 安装git: yum install git
 
 	2. 创建git用户组 useradd git
 

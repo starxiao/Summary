@@ -63,6 +63,8 @@ A域名与B域名存在跨域：
 
      	jsonp 是一种解决跨域访问的一种方式，它允许客户端发送一个回调函数名到服务器，服务器接收到这个回调函数名后，将json数据包含在这个回调函数里面，接着输出回调函数javascript脚本，在客户端直接执行js。
 
+     	如果存在CSP 策略的存在header X-Content-Type-Options: nosniff，则要求返回的Content-Type不能text/html，一定是相对应的JavaScript类型：Content-Type: application/x-javascript
+
 		在客户端
 
 		<script type="text/javascript">
@@ -108,6 +110,17 @@ A域名与B域名存在跨域：
 
     在跨域访问时，XMLHttpRequest对象的getResponseHeader()方法只能拿到一些最基本的响应头，Cache-Control、Content-Language、Content-Type、Expires、Last-Modified、Pragma，如果要访问其他头，则需要服务器设置本响应头。
     
+    前端判断浏览器支持cors
+
+    <script type="text/javascript">
+    	
+    	var xhr = new XMLHttpRequest();   还有设置header Access-Control-Allow-Origin 是否成功
+    	if(xhr.withCredentials){    --判断是否支持cors
+    		cors
+    	}else{
+    		jsonp
+    	}
+    </script>
 
     4. nginx 反向代理处理跨域(因为服务器端请求不存在跨域) 性能损耗也比较小
            req             proxy   
