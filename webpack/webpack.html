@@ -120,6 +120,8 @@ webpack 总结
 		            "/api": {
 		                target:"http://10.0.1.15/~xiaoxx",
 		                // secure: false
+		                changeOrigin: true  后端服务托管在虚拟主机的时候，也就是一个IP对应多个域名，需要通过域名区分服务，那么参数changeOrigin必须为true(默认为false)
+
 		            },
 		        },
 			}
@@ -260,3 +262,8 @@ webpack 总结
 	5. 通过各种的loader将代码转换成想要的代码，比如babel-loader将es6->es5
 
 
+
+
+3. webpack bug
+
+	1. core-js@3.0.0版本不兼容会出现，can't resolve 'core.js/modules/es6.function.name' or 'core.js/modules/es6.function.bind' or 'es6.string.link'  官方说babel-preset-env 会引用core.js 但是它不支持core.js@3.0.0。所以解决办法 cnpm install core-js@2.6.5 -D 
