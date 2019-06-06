@@ -1,5 +1,4 @@
 
-
 1. git 查看当前git仓库地址
 
 $ git remote -v
@@ -54,80 +53,86 @@ git clone git@10.0.1.15:huodong.500.com.git huodong.500.com
 
 	tmd 就是一个发代码的工具
 
+	linux 上搭建jenkins教程  -> https://www.jianshu.com/p/c517f09df025    jenkins软件 -->https://pkg.jenkins.io/redhat-stable/jenkins-2.164.3-1.1.noarch.rpm
+
 	本地jenkins 结合 git仓库 --- http://10.0.1.115:8001/jenkins/
 
 
 	首页创建一个新的项目后。需要添加配置
 
-		源码管理 添加git或者svn仓库地址，如果仓库地址跟jenkins是在同台服务器上的，就不需要添加Credentials
+		1. 添加git仓库地址: repository url ->git@10.0.0.138:admin.sanyol.cn.git
 
-		如何添加Credentials
+		2. 添加credentials: 因为git用ssh登录，添加凭据的类型选择 SSH username with private key
 
-			1. 首页左下侧有个Credentials
+		username: git 
 
+		passphrase: 123456
 
-npm install
-npm run build:prod
-tar --exclude node_modules --exclude embdenadmin.prod.tar.gz -zcf embdenadmin.prod.tar.gz *
-sshpass -p 123456 scp embdenadmin.prod.tar.gz  nodejs@10.0.0.58:~/tmp/embdenadmin.prod.tar.gz
-sshpass -p 123456 ssh nodejs@10.0.0.58 'cd ~/embdenadmin.500.com && tar -zxf ~/tmp/embdenadmin.prod.tar.gz -C .'
-sshpass -p 123456 ssh nodejs@10.0.0.58 'cd ~/embdenadmin.500.com && svn delete dist/  --force  && svn ci -m "delete before version"'
-sshpass -p 123456 ssh nodejs@10.0.0.58 'cd ~/embdenadmin.500.com && svn add * --force && svn ci -m "brand app admin "'
+		3. jenkins 配置git仓库的时候 git地址通过http访问 添写http://gitlab.boss.com/ME/admin.sanyol.cn.git   添加凭据的类型选择 username with password 
 
+		name: xiaoxx 密码: 0123456789
 
+		#!/bin/bash 
+		yarn install
+		npm run build:local	
+		tar --exclude node_modules --exclude mock --exclude config  --exclude src --exclude a.sanyol.cn.tar.gz -zcf a.sanyol.cn.tar.gz *
+		sshpass -p 123456 scp a.sanyol.cn.tar.gz nodejs@10.0.0.138:~/tmp/a.sanyol.cn.tar.gz
+		sshpass -p 123456 ssh nodejs@10.0.0.138 'cd ~/a.sanyol.cn && npm run clean && tar -zxf ~/tmp/a.sanyol.cn.tar.gz -C .'
 
-npm install 
-npm run build
-tar --exclude src --exclude node_modules --exclude yarn.lock --exclude lottery.master.tar.gz -zcf lottery.master.tar.gz *
-scp lottery.master.tar.gz nodejs@10.0.1.115:~/tmp/lottery.master.tar.gz
-ssh nodejs@10.0.1.115 'cd ~/lottery && npm run clean-before && tar -zxf ~/tmp/lottery.master.tar.gz -C .'
-ssh nodejs@10.0.1.115 'cd ~/lottery && svn add * --force && svn ci -m "brand new lottery vue reconstruct" *'
+6. 创建SSH keys
+	
+	1. git bash   里面 ssh-keygen -t rsa -C "xiaoxx@500wan.com"
 
+	2. 查看ssh公钥  cat ~/.ssh/id_rsa.pub           Enter passphrase for key '/c/Users/Administrator/.ssh/id_rsa':  密码:  gitkey
 
-npm install
-npm run build
-tar --exclude node_modules --exclude src --exclude lottery_dev.tar.bz2 -jcf lottery_dev.tar.bz2 *
-scp lottery_dev.tar.bz2 nodejs@10.0.1.115:~/tmp/lottery_dev.tar.bz2
-ssh nodejs@10.0.1.115 'rm -rf ~/lottery_dev/dist/*'
-ssh nodejs@10.0.1.115 'cd ~/lottery_dev &&  pm2 startOrRestart lottery.config.js '
+	3. gitlab.boss.com  用户名: xiaoxx -> 0123456789
 
 
+7. git branch
 
+	1. 新建分支并且切换到该分支 ---> git branch dev && git checkout dev  || git checkout -b dev 
 
-npm install
-npm run build
-tar --exclude node_modules --exclude src --exclude lottery_dev.tar.bz2 -jcf lottery_dev.tar.bz2 *
-scp lottery_dev.tar.bz2 nodejs@10.0.1.115:~/tmp/lottery_dev.tar.bz2
-ssh nodejs@10.0.1.115 'rm -rf ~/lottery_dev/dist/*'
-ssh nodejs@10.0.1.115 'cd ~/lottery_dev &&  pm2 startOrRestart lottery.config.js '
+	2. 查看本地分支 git branch, 查看本地和远程分支 git branch -a 
+		dev
+		dev1
+		dev2
+	  * dev3    -- 带有 * 号表示当前分支
+		master
+		test
+		remotes/origin/dev          -- 含有remotes 表示远程分支
+		remotes/origin/master
+	    remotes/origin/test
 
+	3. 删除本地分支   git branch -d [branchname]
 
+	4. 新建远程test分支（要在本地新建test分支）  git push origin test:test 
 
-npm install 
-npm run build
-tar --exclude src --exclude node_modules --exclude yarn.lock --exclude lottery.master.tar.gz -zcf lottery.master.tar.gz *
-scp lottery.master.tar.gz nodejs@10.0.1.115:~/tmp/lottery.master.tar.gz
-ssh nodejs@10.0.1.115 'cd ~/lottery && npm run clean-before && tar -zxf ~/tmp/lottery.master.tar.gz -C .'
-ssh nodejs@10.0.1.115 'cd ~/lottery && svn add * --force && svn ci -m "brand new lottery vue reconstruct" *'
+	5. 删除远程分支  git push origin -d test
 
+9. 合并代码 
 
+	1. git merge brachname 合并brachname到当前目录
 
+	2. git cherry-pick commitid  合并到具体某个提交id
 
+	3. git checkout -b branch commitid2 && git rebase --onto master commitid1 从commitid1 合并到commit2
 
-npm install
-npm run build
-tar --exclude node_modules --exclude src --exclude openplatform.500.com.tar.gz -zcf openplatform.500.com.tar.gz *
-sshpass -p 123456 scp openplatform.500.com.tar.gz nodejs@10.0.1.15:~/tmp/openplatform.500.com.tar.gz
-sshpass -p 123456 ssh nodejs@10.0.1.15 'cd ~/openplatform.500.com && npm run clean && tar -zxf ~/tmp/openplatform.500.com.tar.gz -C .'
-sshpass -p 123456 ssh nodejs@10.0.1.15 'cd ~/openplatform.500.com && npm run start'
+10. git push
 
+	1. git push origin master 当前master分支提交到远程master分支上
 
+	2. git push --set-upstream origin master 当前分支与远程origin/master分支建立联系，之后git push就默认提交到origin master 分支上了。
 
+11. git项目合作开发
 
+	1. linux 搭建git服务器 git init --bare
 
+	2. 开发者 git clone 远程仓库代码
 
-npm install
-npm run build
-tar --exclude node_modules --exclude src --exclude openplatform.500.com.tar.gz -zcf openplatform.500.com.tar.gz *
-sshpass -p 123456 scp openplatform.500.com.tar.gz nodejs@10.0.1.15:~/tmp/openplatform.500.com.tar.gz
-sshpass -p 123456 ssh nodejs@10.0.1.15 'cd ~/openplatform.500.com && npm run clean && tar -zxf ~/tmp/openplatform.500.com.tar.gz -C .'
+	3. git add && git commit && git push origin master 提交代码到远程仓库,提交之前需要git fetch && git merge 别人改过的代码
+
+	4. 多人协作 git branch dev && git checkout dev  && git push origin dev:dev 创建一个开发分支，开发者都在这个分支上开发。
+
+	5. 只能在master 主分支上发代码, 所以要在本地 master分支合并dev分支的代码再提交代码 git checkout master && git merge dev && git push origin master
+
+	6. origin 分支有是三个 dev,build,master dev 是开发提交的分支，build是开发确认后提交给测试的分支，master测试确认没问题发代码的分支。

@@ -41,7 +41,7 @@ promise对象的状态，从Pending转换为Fulfilled或Rejected之后， 这个
 
 另外，Fulfilled和Rejected这两个中的任一状态都可以表示为Settled(不变的)。
 
-3. .then方法里面的操作是异步的
+3. then方法里面的操作是异步的
 
 <script type="text/javascript">
 	var promise = new Promise(function(resolve){
@@ -57,3 +57,29 @@ promise对象的状态，从Pending转换为Fulfilled或Rejected之后， 这个
 	outer promise  -- 2
 	34             -- 3
 </script>
+
+4. promise.catch   -> 指定发生错误时的回调函数
+	
+	<script type="text/javascript">
+		let p = new Promise((resolve,reject) => {
+			if(true){
+				resolve('success');
+			}else{
+				throw Error('error');
+				reject('error');
+			}
+		});
+
+		p.then((res) => {
+			console.log(res);
+			throw Error('123'); 
+		}).catch((err) => {
+			console.log(err);        // catch会捕获异步操作里面发生的错误  && then里面回调函数的错误
+		})
+
+		p.then((res) => {
+
+		},(err) => {
+						 // 只会捕获异步操作里面发生的错误
+		})
+	</script>

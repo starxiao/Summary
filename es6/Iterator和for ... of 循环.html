@@ -1,0 +1,15 @@
+Iterator和for ... of 循环
+
+1. 定义
+	
+	Iterator是一种接口，为各种不同的数据结构提供统一的访问机制。任何数据只要部署了Iterator接口,就可以完成遍历操作
+
+3. for ... of 可以遍历的数据结构 --> 只要部署了Symbol.iterator
+	
+	默认已经部署了Symbol.iterator
+
+	1. array 2. Map 3. Set 4. String 5. arguments 6. NodeList
+
+	单纯的Object对象不能使用for ... of遍历
+
+	 
