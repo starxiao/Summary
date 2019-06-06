@@ -1,3 +1,49 @@
 Symbol
 
-1. symbol定义
+1. 定义
+
+	symbol -> es6引入一种新的原始类型，表示独一无二的值
+
+	<script type="text/javascript">
+		let s = Symbol('foo');
+		console.log(typeof s);   -> 'symbol';
+		console.log(s);    -> 'Symbol(foo)';
+
+		let s1 = Symbol('foo');
+
+		s == s1    -> false
+	</script>
+
+2 用途
+
+	1. 作为对象的属性名,但是不能使用点运算符.,点运算符后面总是字符串，symbol值必须要放在[]内
+
+	<script type="text/javascript">
+		let s = Symbol();
+
+		let obj = {
+			[s]: 'hello';
+		}
+	</script>
+
+	2. 作为常量  const NODE_DEV = Symbol;
+
+	3. symbol作为属性名，该属性不会出现在for ..in for .. of循环中。也不会再Object.keys(),Object.getOwnPropertyNames(),JSON.stringify()
+
+	<script type="text/javascript">
+		let obj = {
+			[Symbol()]: 'h';
+		};
+
+		const s = Object.getOwnPropertySymbols(obj);
+
+	</script>
+
+	4. Symbol.for('foo') 如果在symbol里面搜寻到对应的foo值就直接返回，否则就新建一个symbol
+
+	<script type="text/javascript">
+		let s1 = Symbol.for('foo'),
+			s2 = Symbol.for('foo');
+			s1 == s2   -> true
+	</script>
+

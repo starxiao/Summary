@@ -1,0 +1,95 @@
+Set 和 Map
+
+
+1. es6的数据结构: Array、Object、Set、Map,新增了Set/Map数据结构
+
+
+	1.Set -> 类似于数组，但是成员的值都是唯一的，不存在重复值
+
+	<script type="text/javascript">
+
+		let s = new Set([1,2,3,1,1]);   -> Set() 接受参数是Iterator结构
+
+		[...s]      ---> 1,2,3  去除了重复的1
+
+
+		数组去重
+		[...new Set([1,2,3,4,2,3])] -> [1,2,3,4]
+
+		Array.from(new Set([1,2,3,2,3]))  -> Array.from将set转化为数组
+
+		字符串去重
+		[...new Set('abcdab')].join(',') -> a,b,c,d
+	</script>
+
+	2. Set实例的属性、方法
+
+	<script type="text/javascript">
+		let s = new Set([1,2,3]);
+
+		s.size  ->  3
+
+		s.add(4)   -> 返回Set
+
+		s.delete(1)  -> 返回Boolean表示是否删除成功
+
+		s.has(2) -> 返回Boolean
+
+		s.clear()  -> 清除所有值
+
+		（Set的遍历顺序就是插入顺序）
+
+		s.keys() -> 返回键名遍历器
+
+		s.values() -> 返回键值遍历器 && 默认set的遍历器
+
+		s.entries() -> 返回键值对遍历器
+
+		s.forEach()  -> 使用回调函数遍历器
+
+		for(let n of s){
+			console.log(n);
+		}
+	</script>
+
+	3. WeakSet 类似 Set，WeakSet只接受对象，无属性size和forEach
+
+	4. Map -> 给对象提供不以字符串为属性的对象
+
+	<script type="text/javascript">
+		
+		let m = new Map();
+
+		let k1 = ['a'];
+		let k2 = ['a'];
+		m.set(k1,111).set(k2,222);    Map 的键实际上是跟内存地址绑定的，只要内存地址不一样，就视为两个键
+		m.get(k1);  -> 111
+		map.get(k2);  -> 222
+
+		m.size
+
+		m.set(key,value)  返回Map结构，可以采用链式写法
+
+		m.get(key) 
+
+		m.has(key)
+
+		m.delete(key)
+
+		m.clear();
+
+		m.keys()  -> 返回键名遍历器
+
+		m.values()
+
+		m.entries()
+
+		m.forEach()
+
+		for(let [key,value] of map){
+			console.log(key);
+			console.log(value);
+		}
+	</script>
+
+	3. WeakMap 类似 Met，WeakMap只接受对象，无属性size和forEach

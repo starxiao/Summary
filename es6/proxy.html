@@ -5,13 +5,14 @@ proxy: 在对象上做一层拦截,外界对这层对象的访问之前都必须
 let proxy = new Proxy(target,handler)
 
 target ===> 表示要拦截的对象
-handler ===> 表示拦截行为
 
+handler ===> 表示拦截行为,也是一个对象
+
+1. 要使得Proxy起作用，必须针对Proxy实例（上例是proxy对象）进行操作，而不是针对目标对象（上例是空对象）进行操作
 <script type="text/javascript">
 	
 	var obj = new Proxy({},{
 		get: function(target,key,receiver){
-			console.log('receivereturn key' + key);
 			return 'hello';
 		},
 		set: function(target,key,value,receiver){
@@ -19,3 +20,38 @@ handler ===> 表示拦截行为
 		}
 	})
 </script>
+
+2. proxy 支持的拦截操作
+
+ 	get(target,key,receiver);
+
+ 	set(target,key,value,receiver);
+
+ 	has(target,key);
+
+ 	deleteProperty(target,key);
+
+ 	defineProperty(target,key);
+
+ 	apply(target,object,args);
+
+ 	construct(target, args)
+
+ 	<script type="text/javascript">
+ 		let user = {
+ 			name: 'xiaoxx'
+ 		};
+
+ 		let p = new Proxy(user,{
+ 			get(target,key){
+ 				if(key in target){
+ 					return target[key];
+ 				}else{
+ 					return `property ${key} not in`;
+ 				}
+ 			}
+ 		});
+
+ 		p.name -> 'xiaoxx';
+ 		p.age -> 'property age not in';
+ 	</script>
