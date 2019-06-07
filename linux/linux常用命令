@@ -8,19 +8,27 @@ linux 常用命令     http://man.linuxde.net/
 
 重启nginx   cd /usr/local/nginx/sbin/   ./nginx -t ==> 查看nginx.conf配置文件语法 ./nginx -s reload ==> nginx重启
 
-查看端口占用情况			netstat -nlp | grep 80
+查看端口占用情况			netstat -nlp | grep 80    
+
+查看该端口是否同        telnet 10.0.0.138 8080    
 
 查看apache运行情况       ps -ef | grep httpd   如果有-f就能看到了，没有就要执行相应目录下的httpd /usr/sbin/httpd -S  service httpd restart
 
-改变文件所属用户组       chown -R www:www /html/huodong.500.com
+改变文件所属用户组       chown -R www:www /html/huodong.500.chmod
 
-改变文件的权限        chmod 664 index.php    -rw-rw-r   r-4 w-2 x-1
+改变文件的权限        chmod 664 index.php    -rw-rw-r   r-4 w-2 x-1   chomd -R 755 nodejs
+
+drwxr-xr-x 7 nodejs  www     4096 May 28 10:16 nodejs
+
+d -> 文件  2-4位 rwx=7 代表所有者的权限 5-7位 r-x=5 代表用户组的权限 最后上r-x=5 代表公共用户的权限
 
 删除文件夹无需要提示(慎用慎用)      rm -rf huodong.500.com
 
 修改用户密码					passwd xiaoxx
 
+安装软件 yum install nodejs
 
+卸载软件 yum remove nodejs
 
 
 
@@ -34,6 +42,11 @@ linux  添加定时任务   --- crontab
 
 3. 切换root重启crond  service crond restart
 
+
+linux ssh
+
+	1. 当使用sshpass -p 123456 scp index.html nodejs@10.0.0.138:~/tmp/a.sanyol.cn  报Host key verification failed.
+	   解决办法在当前机器上使用ssh 10.0.0.138 登录一下就可以
 
 
 

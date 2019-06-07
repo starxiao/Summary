@@ -3,17 +3,21 @@
 linux安装nodejs
 
 
-wget https://nodejs.org/dist/v6.9.2/node-v6.9.2-linux-x64.tar.xz  --下载
+wget https://nodejs.org/dist/v10.15.3/node-v10.15.3-linux-x64.tar.xz  --下载
 
-    xz -d node-v6.9.2-linux-x64.tar.xz --解压为tar类型
+    xz -d node-v10.15.3-linux-x64.tar.xz --解压为tar类型
 
-    tar -xvf node-v6.9.2-linux-x64.tar  --解压
+    tar -xvf node-v10.15.3-linux-x64.tar  --解压
 
 解压完成后pwd查看当前下载目录，并执行以下命令设置全局：
 
-    ln -sf /usr/local/n/versions/node/10.8.0/bin/node /usr/local/bin/node
+    ln -sf /usr/local/node-v10.15.3-linux-x64/bin/node /usr/bin/node
 
-    ln -sf /usr/local/n/versions/node/10.8.0/bin/npm /usr/local/bin/npm
+    ln -sf /usr/local/node-v10.15.3-linux-x64/bin/npm /usr/local/bin/npm
+
+	ln -sf /usr/local/node-v10.15.3-linux-x64/bin/cnpm /usr/bin/cnpm
+
+		
 
 修改环境变量
 
@@ -25,3 +29,10 @@ export PATH=$NODE_HOME/bin:$PATH
 export PATH USER LOGNAME MAIL HOSTNAME HISTSIZE HISTCONTROL
 
 source　/etc/profile   ---生效 
+
+
+1. 问题
+	
+	安装nodejs12.1.3的版本 ，依赖的gcc需要升级。
+	
+	
