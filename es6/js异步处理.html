@@ -1,0 +1,96 @@
+js异步处理
+
+1. 定义
+	
+	连续地执行任务的行为为同步，反则不连续地执行任务为异步。
+
+2. 异步解决方法
+
+	1. 回调函数(callback)
+	2. 事件监听
+	3. 发布订阅
+	4. promise 
+	5. generator
+	6. async
+
+3. 回调函数
+	
+	<script type="text/javascript">
+		function a(callback){
+			console.log('a');
+			callback && callback();
+		}
+		function b(){
+			console.log('b');
+		}
+		a(b);   b -> 即是回调函数
+
+		最常见的就是ajax 成功之后处理函数
+
+		ajax('./api',function(){
+			ajax('./api',function(){
+
+			})
+		})
+
+		这样就会产生回调地狱
+	</script>
+
+4. promise -> 可以称为回调函数的语法糖，改成了then
+
+	<script type="text/javascript">
+		axios.get('/api').then(res => {
+			console.log(res);
+			return axios.get('/api');
+		}).then(res => {
+			console.log(res);
+		}).catch(err => {
+			console.log(err);
+		});
+
+		将回调函数改了promise then 语法，相比于回调函数更清晰一点，能在同一地方处理错误(catch);
+	</script>
+
+5. generator 协程处理，状态机函数，异步任务
+
+	<script type="text/javascript">
+		function* readFile() {
+			var url = yield getUrl();
+			return axios.get(url);
+		}
+		let file = readFile();
+		file->next();
+		file->next();
+	</script>
+
+6. async 函数 -> generator函数+自动执行任务 + 更好的语义
+
+	<script type="text/javascript">
+		async function readFile(){
+			let url = await getUrl();
+			return axios.get(url);
+		}
+		readFile();
+	</script>
+
+7. 事件监听
+
+	<script type="text/javascript">
+		document.querySelector('.btn').addEventListener('click',function(el){
+			console.log(el);
+		})
+	</script>
+
+8. 事件发布订阅   -> nodejs的事件处理，类似window的点击事件监听
+
+	<script type="text/javascript">
+		let event = require('events')();
+
+		event.on('data',function(res){     -> 监听data事件
+			console.log(res);
+		});
+
+		axios.get('api').then(res => {
+			event.emit('data',res);          -> 触发data事件
+		})
+	</script>

@@ -55,3 +55,51 @@ handler ===> 表示拦截行为,也是一个对象
  		p.name -> 'xiaoxx';
  		p.age -> 'property age not in';
  	</script>
+
+ 3. get() --> 实例  
+ 	<script type="text/javascript">
+ 		利用proxy 实现生成dom
+ 		const dom = new Proxy({},{
+ 			get(target,key){
+ 				return function(attrs, ...children){
+ 					const el = document.createElement(key);
+ 					for(let prop of attrs){
+ 						el.setAttribute(prop,attrs[prop]);
+ 					}
+ 					for(let child of children){
+ 						if(typeof child === 'string'){
+ 							child = document.createTextNode(child);
+ 						}
+ 						el.appendChild(child);
+ 					}
+ 					return el;
+ 				}
+ 			}
+ 		});
+
+ 		dom.div({
+ 			class: 'container',
+ 		},{
+ 			'hello world',
+ 			dom.a({href: 'http://www.baidu.com'},'click to baidu')
+ 		}); 
+ 	</script>
+
+ 	4. Set() 实例
+ 	<script type="text/javascript">
+		1. 对象属性值符合要求
+
+		var validator = new Proxy({},{
+			set(target,key,value){
+				if(key === 'age'){
+					if(!Number.isInteger(value)){
+						throw Error('The age is not an integer');
+					}
+					if(value > 200){
+						throw Error('The age invalid');
+					}
+				}
+				target[key] = value;
+			}
+		})
+ 	</script>
