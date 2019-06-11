@@ -6,22 +6,88 @@ js 条件判断为false的几种情况： 0,-0,null,undefined,'',false,NaN
 
 函数的默认值
 
-通常写法
+<script type="text/javascript">
+	function foo(x,y){
+		y = y || 'hello';
+	}
 
-function foo(x,y){
-	y = y || 'hello';
-}
+	foo(x,''); foo(x,0);  这样y也会传入默认值
 
-foo(x,''); foo(x,0);  这样y也会传入默认值
+	function foo(x,y){
+		y = typeof y === 'undefined' ? 'hello' : y;
+		console.log(y);
+	}
 
-function foo(x,y){
-	
-	y = typeof y === 'undefined' ? 'hello' : y;
-	console.log(y);
-}
+	es6 写法
+	function foo(x,y='hello'){
+		let y; y已经声明，再次声明会报错
 
-es6 写法
-function foo(x,y='hello'){
-	
-}
+	}
+
+	参数默认值是惰性求值的，也就是参数默认值存在表达式的话，每次传参的时候都会计算表达式的值才赋值。
+
+	let y = 99 
+	function fun(x = y + 1){
+		console.log(x);
+	}
+	fun();
+</script>
+
+rest 参数 -> 将函数参数转为数组，用于获取函数的多余参数，这样就不用使用arguments对象了。
+
+<script type="text/javascript">
+	function add(...values){
+		console.log(values)      -> values  array 
+	}
+</script>
+
+箭头函数 ---   => 定义函数
+
+let f = v => v;
+
+//等同于
+let f = function(v){
+	return v;
+};
+<script type="text/javascript">
+	let f = () => 5;
+
+	let sum = (num1,num2) => num1 + num2;
+
+	let add = (num1,num2) => {
+		return num1 + num2;
+	};
+</script>
+
+箭头函数注意点
+
+	1. 函数体内的this对象，就是定义时所在的对象，而不是使用时所在的对象，跟普通函数的this不同。
+
+	2. 不可以当做构造函数，也就是不能使用new 命令。
+
+	3. 不可以使用arguments对象，可以用rest参数代替。
+
+	4. 函数里面不能使用yield命令，所以gnerator函数不能是箭头函数。
+
+箭头函数不适用
+
+	1. 定义对象的方法，且方法内部包括this
+
+	<script type="text/javascript">
+		const cat = {
+			age: 1,
+			add: () => {
+				this.age++;   this-> 指向了全局作用域,而不是cat
+			}
+		}
+	</script>
+
+	2. 需要动态this，比如监听click事件
+
+	<script type="text/javascript">
+		document.querySelector('.btn').addEventListener('click', () => {
+			this.classList.toggle('on');   this-> 指向了全局作用域，而不是点击按钮对象
+  		})
+	</script>
+
 

@@ -2,25 +2,59 @@
 
 Array 
 
-1. 扩展运算符   ...  将一个数组转为用逗号分隔的参数序列
+1. 扩展运算符   ...  将一个数组转为用逗号分隔的参数序列,相当于rest参数的逆运算。
 
 <script type="text/javascript">
 	console.log(...[1,23,23,324,32]);	
 </script>
 
-	可以代替数组的apply方法
+2. 应用 
 <script type="text/javascript">
+	1. 可以代替数组的apply方法
+
 	function f(x,y,z){}
 	f.aplly(null,[1,23,4]);
 
 	es6
 	f(...[1,23,4]);
 
-	合并数组
+	Math.max.apply(null,[1,2,3]);
+
+	Math.max(...[1,2,3]);
+
+	2. 复制数组
+	let a = [1,2,4];
+	let a1 = [...a];
+
+	3. 合并数组
 
 	let arr1 = [1,23,3],
 		arr2 = [2,3];
 
 	let arr3 = [...arr1,...arr2]
+
+	4. 与解构赋值结合
+
+	let [a,...b] = [1,2,3,4,5];
+	a -> 1;
+	b -> [2,3,4,5];
+
+	5. 字符串
+
+	[...'hello']  -> ['h','e','l','l','o']
+
+	6. 任何具有Iterator接口的值都可以使用扩展运算符转为数组
+
+	[...document.querySelectorAll('div')]
 </script>
 
+
+Array.from -> 将类数组和可遍历的对象转为数组
+
+Array.of -> 将一组值转为数组
+
+Array.entries() Array.keys() Array.values();
+
+Array.includes()
+
+Array.flat(num)  -> 将多维数组转为一维数组

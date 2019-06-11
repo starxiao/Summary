@@ -1,6 +1,67 @@
 对象的扩展
 
-1. 对象的扩展符 ...
+1. 对象属性和方法简写
+		
+	<script type="text/javascript">
+		let name = 'xiaoxx';
+		let obj = {
+			name,   
+			age: 10,
+			addAge(){
+				this.age + 1;
+			}
+		}
+
+		function getItem(key){
+			return key in obj ? obj[key] : null;
+		}
+
+		function setItem(key,value){
+			obj[key] = value;
+		}
+
+		module.exports = {
+			getItem,
+			setItem
+		}
+
+		等同于
+		module.exports = {
+			getItem: getItem,
+			setItem: setItem
+		}
+	</script>
+
+2. 属性名表达式
+	
+	<script type="text/javascript">
+		let key = 'hello';
+		var obj = {	
+			[key]: 'world'
+		}
+		obj[key] -> 'world'
+		obj['hello'] -> 'world'
+	</script>
+
+3. 可枚举性
+
+	<script type="text/javascript">
+		let obj = {a:1};
+		Object.getOwnPropertyDescriptor(obj,'a');
+
+		下面四种方法不会操作不可枚举性属性
+
+		for ... in 
+
+		Object.keys()
+
+		JSON.stringify()
+
+		Object.assign()
+
+	</script>
+
+4. 对象的扩展符 ...
 
 	解构赋值要求等号右边必须是对象，且不等于undefined | null，解构赋值要求是最后一个参数
 
@@ -17,4 +78,57 @@
 
 	z.a.b = 2;    obj.a.b  -> 2
 
-	解构赋值不会继承原型上的属性
+	扩展运算符的解构赋值不会继承原型上的属性，但解构赋值会解析原型上的属性
+
+	使用解构赋值，扩展运算符后面必须是一个变量，而不能是一个解构赋值表达式
+
+	<script type="text/javascript">
+		var o = Object.create({a:1,b:2});  Object.create创建对象的proto
+		o.z = 1;
+		let {a, ...obj} = o; 
+		a -> 1    -> 解构赋值会解析原型上的属性
+		obj.b  ->  undefined  扩展运算符的解构赋值不会继承原型上的属性
+		obj.z  -> 1 自身属性
+
+	</script>
+
+	将数组转为对象
+	<script type="text/javascript">
+		let obj = {...['a','b','c']};
+	</script>
+
+	克隆对象
+	<script type="text/javascript">
+
+		let obj = { ... obj1 };
+		let obj = Object.assign({},obj1)；
+
+		复制完整对象
+		let obj = Object.assign(
+			Object.create(Object.getPrototypeOf(obj1))
+			obj
+		);
+
+		let obj = {
+			__proto__: Object.getPrototypeOf(obj1),
+			...obj1
+		}
+		
+	</script>
+
+	Object.is()  vs === 
+
+	Object.is(+0,-0) -> false  +0 === -0 -> true
+
+	Object.is(NaN,NaN) -> true   NaN === NaN -> false
+
+
+	Object.assign(target,source) -> 将源对象（source）的所有可枚举属性，复制到目标对象（target）
+
+	Object.setPrototypeOf()
+
+	Object.getPrototypeOf()
+
+	__proto__
+
+	Object.keys() Object.values() Object.entries()

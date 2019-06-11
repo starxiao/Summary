@@ -5,8 +5,6 @@ es6 是一个泛指，涵盖es2015,es2016,es2017
 
 let / var / const 
 
-
-
 var 声明的变量存在提升
 
 1. js代码执行过程，首先在为fun函数创建一个代码{}空间。
@@ -27,7 +25,7 @@ var 声明的变量存在提升
 		console.log(window.y);     -- 234
 	}
 
-	因为没有使用var关键字声明变量，所以不存在变量提升，所以会保y is not defined
+	因为没有使用var关键字声明变量，所以不存在变量提升，所以会报错 y is not defined
 
 	在赋值时，会为y声明为全局变量，所以 window.y 存在
 </script>
@@ -54,8 +52,25 @@ let 声明的变量不存在变量提升，且不允许在相同作用域({})重
 	}
 </script>
 
+es5 只有全局作用域和函数作用域，导致的问题。
 
-块级作用域
+1. 内层变量覆盖外层变量。
+
+<script type="text/javascript">
+	var temp = 'window';
+	function fun(){
+		console.log(temp);    -> undefined
+		if(true){
+			var temp = 'function';
+		}
+	}
+	fun();
+</script>
+
+2. 循环变量i泄露为全局变量
+
+
+块级作用域 {}
 
 <script type="text/javascript">
 	var temp = 123;
@@ -68,15 +83,85 @@ let 声明的变量不存在变量提升，且不允许在相同作用域({})重
 	})();
 </script>
 
+暂时性死区 -> 只要一进入当前作用域，所要使用的变量就已经存在了，但是不可获取，只有等到声明变量的那一行代码出现，才可以获取和使用该变量。
+
+只要块级作用域内存在let命令，它所声明的变量就“绑定”（binding）这个区域，不再受外部的影响
+
+在代码块内，使用let命令声明变量之前，该变量都是不可用的
+
+<script type="text/javascript">
+	var temp = 123;
+	if(true){
+		console.log(temp);    -> temp referenceError
+		let temp = 'avs';
+		console.log(temp);
+	}
+</script>
+
 const 命令
 
 const 与let不同的是 const声明的变量是一个只读的，在声明的同时并初始化
 
 const 声明的复杂类型的变量实际保存的是一个地址，这个地址不可变，但可以为该变量添加值
 
+const所说的一旦声明值就不能改变，实际上指的是：变量指向的那个内存地址所保存的数据不得改动
+
+<script type="text/javascript">
+	const PI = 123;
+	const a; 报错
+	const obj = {a:123,b:123};
+	obj = {a:23,b:123}; -> 报错
+	obj.a = 23;   可以修改该值
+</script>
 
 顶层对象 与全局变量是等价的。
 
 在浏览器环境下 window
 
 在node环境下  global
+
+<script type="text/javascript">
+	var x = 123;
+	console.log(window.x)   -> 123;
+
+	function fun(){
+		var y = 123;
+		console.log(window.y);   -> undefined
+
+		c = 213;
+		console.log(window.c); -> 213;
+	}
+	fun();
+</script>
+
+
+let/const vs var 
+
+1. 在相同作用域内不可重复声明。包括使用var声明的变量，也不可再使用let/const声明。
+
+2. 不存在变量提升，先声明后使用。
+
+3. 存在块级作用域{}，外部声明后，在块级内也可声明。
+
+4. 暂时性死区，从作用域开始到声明变量。
+
+5. 声明的变量不会挂到顶层对象下(window,global)。
+
+let vs const 
+
+1. const声明时必须初始化该值。
+
+2. const声明的简单类型的值声明之后不可修改，但声明复杂类型（对象）指向的指针地址不可修改，对象值是可修改的。
+
+
+
+变量提升与暂时性死区的冲突 因为es6存在暂时性死区，所以导致不存在变量提升。
+
+<script type="text/javascript">
+	var a = 123;
+	function fun(){
+		console.log(a);          a-> 报错
+ 		let a = 'abc';
+	}
+	fun();
+</script>

@@ -1,0 +1,133 @@
+
+js this,call,apply,bind用法
+
+
+es5 this的指向 -> 指向最后调用它的那个对象
+
+var name = 'window'
+function obj(){
+
+	var name = 'obj';
+	console.log(this.name);
+
+	innerobj();
+	function innerobj(){
+		console.log(this.name);
+	}
+}
+
+obj() -> window.obj();  this指向了window  echo name = 'window'
+
+innerobj -> 没有任何一个对象调用，默认this指向了window echo name = 'window';
+
+var obj1 = {
+	name: 'obj1',
+	fun1: function(){
+		console.log(this.name);
+	}
+	fun2: function(){
+		window.setTimeout(function(){
+			console.log(this.name);
+		})
+	}
+}
+
+obj1.fun1();  this -> obj1  echo name = 'obj1'
+
+obj1.fun2();  this->window  echo name = 'window';
+
+
+改变 this的方法 -> 箭头函数、_this、call、apply、bind
+
+
+	1、箭头函数 -> 箭头函数的 this 始终指向函数定义时的 this，而非执行时
+
+		var obj1 = {
+			name: 'obj1',
+			fun1: function(){
+				windwo.setTimeout(()=>{
+					console.log(this.name);	 this->obj1
+				})
+			}
+		}
+
+	2、声明变量存储
+
+		var obj1 = {
+			name: 'obj1',
+			fun1: function(){
+				var _this = this;
+
+				windwo.setTimeout(()=>{
+					console.log(_this.name);	 this->obj1
+				})
+			}
+		}
+
+	3. call、apply、bind
+
+		call(_this(指向的对象,可选),arguments(参数列表,可选));
+		apply(_this(指向的对象,可选),arguments(参数列表,可选));
+		bind(_this(指向的对象,可选),arguments(参数列表,可选));
+
+		call、apply 是调用一个有给定this值的函数,也就是会马上执行这个函数。
+		apply和call的区别是，call的第二参数接收的是参数列表，而apply是接收参数数组
+
+		bind： bind方法创建一个新的函数，在调用时设置this关键字为提供的值。在调用新函数时，将给定参数列表作为原函数的参数序列的前若干项。
+
+		call、apply与bind的区别是call、apply会直接调用该函数，而bind是生成一个新的函数，不会马上执行
+
+		var obj = {
+		    name: 'xiaoxx',
+		    fun1: function (params) {
+		        console.log(this.name);
+		        window.setTimeout(function(){
+		            console.log('bind',this.name);  -> 1500ms后执行
+		        }.bind(this), 1500)
+		        window.setTimeout(function () {
+		            console.log('call', this.name);  -> 马上执行
+		        }.call(this), 1500)
+		        window.setTimeout(function () {
+		            console.log('apply', this.name);  -> 马上执行
+		        }.apply(this), 1500)
+		    },
+		    fun2: function(){
+		    	console.log(this.name);
+		    }
+		}
+
+		oj1.fun1();
+		echo  'call xiaoxx' -> 'apply xiaoxx' -> 'bind xiaoxx' 
+
+		var fun = obj.fun2;
+
+		fun() -> this->window echo 'window';
+
+		var fun = obj.fun2.bind(obj);
+
+		fun() -> this -> obj  echo 'xiaoxx'
+
+		obj.fun2.bind(obj)  -> 生成新函数，不会执行
+
+		obj.fun2.call(obj)  -> 执行函数 ehco 'xiaoxx'
+
+
+apply、call、bind的常用用法
+
+	1. 将类数组转为数组
+
+		Array.prototype.slice.apply(document.querySeletorAll('.list')).forEach(function(){
+
+		})
+
+	2. 取数组中的最小值
+
+		Math.min.apply(null,[1,23,4324,45,1,23]);
+
+		Math.max.apply(null,[1,23,4324,45,1,23])
+
+	3. 判断对象是否存在属性
+
+		function hasProperty(object,property){
+			Object.prototype.hasOwnProperty.call(object, property)；					
+		}
