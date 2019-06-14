@@ -1,0 +1,93 @@
+object
+
+1. 定义
+	
+	声明形式和构造形式
+
+	<script type="text/javascript">
+		let obj = {
+			a: 1,
+			foo(){
+				console.log(this.a);
+			}
+		}
+
+		function Obj(a){
+			this.a = a;
+			console.log(this.a);
+		}
+
+		let obj1 = new Obj(2);
+	</script>
+
+2. 内置对象
+
+	String, Number ,Date , Boolean,Object,Function,Array,RegExp,Error
+
+	<script type="text/javascript">
+		
+		var str = '12';
+		console.log(str.length);   str 自动转换成了String 对象
+
+		var num = 123.123;
+		console.log(num.toFixed(1)); num 自动转成了Number对象
+	</script>
+
+3. 属性访问
+	
+	使用. 和[] 进行访问属性，.号只能是key为标识符时才能生效。
+
+4. 对象复制
+
+	深复制和浅复制
+
+	JSON.parse(JSON.strigify(json));  Object.assign(target,source);
+
+5. 属性描述符
+
+	<script type="text/javascript">
+		var obj = {
+			a: 2
+		}
+
+		Object.getOwnPropertyDescriptor(obj,'a');
+
+		writable -> 可写
+
+		enumerable  -> 可枚举
+
+		configurable -> 可配置
+
+		Object.defineProperty(obj,'a',{
+			writable: false
+		});
+
+		Object.freeze(obj)  -> 冻结对象，所有属性不可修改
+
+	</script>
+
+6. get()操作 ，set()
+
+	6.1 对象默认的内置 [[Get]] 操作首先在对象中查找是否有名称相同的属性，如果找到就会返回这个属性的值。如果没有找到就在原型链寻找，最终没有的话就返回undefined
+
+	6.2 对象设置属性
+
+	<script type="text/javascript">
+		var obj = {
+			set a(key,val){
+				obj[key] = val;
+			},
+
+			get a(key){
+				return obj[key];
+			}
+		}
+	</script>
+
+7. 遍历
+	
+	for .. in 可以遍历对象的可枚举属性列表（包括原型链）
+
+7. in 操作 和 hasOwnProperty
+
+	in 操作符会检查属性是否在对象及其原型链上，而hasOwnProperty只会检查属性是否在当前对象上。

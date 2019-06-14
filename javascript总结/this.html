@@ -1,3 +1,158 @@
 
 
 this
+
+1. 定义
+	
+	1.1 this既不是指向函数本身也不指向函数的作用域。this实际上是在函数被调用时进行绑定的，取决于函数在哪里被调用。
+
+	1.2 this是运行时进行绑定的，它的上下文取决于函数调用时的各种条件。
+
+	1.3 this的绑定和函数声明的位置没有任何关系，只取于函数的调用方式。
+
+	1.4 函数被调用时，会创建一个执行上下文，执行上下文包含调用栈（在哪里被调用），函数的调用方法，传入的参数等信息，而this就是执行上下文其中的一个属性。
+
+2. 函数的调用位置
+	
+	2.1 调用位置就是函数在代码中被调用的位置（而不是声明的位置，调用位置就在当前正在执行的函数的调用栈的前一个
+
+	<script type="text/javascript">
+		function a(){
+			console.log('a');    调用栈: 全局 -> a 
+			b();
+		}
+
+		function b(){
+			console.log('b');   调用栈： 全局 -> a -> b
+			c();
+		}
+
+		function c(){
+			console.log('c');    调用栈: a -> b -> c    忽略了全局
+		}
+
+		a();
+	</script>
+	
+3. 绑定规则
+
+	3.1 默认绑定： 独立函数调用,直接使用不带任何修饰的函数引用进行调用的，因此只能使用默认绑定，如果是在严格模式下 use strict
+	
+	<script type="text/javascript">
+		var a = 1;
+
+		function b(){
+			console.log(this.b);
+		}
+
+		b();
+	</script>
+
+	3.2 隐式绑定，调用的位置是否有上下文对象，或者是否被某个对象包含
+	
+	<script type="text/javascript">
+		function foo(){
+			console.log(this.a);
+		}
+
+		var obj = {
+			a: 2,
+			foo: foo
+		}
+
+		obj.foo();
+
+		foo函数被obj包含了，所以里面的this指向了obj，对象属性引用链中最后一层会影响调用位置。
+
+		var a = 'global';
+		function foo(){
+			console.log(this.a);
+		}
+
+		var obj = {
+			a: 1,
+			foo: foo
+		}
+
+		var fun = obj.foo;
+
+		fun();    -> fun是obj.foo的引用，引用了foo函数本身，所以fun是默认绑定  'global'
+
+		var a = 'global';
+
+		function foo(){
+			console.log(this.a);
+		}
+
+		function fun(fn){
+			fn && fn();
+		}
+
+		var obj = {
+			a: 1,
+			foo: foo
+		}
+
+		fun(obj.foo);   'global'
+	</script>
+
+	3.3 显示绑定 call/apply/bind
+
+		call、apply与bind的区别是call、apply会直接调用该函数，而bind是生成一个新的函数，不会马上执行
+
+		apply和call的区别是，call的第二参数接收的是参数列表，而apply是接收参数数组
+
+		<script type="text/javascript">
+			function fun(b){
+				console.log(this.a);
+				return this.a + b;
+			}
+
+			function bar(){
+				return fun.apply(obj,arguments);
+			}
+
+			var obj = {a: 1};
+			bar(2);       -> 3
+
+			function fun(){
+				console.log(this.a);
+			}
+			var obj = {a: '111'};
+			var bar = fun.bind(obj);
+			bar();   -> '111'
+
+			bind(..) 会返回一个硬绑定的新函数，它会把参数设置为 this 的上下文并调用原始函数
+		</script>
+
+	3.4 new 绑定
+
+		new创建函数的过程
+		1. 创建一个全新的对象
+		2. 这个新对象会被原型连接
+		3. 这个新对象会绑定到函数调用的this
+		4. 如果函数没有返回，则返回这个新对象
+
+		<script type="text/javascript">
+			
+			function Foo(a){
+				this.a = a;
+			}
+
+			var bar = new Foo(2);
+			console.log(bar.a);    -> 2
+		</script>
+
+	3.5 绑定规则优先级
+
+	new -> 显式 -> 隐式 -> 默认
+
+4 箭头函数this
+	
+	箭头函数只跟其定义的作用域有关，无法进行绑定。
+
+
+
+
+
+
