@@ -1,5 +1,4 @@
-javascript 原型
-
+javascript 原型以及原型链
 
 1. 定义
 
@@ -95,10 +94,164 @@ javascript 原型
 		
 	</script>
 
-	
-
 	2. 函数与Function的关系
-	
 
+		1. 函数也是对象，任何函数都是由Function构造函数new实例化的结果，函数Object的构造函数也是Function
+		<script type="text/javascript">
+			function Fn(){}
+			console.log(Fn.__proto__ === Function.prototype);
+			console.log(Object.__proto__ === Function.prototype);
+		</script>
+
+		2. Function.prototype的constructor属性指向构造函数Function(), Function函数是一个空函数。
+		<script type="text/javascript">
+			function Fn(){}
+			console.log(Function.prototype.constructor === Function);
+			console.log(Fn.constructor === Function);
+			console.log(Fn.hasOwnProperty('constructor'));
+			console.log(Object.constructor === Function);
+			console.log(Object.hasOwnProperty('constructor'));
+		</script>
+
+		3. Function也可以看做是其调用自身实例化的结果，Function的构造函数是Function,原型对象是Function.prototype
+		<script type="text/javascript">
+			console.log(Function.__proto__ === Function.prototype);
+			console.log(Function.constructor === Function.prototype.constructor);
+			console.log(Function.prototype === Function.prototype);
+		</script>
+
+		4. Function.prototype作为实例对象也存在原型对象,其构造函数
+		<script type="text/javascript">
+			console.log(Function.prototype.__proto__ === Object.prototype);
+		</script>
+
+	3. Object
+
+		1. 任何对象都可以是由Object()函数new实例化的对象。Foo.prototype也是对象，它的构造函数是Object()，其原型对象也就是Object.prototype
+		<script type="text/javascript">
+			console.log(Foo.prototype.__proto__ === Object.prototype);
+		</script>
+
+		2. 实例对象Foo.prototype本身存在constructor属性,它屏蔽了Object.prototype.constructor属性。
+		<script type="text/javascript">
+			console.log(Foo.prototype.constructor === Foo);
+			console.log(Object.prototype.constructor === Object);
+		</script>
+
+		3. Object.prototype是一个对象，也存在原型对象，它最终指向了null,null没有原型对象。至此，原型对象最终指向了null
+		<script type="text/javascript">
+			console.log(Object.prototype.__proto__ === null);
+		</script>
+
+3. 原型链查找、设置属性
+		
+	1. 如果a属性不在obj对象上，就会去向上遍历原型链，直到查找到a属性，没有不存在a属性则返回undefined。
+
+	console.log(obj.a) 
+
+	2. 如果a属性在obj对象上，原型链上也存在a属性，则obj对象上的a属性就会屏蔽原型链上的a属性了。也就是选择原型链中最底层的a属性。
+
+	3. 给obj对象设置a属性，如果a属性不在原型链上，则会添加一个新属性a。
+
+	4. 如果a属性在原型链上，只有原型链上的a属性允许读写操作时且不是setter操作时，就会在obj对象上添加一个新属性。
+	
+	obj.a = 12;
+
+	5. 如果只想在obj对象上添加a属性，则使用Object.defineProperty。
+	<script type="text/javascript">
+		function Fn(){}
+		Fn.prototype = {
+			a: 1
+		}
+		var obj = new Fn();
+		obj.a = 123;
+		console.log(obj.a);
+		var obj1 = new Fn();
+		console.log(obj1.a);
+	</script>
+
+4. 原型继承
+
+	1. 原型继承是通过原型对象实现的，但是原型对象不是复制的对象属性和方法，是对原型对象的引用。
+
+		1. 添加Fn.prototype的属性
+		<script type="text/javascript">
+			function Fn(){}
+			Fn.prototype.a = 1;
+			var obj = new Fn();
+			var obj1 = new Fn();
+			console.log(obj.__proto__ === Fn.prototype);
+			console.log(obj.__proto__ === obj1.__proto__);
+		</script>
+
+		2. 添加Fn.prototype对象
+		<script type="text/javascript">
+			function Fn(){}
+			Fn.prototype = {
+				a: 1
+			}
+			var obj = new Fn();
+			Fn.prototype = {           //使用 = 相当于重新创建了一个新的原型对象，并不覆盖之前的原型对象。即使继承是关联对象。但原来的原型对象依据存在。
+				a: 123,
+				b: 1
+			}
+			var obj1 = new Fn();
+			console.log(obj.a);
+			console.log(obj1.a);
+			console.log(obj.__proto__ === obj1.__proto__);   //这两个原型对象不相等了
+		</script>
+
+	2. 原型继承实例 -- 使用类思想实现继承
+	<script type="text/javascript">
+		function Persion(name){
+			this.name = name;
+		}
+		Persion.prototype.sayName = function(){
+			console.log(this.name);
+		}
+
+		function Student(name,subject){
+			Persion.call(this,name);
+			this.subject = subject;
+		}
+
+		//Student.prototype = Persion.prototype  不能直接引用父类对象，否则子类修改，就会影响到父类。使用Object.create或者Object.setPrototypeOf
+		Student.prototype = Object.create(Persion.prototype);
+
+		Student.prototype.sayName = function(){
+			console.log('hello' + this.name);
+		}
+
+		Student.prototype.saySubject = function(){
+			console.log(this.subject);
+		}
+
+		var persion = new Persion('xiaoxx');
+		persion.sayName();
+
+		var student = new Student('xxx','math');
+		student.sayName();
+		student.saySubject();
+	</script>
+
+	3. 对象关联思想实现继承  -- 简单的继承关系可能会比类思想好点。
+	<script type="text/javascript">
+		var persion = {
+			setName: function(name){
+				this.name = name;
+			},
+			sayName: function(){
+				console.log(this.name);
+			}
+		}
+
+		var student = Object.create(persion);
+		student.initSubject = function(subject){
+			this.subject = subject;
+		}
+		student.setName('xiaoxx');
+		student.initSubject('math');
+		student.sayName();
+	</script>
 
 
