@@ -136,3 +136,19 @@ git clone git@10.0.1.15:huodong.500.com.git huodong.500.com
 	5. 只能在master 主分支上发代码, 所以要在本地 master分支合并dev分支的代码再提交代码 git checkout master && git merge dev && git push origin master
 
 	6. origin 分支有是三个 dev,build,master dev 是开发提交的分支，build是开发确认后提交给测试的分支，master测试确认没问题发代码的分支。
+
+12. git vs svn
+
+	1. 最核心的区别git是分布式的，而svn是集中式的。git支持离线工作，而svn必须要连上到远程仓库才可提交代码。
+
+	2. git存在本地版本库，可以随时提交保存代码，但svn一旦提交，就提交到了远程仓库。而且提交之前必须svn up。
+
+	3. git支持分支，开发随意切换，协同开发。而svn需要迁出多套代码。
+
+	4. 本地代码提交到预发布代码svn需要复制文件过去，而git只需要merge分支即可。
+
+	5. git命令较为复杂，而svn相对简单。
+
+	6. git是按内容存储的，而svn是按文件。git内容完整性优于svn。
+
+

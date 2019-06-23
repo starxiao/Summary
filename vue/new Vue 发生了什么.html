@@ -1,0 +1,61 @@
+new Vue 发生了什么
+
+1. vue的构建
+
+	因为vue支持web、weex、服务端，所以需要不同的构建方式构建出适合的版本。
+
+2. vue版本有区分Runtime only vs Runtime + Compiler
+
+	编译的定义:  包括把模板语法解析成ast语法化，最后生成render函数(相当于在new Vue options 传入的render)。
+
+	Runtime only需要借助webpack等打包工具将.vue文件编译成javascript。
+
+	Runtime + Compiler 只要使用了template属性但又没用webpack预编译的都需要使用在客户端使用compiler
+
+	在客户端编译对性能会有一定的损耗，并且js体积也会更大。
+
+3. vue Init
+	
+	因为vue区分compiler和runtime版本
+	<script type="text/javascript">
+		const App = new Vue({
+			el: '#app',
+			template: '<div>{{msg}}</div>'
+			data:{
+				msg: 'hello vue'
+			}
+		})
+
+		当vue options只有el选项而没有render函数时，vue会将el节点的元素取出进行编译，并且自动调用mount渲染。所以需要compiler版本的vue。
+
+		当出现template选项的时候，需要compiler，el也只是挂载。
+		
+		App.$mount('#app'); 手动调用mount函数挂载到div，有el选项会自动挂载。
+	</script>
+
+4. Virtual DOM
+
+var div = document.querySelector('#app'),str;
+for(var key in div){str += key;}
+可以看到输出的str的属性非常多。
+
+DOM元素是非常的庞大，当频繁更新DOM的时候会产生性能问题。
+
+vnode 是一个js对象，是对dom的抽象描述，包含tag、data、子节点等等，不包含DOM的操作方法
+
+vue 使用Vnode是因为Vue的响应式更新。
+		  
+		  data	
+	watch ====> update(vnode) ====> diff ====> render
+
+
+Vue的渲染路径:
+
+	1、组件实例初始化创建DOM   ---> 对应生命周期函数 mounted
+
+	2、组件数据更新刷新DOM     ---> updated
+
+
+5. new Vue 到渲染成真正DOM发生了什么
+
+	new Vue  -> init(lifecycle、event、data、props)  -> mount(挂载到具体DOM节点) -> compiler(将模板编译成render函数) -> vnode(render函数生成虚拟dom) -> patch(将vnode渲染到真正的DOM节点上)   -> DOM

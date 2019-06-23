@@ -1,0 +1,32 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<!-- <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script> -->
+	<script src="https://cdn.bootcss.com/vue/2.6.10/vue.runtime.min.js"></script>
+</head>
+<body>
+<div id="app">
+	123123
+	{{msg}}
+</div>
+<script type="text/javascript">
+	const app = new Vue({
+		// template: '<div>template = {{template}}</div>',
+		el: '#app',
+		data:{
+			msg: 'hello vue!',
+			template: 'vue template'
+		},
+		render:(createElement)=>{
+			return createElement('div', {
+				attrs:{
+					class: 'container' 
+				}
+			},this.msg)
+		}
+	})
+</script>
+</body>
+</html>
