@@ -3,13 +3,14 @@
 <html>
 <head>
 	<title></title>
-	<!-- <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script> -->
-	<script src="https://cdn.bootcss.com/vue/2.6.10/vue.runtime.min.js"></script>
+	<script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+	<!-- <script src="https://cdn.bootcss.com/vue/2.6.10/vue.runtime.min.js"></script> -->
 </head>
 <body>
 <div id="app">
 	123123
 	{{msg}}
+	{{arr[0]}}
 </div>
 <script type="text/javascript">
 	const app = new Vue({
@@ -17,14 +18,18 @@
 		el: '#app',
 		data:{
 			msg: 'hello vue!',
-			template: 'vue template'
+			template: 'vue template',
+			arr:[1,2]
 		},
-		render:(createElement)=>{
-			return createElement('div', {
-				attrs:{
-					class: 'container' 
-				}
-			},this.msg)
+		// render:(createElement)=>{
+		// 	return createElement('div', {
+		// 		attrs:{
+		// 			class: 'container' 
+		// 		}
+		// 	},this.msg)
+		// }
+		mounted: function(){
+			// this.$set(this.arr,0,'xx123');
 		}
 	})
 </script>

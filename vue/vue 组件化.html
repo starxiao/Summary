@@ -1,6 +1,56 @@
 
 vue 组件化
 
+1. 定义：
 	组件化： 就是将页面拆分多个组件，每个组件依赖的css、JavaScript、模板等等资源放在一个文件下开发和维护，
 	组件内部可复用的，组件与组件之间可嵌套。
+
+2. 创建过程
+
+	createComponent -> mergeOptions -> vnode -> render DOM
+
+3. 生命周期
+	参考生命周期文件
+
+4. 注册组件方式
 	
+	全局注册: Vue.component('my-component',{});  相当于公共组件，添加到Vue.options上。
+
+	局部注册: 在组件内components选项添加。只能当前组件内使用
+
+5. 异步组件实现的本质是 2 次渲染，除了 0 delay 的高级异步组件第一次直接渲染成 loading 组件外，其它都是第一次渲染生成一个注释节点，当异步获取组件成功后，再通过 forceRender 强制重新渲染，这样就能正确渲染出我们异步加载的组件了。
+
+	1. 普通异步加载，require需要在nodejs下支持,也就是需要webpack
+	<script type="text/javascript">
+		Vue.component('my-component',function(resolve,rejcet){
+
+			//require加载
+			require(['./component/my.vue'],resolve);
+		})
+	</script>
+
+	2. import方式 需要webpack
+	<script type="text/javascript">
+		Vue.component(
+			'my-component',
+			() => import('./component/my.vue')
+		)
+	</script>
+
+	3. 高级异步组件，也就是添加了loading组件，error组件
+	<script type="text/javascript">
+		const AsyncComp = () => ({
+		// 需要加载的组件。应当是一个 Promise
+		component: import('./MyComp.vue'),
+		  // 加载中应当渲染的组件
+		  loading: LoadingComp,
+		  // 出错时渲染的组件
+		  error: ErrorComp,
+		  // 渲染加载中组件前的等待时间。默认：200ms。
+		  delay: 200,
+		  // 最长等待时间。超出此时间则渲染错误组件。默认：Infinity
+		  timeout: 3000
+		})
+		Vue.component('async-example', AsyncComp)
+	</script>
+

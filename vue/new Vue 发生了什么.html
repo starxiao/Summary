@@ -14,6 +14,14 @@ new Vue 发生了什么
 
 	在客户端编译对性能会有一定的损耗，并且js体积也会更大。
 
+	模板编译过程
+
+	template -> compiler -> render 
+
+	compiler: 字符串template parse -> ast树 -> optimize 标记静态节点 -> 生成代码 generate code
+
+	 
+
 3. vue Init
 	
 	因为vue区分compiler和runtime版本
