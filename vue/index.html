@@ -13,13 +13,27 @@
 	{{arr[0]}}
 </div>
 <script type="text/javascript">
+	Vue.component('my-component',{
+		template: '<div @click="update">{{text}}</div>',
+		props:['text'],
+		model:{
+			prop: 'text',
+			event: 'updatetext'
+		},
+		methods:{
+			update:function(){
+				this.$emit('updatetext');
+			}
+		}
+	});
 	const app = new Vue({
-		// template: '<div>template = {{template}}</div>',
 		el: '#app',
+		template: '<div>template = {{template}}<my-component v-model="text" @updatetext="updatetext"></my-component></div>',
 		data:{
 			msg: 'hello vue!',
 			template: 'vue template',
-			arr:[1,2]
+			arr:[1,2],
+			text: 1
 		},
 		// render:(createElement)=>{
 		// 	return createElement('div', {
@@ -29,9 +43,18 @@
 		// 	},this.msg)
 		// }
 		mounted: function(){
-			// this.$set(this.arr,0,'xx123');
+			console.log(2340);
+		},
+		methods:{
+			updatetext: function(){
+				console.log(this.text);
+				this.text++;
+				console.log(this.text);
+			}
 		}
-	})
+	});
+
+
 </script>
 </body>
 </html>
