@@ -3,4 +3,93 @@ vue-router
 
 1. 定义
 
-	VueRouter存在三种模式和两个组件。
+	vuerouter的作用是根据不同的路径渲染出相对应的组件。VueRouter存在三种模式和两个组件。
+
+2. vuerouter渲染的过程
+	
+	<script type="text/javascript">
+		import Vue from 'vue';
+		import VueRouter from 'vue-router';
+
+		Vue.use(VueRouter);
+
+		const Home = ()=> import('./component/home.vue');
+
+		const router = new VueRouter({
+			mode: 'hash',
+			routes:[
+				{
+					path: '/home',
+					name: 'home',
+					component: Home
+				}
+			]			
+		});
+
+		const App = new Vue({
+			el: '#app',
+			router,
+		});
+
+		<router-view></router-view>
+	</script>
+
+	1. Vue.use(VueRouter), 使用install方法安装vuerouter插件。
+
+	install方法里面将$router,$route都添加到Vue的属性中，并且添加Vue.mixin在每个组件beforeCreate初始化router和将route对象设为响应式对象。最后注册了两个组件。
+
+	2.new VueRouter 定义了一个router对象。根据mode初始化history对象，创建router的matcher函数，根据当前的url地址匹配到相对于的组件。
+
+	3. new Vue创建vue实例，在Vue每个组件都会beforeCrate会init router。init router会根据history对象添加路由变化监听。hash模式会监听hashchange事件，history模式会监听popstate事件。
+
+	4. 在transitionTo过程中，当路由变换的时候。会重新更新route对象。因为route对象已是响应式对象，
+	所以会触发watch然后重新更新组件。
+
+	5.router-view 组件是一个功能性组件，里面有render函数，因为组件里面使用了route对象，重新当route改变时，会触发该组件重新渲染组件。
+
+	6. 最终就是达到了url地址变化的时候，渲染出不同的组件
+
+3. router模式
+
+	3.1 hash模式--> 触发 window 的 hashchange 事件
+
+		const router = new VueRouter({
+			mode: 'hash',   -> 默认是hash('#')
+			routes:[{
+				path: '/home',
+				name: 'home',
+				component: Home
+			}]
+		});
+
+	3.2 history模式 --> 触发window 的 popstate 事件
+
+		如果直接访问http://www.xxx.com/user/123,会返回404,因为应用是SPA,服务器未匹配这么目录。
+		所以需要再服务器端配置一个默认的html页面返回
+
+		1. nginx：
+			location / {
+			  try_files $uri $uri/ /index.html;
+			}
+
+		2. node web server：
+
+			const http = require('http');
+			const fs = require('fs');
+
+			http.createServer((req,res)=>{
+				fs.readFile('index.html','utf8',(err,content)=>{
+					if(err){
+						console.log(err);
+					}
+					res.writeHead(200,{
+						'Content-Type': 'text/html;charset=utf-8'
+					})
+					res.end(content);
+				});
+			}).listen(80)
+
+	3.3 abstract模式(nodejs使用)
+
+		抽象模式是属于最简单的处理了，因为不涉及和浏览器地址相关记录关联在一起；整体流程依旧和HashHistory 是一样的，只是这里通过数组来模拟浏览器历史记录堆栈信息。
+
