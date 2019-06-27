@@ -1,0 +1,34 @@
+keep-alive
+
+1. 定义:
+	
+	<keep-alive></keep-alive>是一个抽象组件，将子组件的vnode缓存起来，更新的时候直接挂载。
+
+	存在组件实例的时候就会执行reactiveComponent,而不会去执行$mount函数了。所以组件的生命周期函数都没有了，但提供了activated和deactivated钩子函数。
+
+	在动态组件上使用<keep-alive></keep-alive>,当在这些组件之间切换的时候，你有时会想保持这些组件的状态，以避免反复重渲染导致的性能问题。
+
+2. 用法
+
+	1. 与路由结合
+	<keep-alive>
+		<router-view></router-view>	
+	</keep-alive>
+
+	当路由切换的时候，匹配到的组件之间的切换都会缓存组件，最直观的是不在执行beforeCreate、mounted等生命周期函数，已经保存过的data数据不会再改变
+
+	2. 与动态组件结合
+
+	<keep-alive>
+		<component :is="currentComponent"></component>
+	</keep-alive>
+
+	3. 不会初始化实例，保存组件销毁前的所有数据。比如手动操作修改了data里面的数据，当组件reactiveComponent的时候不会将data设置为初始化的状态。
+
+	4. props
+
+		include(string|reg): 将匹配命中的缓存。
+
+		exclude(string|reg): 将匹配不命中的缓存。
+
+		max(num): 缓存组件的最大个数。

@@ -1,0 +1,67 @@
+组件插槽
+
+1. 定义
+	
+	插槽为自定义和复用组件的实现变的更加灵活。插槽分三种普通插槽、作用域插槽、具名插槽。
+
+2. 使用
+
+	2.1 普通插槽
+
+	child
+	<template>
+		<div class="content">
+			<slot>默认内容</slot>
+		</div>
+	</template>
+
+	fathter
+	<child-component>
+		<h1>普通插槽</h1>
+	</child-component>
+
+	在子组件的<slot>就会被替换为<h1>普通插槽</h1>
+
+	<child-component></child-component>
+	当父组件什么都不传时吗，子组件slot会渲染默认内容
+
+	2.2 作用域插槽也就是父组件能使用子组件的data
+
+	child
+	<template>
+		<div class="content">
+			<slot v-bind:user="user"></slot>
+		</div>
+	</template>
+
+	father
+
+	<child-component>
+		<h1 v-slot="childData">{{childData.user}}</h1>
+	</child-component>
+
+	2.3 具名插槽
+
+	child
+	<template>
+		<div class="content">
+			<slot name="header"></slot>
+			<slot></slot>
+			<slot name="footer"></slot>
+		</div>
+	</template>
+
+	father
+	<child-component>
+		<template v-slot:header>
+			<h1>header</h1>
+		</template>
+		<template>
+			content
+		</template>
+		<template v-slot:footer>
+			<h3>footer</h3>
+		</template>
+	</child-component>
+
+	子组件在slot标签内添加name属性对应的值就是在父组件template标签v-slot的值
