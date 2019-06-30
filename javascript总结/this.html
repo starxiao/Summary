@@ -42,7 +42,7 @@ this
 		var a = 1;
 
 		function b(){
-			console.log(this.b);
+			console.log(this.a);
 		}
 
 		b();
@@ -137,6 +137,10 @@ this
 			
 			function Foo(a){
 				this.a = a;
+			}
+
+			Foo.prototype.say = function(){
+				console.log(this.a);
 			}
 
 			var bar = new Foo(2);

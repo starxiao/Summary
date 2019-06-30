@@ -10,7 +10,7 @@ touch事件按钮点击穿透
 
 	touch网页不存在鼠标的事件，只存在touchstart/touchmove/touchend。touch并不存在(tap事件),zpeto的tap事件是模拟出来的
 
-	在手机上响应click事件会有300ms的延迟，原因就是在手机上触发touchEnd的后悔等待约300ms去判断用户是否有双击的行为。如果没有double tap
+	在手机上响应click事件会有300ms的延迟，原因就是在手机上触发touchEnd的后会等待约300ms去判断用户是否有双击的行为。如果没有double tap
 
 	行为就触发click事件。而zepto的tap事件是在touchEnd响应250ms无操作后触发的
 
@@ -55,7 +55,7 @@ touch事件按钮点击穿透
 	})
 </script>
 
-页面点击按钮触发弹窗，为弹窗下的底层元素绑定click事件，而关闭弹窗绑定tap事件。
+页面点击按钮触发弹窗，为弹窗下的底层元素绑定click事件，而关闭弹窗绑定tap事件(或者直接绑定touchstart||touchend事件)。
 
 点击关闭按钮，touchend首先触发tap，弹窗和layer都隐藏咯。touchend后等待300ms后发现不其他行为咯，则会继续触发click,
 弹窗已经消失，当前的click事件的target就在底层元素咯，就触发底层元素绑定的click事件。整个事件触发过程
@@ -69,4 +69,4 @@ touchend -> tap -> click
 
 	(2) fastClick
 
-	(3) vue-tap
+	(3) 统计使用v-tap事件，不要弹窗按钮添加touchend事件，弹窗下层添加click事件。

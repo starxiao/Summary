@@ -9,7 +9,7 @@
 
 		(1)在弹出层设置touchmove事件中设置e.preventDefault (适应于弹出层没有滚动);
 
-		(2)设置滚动元素{position:fixed;height:100%;overflow-y:hidden},在弹出弹窗之前需要记住body的滚动位置，关闭弹窗之后需要恢复。
+		(2)设置滚动元素{position:fixed;top:1000px;height:100%;overflow-y:hidden},在弹出弹窗之前需要记住body的滚动位置，设置其为fixed，top为已滚动的值。关闭弹窗之后去掉添加的时间需要恢复。
 
 		.toastFixed{
 			position: fixed; (添加position:fixed是禁止touch浏览器页面自带的上下滚动效果)
