@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>节流</title>
+</head>
+<style>
+	html,body{
+		width: 100%;
+		height: 100%;
+	}
+</style>
+<body>
+<div class="container">
+	<div class="content">
+		<ul class="scroll">
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+			<li>throttle</li>
+		</ul>
+	</div>
+</div>
+<script type="text/javascript">
+	function isEnd(){
+		var wHeight = document.body.clientHeight || document.documentElement.clientHeight,
+			sHeight = document.querySelector('.scroll').clientHeight,
+			scrollTop = window.pageYOffset || document.body.scrollTop || document.documentElement.scrollTop;
+		scrollHander = throttle2(function(){
+			console.log('window is scroll');
+			scrollTop = window.pageYOffset || document.body.scrollTop || document.documentElement.scrollTop;
+
+			console.log(sHeight);
+			console.log(wHeight);
+			console.log(scrollTop);
+			if(sHeight - wHeight - scrollTop < 30){
+				console.log('is end');
+			}
+		},1000);
+		
+		window.onscroll = scrollHander;
+	}
+	isEnd();
+
+	function throttle(fn,time=300){
+		let prev = 0;
+		return function(){
+			let context = this,
+				args = arguments,
+				now = Date.now();
+			if(now - prev > time){
+				console.log(now);
+				fn.apply(context,args);
+				prev = now;
+			}
+		}
+	}
+
+	function throttle1(fn,time=300){
+		let timeout = null;
+		console.log(timeout);
+		return function(){
+			let context = this,
+				args = arguments;
+			if(!timeout){
+		console.log(Date.now());
+
+				timeout = window.setTimeout(function(){
+		console.log(Date.now());
+
+					fn.apply(context,args);
+					timeout = null;
+				},time)
+			}
+		}
+	}
+
+
+  function throttle2(fun, delay) {
+        let last, deferTimer
+        return function (args) {
+            let that = this
+            let _args = arguments
+            let now = +new Date()
+            if (last && now < last + delay) {
+            	console.log('xxxx');
+                clearTimeout(deferTimer)
+                deferTimer = setTimeout(function () {
+                    last = now
+                    fun.apply(that, _args)
+                }, delay)
+            }else {
+                last = now
+                fun.apply(that,_args)
+            }
+        }
+    }
+
+
+
+
+</script>
+</body>
+</html>

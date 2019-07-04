@@ -1,0 +1,47 @@
+svn vs git
+
+1. 定义
+
+	svn是一个集中式版本控制系统，由中央服务器对代码进行管理。
+
+	git是一个分布式版本控制系统，本地仓库和远程仓库都可对代码进行管理。
+
+2. 命令
+
+			    		svn 					git
+
+	同步代码 		checkout					clone
+
+	更新代码			update						pull || fetch && merge
+
+	提交代码			commit						add && commit && push
+
+	忽略代码			ignore list               	.gitignore
+
+	查看提交记录		log							log
+
+	查看修改的文件	status						status
+
+	切换分支			swtich						checkout
+
+	创建分支 		相当于复制一份代码			branch
+
+	合并代码			merge						merge
+
+	回退代码			revert						checkout  commitid filename
+
+3. 应用场景区别
+
+	1. 最核心的区别git是分布式的，而svn是集中式的。git支持离线工作，而svn必须要连上到远程仓库才可提交代码。
+
+	2. git存在本地版本库，可以随时提交保存代码，但svn一旦提交，就提交到了远程仓库。而且提交之前必须svn up。
+
+	3. svn每次提交之前都要合并的别人的代码，如果遇到冲突每次都要解决。而git可以先push到个人远程仓库，而后再统一解决冲突。
+
+	3. git支持分支，开发随意切换，协同开发。而svn需要迁出多套代码。
+
+	4. 本地代码提交到预发布代码svn需要复制文件过去，而git只需要merge分支即可。
+
+	5. git命令较为复杂，而svn相对简单。
+
+	6. git是按内容存储的，而svn是按文件。git内容完整性优于svn。

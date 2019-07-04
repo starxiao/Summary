@@ -63,6 +63,8 @@
 	  	return $str;
 	}
 
+	4. curl bug
 
-
+		4.1 curl 请求的url地址默认是80端口，如果不是80端口，需要添加
+		curl_setopt($ch,CURLOPT_PORT,8080);
 ?>
