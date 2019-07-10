@@ -1,0 +1,226 @@
+localStorage vs sessionStorage vs cookies vs session
+
+1. localStorage 和 sessionStorage
+
+	1.1 基本用法
+	<script type="text/javascript">
+		localStorage.setItem('user','xiaoxx');
+		localStorage.getItem('user');
+		localStorage.removeItem('user');
+		localStorage.clear();
+	</script>
+
+	1.2 作用域
+
+		作用域是指如何隔离开不同页面之间的localStorage和sessionStorage(总不能再百度的页面读到谷歌的localStorage吧)
+
+		localStorage只要在相同的协议、域名、端口。就能读取、修改同一份localStorage数据。
+
+		sessionStorage比localStorage不一样的是要求在同一个窗口下。
+
+	1.3 生存期
+
+		localStorage在理论上没有被请除的情况下都是永久有效的。即使数据超过了浏览器规定的大小，也不会把之前的数据清空。
+
+		需要注意的在app的浏览器或者webview上，localStorage有可能被清空。可能因为退出了App,内存不足等等原因。
+
+		sessionStorage的生存期是只要当前窗口关闭（浏览器关闭）就会被清空。
+
+	1.4 数据结构
+
+		localStorage和sessionStarge都是标准的键值对(key,value)，保存的数据类型都是字符串。比如数字会被转成字符串，对象要用json字符串才能保存，图片要转成base64。
+
+		键值是唯一，重复以同一个键赋值的话会覆盖上次的值。
+
+	1.5 过期时间
+
+		localStorage对比cookies是没有过期时间。可以用下面代码实现localStorage添加过期时间
+
+		<script type="text/javascript">
+			const Store = {
+				set: function(key,value,expire){
+					let now = Date.now();
+					localStorage.setItem(key,JSON.stringify({value:value,expire: expire + now}));
+				},
+				get: function(key){
+					let now = Date.now(),
+						value = JSON.parse(localStorage.getItem(key));
+
+					if(!value){
+						return value;
+					}
+
+					if(now < value.expire){
+						return value.value;
+					}
+					
+					localStorage.removeItem(key);
+					return null;
+				}
+			}
+		</script>
+
+	1.6 存储大小
+
+		localStorage和sessionStorage大概为5M作用，比cookie的4k大。
+
+	1.7 域名限制
+
+		由于浏览器的安全，localStorage是无法跨域的，子域名无法读取和继承父域名的localStorage。cokies是可以的
+
+	1.8 localStorage | sessionStorage vs cookies
+
+		webStorage数据存储大小为5M比cookies的4k大很多。
+
+		webStorage无法实现跨域，而cookies子域可以继承主域名的cookie
+
+		cookies可以添加到http请求头内，从而发送到服务端。而webStorage只能保存在本地浏览器中
+
+		数据有效期的差别,sessionStorage是会话存储，窗口有效期。而localStorage在没有手动清除是永久保存，cookies是可以设置有效期。
+
+		webStorage支持时间通知机制，可以将数据更新的通知发送给监听者。
+
+	1.9 bug
+
+		在ios设备上无法重复setItem()
+
+
+2. cookies 
+
+	2.1 定义
+
+		cookie是服务器发送到用户并保存在浏览器上的一个文件，在下次请求时将其发送到服务器。因为http是无状态，所以需要使用cookie记录状态信息。
+
+	2.2 作用
+
+		会话状态管理（用户登录，用户信息）
+
+		浏览器行为跟踪
+
+	2.3 设置
+
+		php|nodejs|python 设置http header Set-Cookie: key=value返回给浏览器。
+
+	2.4 cookie属性值
+
+		"key=value; expires=Thu, expires=25 Feb 2016 04:18:00 GMT; domain=www.xiaoxx.com; path=/; secure; HttpOnly"
+
+		1. key=value 表示设置cookie的键和值。
+
+		2. expires 表示cookie的过期时间。默认是session，也就是当浏览器关闭的时候，cookie失效（当前窗口关闭并不失效，一定是整个浏览器关掉）,expires必须是 GMT 格式的时间（可以通过 new Date().toGMTString()或者 new Date().toUTCString() 来获得）
+
+		3. domain 表示设置cookie的域名。
+
+			比如设置了document.cookie="user=xiaoxx; domain=xiaoxx.com; path=/";
+
+			或者document.cookie="user=xiaoxx; domain=.xiaoxx.com; path=/";
+
+			在m.xiaoxx.com，cookie就会存在。一般设置.号表示二级域名能携带cookie,而不带.号也是一样的，只是这个功能大部分浏览器没实现。
+
+			document.cookie="user=xiaoxx; domain=www.xiaoxx.com; path=/";
+
+			那么cookie只存在于www.xiaoxx.com,而m.xiaoxx.com是不存在的。
+
+			如果当前路径是www.xiaoxx.com/mehome/
+
+			document.cookie="user=xiaoxx; domain=xiaoxx.com;" 那么设置的cookie的path默认是/mehome/
+
+		4. path 表示cookie的所在的网页目录
+
+			document.cookie="user=xiaoxx; path=/me/"; 那么/me/、/me/user/都能读到cookie
+
+			document.cookie="user=xiaoxx; " 设置的cookie的默认path是当前url地址的path
+
+		5. secure 当在https或者其他安全协议时，含有secure选项的cookie才会发送到服务器。
+
+		6. httpOnly 当cookie含有httpOnly选项的时，js就不能对该cookie进行修改，读取，删除。所以这个选项只能由服务端
+
+		7. SameSite cookie在跨站请求时不会发送，可以阻止跨站请求伪造（csrf）（还在试验阶段，chrome支持）
+
+			document.cookie="user=xiaoxx; SameSite=Strict" Strict模式，所有的请求都不能携带cookie
+
+			SameSite=Lax 只有在GET请求情况下可以携带cookie,POST等请求不能
+
+	2.5 js获取cookie
+		<script type="text/javascript">
+			let Cookie = {
+				get: function(key){
+					let cookies_arr = [],
+						cookie_arr = [];
+						value = '';
+
+					cookies_arr = document.cookie.split('; ');
+					cookies_arr.forEach((item) => {
+						cookie_arr = item.split(key+'=');     //不能使用split('=')，因为在value值中可以保存=
+						if(cookie_arr[1] !== undefined){
+							value = cookie_arr[1];
+						}
+					});
+					return decodeURIComponent(value);
+				},
+				get1: function(key){
+					let start = 0,
+						end = 0,
+						value = '';
+
+					start = document.cookie.indexOf(key+'=');
+					if(start > -1){
+						start = start + key.length + 1;
+						end = document.cookie.indexOf(';',start);
+						value = document.cookie.slice(start,end);
+					}
+					return decodeURIComponent(value);
+				},
+				set: function(key,value,options={}){
+					key = encodeURIComponent(key);
+					value = encodeURIComponent(value);
+
+					let cookie = key + '=' + value;
+					cookie += options.expires ? ';expires=' + Cookie._getExpires(options.expires) : '';
+					cookie += options.domain ? ';domain=' + options.domain : '';
+					cookie += options.path ? ';path=' + options.path : '';
+					cookie += options.secure ? ';secure' : '';
+
+					document.cookie = cookie;
+				},
+				_getExpires: function(expires){
+					switch (typeof expires){
+						case 'number': 
+							expires = new Date(Date.now() + expires * 1000);
+						break;
+						case 'string':
+							expires = new Date(expires);
+						break;
+					}
+					if(expires && Object.prototype.toString.call(expires) !== '[object Date]'){
+						throw new Error('expires is invalid');
+					}
+					return expires.toUTCString();
+				},
+				delete: function(key,path,domain){
+					if(Cookie.get(key)){
+						let cookie = key + '=';
+						cookie += path ? ';path=' + path : '';
+						cookie += domain ? ';domain=' + domain : '';
+						cookie += ';expires=' + (new Date(Date.now()-1000)).toUTCString();
+						document.cookie = cookie;
+					}
+				}
+			}
+		</script>
+
+3. session
+
+	session是保存在服务器上的一个状态列表，一般是唯一识别号sessionid用来记录用户的状态，发给浏览器时会将其存于cookie。当浏览器将cookie发到服务器时，服务器会将cookie的sessionid在session列表中查找。
+
+	session vs cookie
+
+	session 是会话级别的，而cookie可以设置有效期。
+
+	session是存在于服务器端，而cookie存在于前端。
+
+	session运行依赖cookie,如果浏览器禁止了cookie,可以在url地址上携带。
+
+	session存在于文件，内存中。
+
+	session经常用于用户验证。

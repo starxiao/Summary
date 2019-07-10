@@ -1,0 +1,111 @@
+防抖和节流
+
+1. 定义
+
+	函数防抖(debounce): 函数只有在过完一段时间后并且在该段时间内不被一直触发调用的情况下才会被执行一次。
+
+	函数节流(throttle)： 函数在规定时间内定时执行一次
+
+2. 应用场景
+
+	1. button频繁点击发送ajax请求。这时可以使用debounce，不管用户点多少次，都只会发送一次请求。
+
+	2. 监听滚动事件判断页面是否为底部。这时可以使用throttle,在滚动过程中会间隔一段时间判断是否到达底部。
+
+3. 代码
+
+	3.1 debounce
+	<script type="text/javascript">
+		function handleInput(){
+			let dom = document.querySelector('.username');
+			dom.addEventListener('keyup',deboundce(function(e){
+				console.log(e.target.value);
+			},1000));
+		}
+
+		function debounce(fn,time){
+			let timer = null;
+			return function(){
+				window.clearTimeout(timer);
+				timer = window.setTimeout(()=>{
+					fn.apply(this,arguments);
+				},time);
+			}
+		} 
+		handleInput();
+	</script>
+
+	3.2 throttle
+	<script type="text/javascript">
+		function isEnd(){
+			var wHeight = document.body.clientHeight || document.documentElement.clientHeight,
+				sHeight = document.querySelector('.scroll').clientHeight,
+				scrollTop = window.pageYOffset || document.body.scrollTop || document.documentElement.scrollTop;
+			scrollHander = throttle2(function(){
+				console.log('window is scroll');
+				scrollTop = window.pageYOffset || document.body.scrollTop || document.documentElement.scrollTop;
+
+				console.log(sHeight);
+				console.log(wHeight);
+				console.log(scrollTop);
+				if(sHeight - wHeight - scrollTop < 30){
+					console.log('is end');
+				}
+			},1000);
+			
+			window.onscroll = scrollHander;
+		}
+		isEnd();
+
+		function throttle(fn,time=300){
+			let prev = 0;
+			return function(){
+				let context = this,
+					args = arguments,
+					now = Date.now();
+				if(now - prev > time){
+					console.log(now);
+					fn.apply(context,args);
+					prev = now;
+				}
+			}
+		}
+
+		function throttle1(fn,time=300){
+			let timeout = null;
+			console.log(timeout);
+			return function(){
+				let context = this,
+					args = arguments;
+				if(!timeout){
+			console.log(Date.now());
+					timeout = window.setTimeout(function(){
+			console.log(Date.now());
+						fn.apply(context,args);
+						timeout = null;
+					},time)
+				}
+			}
+		}
+
+
+	    function throttle2(fun, delay) {
+	        let last, deferTimer
+	        return function (args) {
+	            let that = this
+	            let _args = arguments
+	            let now = +new Date()
+	            if (last && now < last + delay) {
+	            	console.log('xxxx');
+	                clearTimeout(deferTimer)
+	                deferTimer = setTimeout(function () {
+	                    last = now
+	                    fun.apply(that, _args)
+	                }, delay)
+	            }else {
+	                last = now
+	                fun.apply(that,_args)
+	            }
+	        }
+	    }
+	</script>

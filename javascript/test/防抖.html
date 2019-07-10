@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>防抖</title>
+</head>
+<body>
+<div class="content">
+	<input type="text" name="name" class="username">
+</div>
+<script type="text/javascript">
+	function handleInput(){
+		let dom = document.querySelector('.username');
+		dom.addEventListener('keyup',deboundce(function(e){
+			console.log(e.target.value);
+		},100));
+	}
+
+	function debounce(fn,time){
+		let timer = null;
+		return function(){
+			window.clearTimeout(timer);
+			timer = window.setTimeout(()=>{
+				fn.apply(this,arguments);
+			},time);
+		}
+	} 
+	handleInput();
+</script>
+</body>
+</html>

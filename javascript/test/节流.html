@@ -109,10 +109,8 @@
 				args = arguments;
 			if(!timeout){
 		console.log(Date.now());
-
 				timeout = window.setTimeout(function(){
 		console.log(Date.now());
-
 					fn.apply(context,args);
 					timeout = null;
 				},time)
@@ -121,7 +119,7 @@
 	}
 
 
-  function throttle2(fun, delay) {
+    function throttle2(fun, delay) {
         let last, deferTimer
         return function (args) {
             let that = this
@@ -140,10 +138,6 @@
             }
         }
     }
-
-
-
-
 </script>
 </body>
 </html>
