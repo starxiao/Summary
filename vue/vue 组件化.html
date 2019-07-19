@@ -30,6 +30,10 @@ vue 组件化
 	</script>
 
 	2. import方式 需要webpack
+
+		import(path)， import函数类型与es6的import，区别是import()是异步的，返回的是一个Promise
+
+		如果在vue的父组件中使用import()加载子组件。那么父组件的mounted函数会比子组件的mounted先执行。因为import()函数是异步的，而使用import from的话就是先加载子组件，就会按照vue的渲染机制，先渲染子组件后渲染父组件。所以就会先执行子组件的mounted后执行父组件的mounted
 	<script type="text/javascript">
 		Vue.component(
 			'my-component',

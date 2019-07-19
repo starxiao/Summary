@@ -2,12 +2,75 @@ http
 
 1. 定义
 	
-	http协议即超文本传送协议，建议在TCP协议上的一种应用。
+	http协议即超文本传送协议(Hyper Text Transfer Protocol)，建议在TCP协议上用于在客户端与web服务器通信的应用层协议。
 
+	URL在浏览器上输入的地址（uniform resource locater）统一资源定位符
 
+2. http过程
 
+	client                       server
+				request
+			    ------->
+			    <-------
+			    response
 
+	2.1 根据TCP/IP协议建立TCP连接，设置端口为80。
 
+	2.2 建立连接后客户端会发送一个请求(request)：请求命令GET index.html HTTP/1.1和Useragent/Origin/Accept等请求头信息。
+
+	2.3 服务器收到请求后，根据请求信息进行响应(response): HTTP/1.1 200 OK和 Content-type/cache-control/等响应头信息。
+
+	2.4 服务器按照和客户端约定的Content-Type数据格式将数据发送到客户端。
+
+	2.5 数据传输完成后，双方断开TCP连接。
+
+3. HTTP协议
+
+	3.1 通过请求和响应进行通信，客户端发起请求，服务器才会响应。
+
+	3.2 HTTP是不保存状态的协议，不对请求和响应之前的通信状态进行保存。于是引入cookie技术进行管理HTTP状态
+
+	3.4 cookie状态管理，客户端发送请求到服务端后。服务端会返回一个Set-Cookie首部字段信息，客户端接收到后进行保存。
+		下次请求的时候在报文中加入cookie再发送。服务器接收cookie后便可识别到之前的状态信息。
+
+	3.5 HTTP请求方法
+
+		GET: 用来访问服务器上的资源，也可以用来传输资源。但是数据默认添加到url上，传输数据少也会不安全
+
+		POST： 用来传输资源到服务器上。传输的资源添加到http body里，传输数据多，并且相对GET安全
+
+		HEAD: 用来访问服务器的资源，在服务响应的时候不返回数据只访问响应头。常用来查看服务器的性能
+
+		PUT: 传输文件
+
+		DELETE: 删除指定资源
+
+		OPTIONS: 查询针对请求URL指定的资源支持的方法。常出现在当ajax请求为跨域并且是复杂请求时，浏览器会默认发送一个options请求询问服务器支持客户端请求的方法。
+
+		TRACE： 请求服务器回显其收到的请求信息，常用于HTTP请求的测试和诊断
+
+		CONNECT: 要求在和代理服务器通信时建立隧道，实现用隧道协议进场TCP通信。主要使用SSL和TSL协议吧通信内容加密经过网络隧道传输。
+
+4. HTTP报文
+	
+	HTTP报文可分为报文首部和报文主体两部分
+
+	request: POST /index.html HTTP/1.1          -- 请求行
+
+			Content-Type: application/x-www-for-urlencoded
+
+			Host: baidu.com                -- 请求首部
+
+			Origin: baidu.com
+
+			username=xiaoxx&paword=123456   -- 请求主体
+
+	response: HTTP/1.1 200 OK              -- 响应行
+
+			Content-Length: 256
+			Content-Type: text/html         -- 响应首部
+
+			'{user:xiaoxx,password:123456}'   -- 响应主体
 
 
 

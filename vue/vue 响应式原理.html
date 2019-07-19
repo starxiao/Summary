@@ -22,6 +22,53 @@ vue 响应式原理
 
 	3.3 array响应式的方法: push,pop,shfit,unshift,splice,sort,reverse
 
+	3.4 data在vue的实例中可以是obj|function,在组件中必须是function
+
+		因为组件是可以复用的，如果data是个对象，data被所有通过这个构造函数创建的实例所共享，每个组件实例会相互影响。
+
+	3.5 new Vue() VS Vue.extend() VS Vue.component()
+
+		new Vue()  -> 创建一个Vue实例,里面的data可以是对象，因为创造一个新的实例。不会相互影响
+
+		Vue.extend({})   -> Vue的子类继承方法，返回的是一个构造函数(并不是Vue实例)。data只能是函数。
+		<script type="text/javascript">
+			const component = Vue.extend({
+				data(){
+					return{
+						data: 1
+					}
+				}
+			});
+			const page = Vue.component('page-component',component);	
+			const page1 = new component();
+		</script>
+
+		Vue.component('page-component',option)   -> option里面的data也必须是函数，Vue会先用Vue.extend(option)创建一个构造函数。
+
+		<script type="text/javascript">
+			function Fun(option){
+				this.option = option;
+			}
+
+			Fun.prototype.data = {
+				a: 1
+			}
+
+			let a = new Fun({a:1});
+			let b = new Fun({a:1});
+			a和b的属性a相互不影响
+
+			let obj = {a:1};
+			let c = new Fun(obj);
+			let d = new Fun(obj);
+			c和d的属性a会相互影响
+
+			而在Vue.extend创建的构造函数相当于在Fun.prototype属性上添加的。所以当继承的时候指向的是同一个对象。
+		</script>
+
+		而在webpack使用export default的Vue组件也是一个对象，并且这个对象的data只能是一个函数
+
+
 4. 组件更新
 
 	4.1 组将更新过程分新旧组件相同和不同。

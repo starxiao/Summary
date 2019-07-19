@@ -153,4 +153,35 @@ git clone git@10.0.1.15:huodong.500.com.git huodong.500.com
 
 	6. git是按内容存储的，而svn是按文件。git内容完整性优于svn。
 
+13. git仓库迁移
+
+	1. 首先从原地址克隆一份裸版本库，
+
+		git clone --bare http://github.com/xiaoxx/test.git
+
+	2. push到新的git仓库地址
+
+		git push --mirror http://github.com/xiaoxx/new.git
+
+	3. 从新的仓库克隆下来即可
+
+14. 解决git push之前没有fetch&&merge别人的代码从而还原了别人的代码
+
+	1. 在本地新建一个分支dev1 备份所有已经提交的到origin/dev的代码（非常重要，不然代码会被删掉）。
+		git branch -v dev1 && git fetch && git merge origin/dev
+
+	2. 在dev分支下还原到你提交代码之前的那个需要merge的commitid
+		git checkout dev
+		git log
+		git reset --hard commitid
+		git push
+		慎重做这样操作，push之后所有提交的代码都没了。
+	
+	3. git checkout dev1 copy 出去备份一份代码。
+
+	4. git checkout dev 然后加备份代码覆盖当前的文件，再进行对比和提交。
+
+
+
+
 
