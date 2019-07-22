@@ -53,7 +53,7 @@ http
 
 4. HTTP报文
 	
-	HTTP报文可分为报文首部和报文主体两部分
+	4.1 HTTP报文可分为报文首部和报文主体两部分
 
 	request: POST /index.html HTTP/1.1          -- 请求行
 
@@ -71,6 +71,54 @@ http
 			Content-Type: text/html         -- 响应首部
 
 			'{user:xiaoxx,password:123456}'   -- 响应主体
+
+	4.2 HTTP 报文首部字段
+
+		4.2.1 报文首部字段结构
+			报文首部字段是由首部字段名和字段值构成的，中间使用冒号":"分隔。
+
+			HTTP首部字段可以有多个值
+
+			报文首部如果存在两个或以上的相同的首部字段名时，不同浏览器有不同的处理逻辑。大多数情况下是都不生效。
+
+				首部字段名                   冒号                    字段值
+
+				Content-Type                 :                       text/html; charset=UTF-8
+
+				Connection                   :                        keep-alive
+		
+		4.2.2 首部字段类型
+
+			通用首部字段                          请求报文和响应报文都会使用
+
+			请求首部字段						     客户端向服务端发送请求的请求报文首部
+
+			响应首部字段						     服务端向客户端返回的响应报文首部
+
+			实体首部字段							 针对请求报文和响应报文的实体部分使用	
+
+
+		4.2.3 通用首部字段（HTTP/1.1）
+
+			Cache-Control                            控制缓存行为
+
+			Connection                               TCP连接的管理
+
+			Date 									 创建报文的日期时间
+ 
+			Pragma                                   报文指令
+
+			Transfer-Encoding                        指定报文主体的传输编码方式
+
+			Upgrade									 升级为其他协议
+
+			Via										 代理服务器的相关信息
+
+			Warning									 错误通知
+
+
+			Cache-Control（详见浏览器缓存）
+
 
 
 
