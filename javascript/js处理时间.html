@@ -9,6 +9,8 @@ new Date('2018-10-10 12:12:12')   --在ios上不支持
 
 <script type="text/javascript">
 	date.replace(/\-/g,'/');
+
+	if(new Date(time) === 'Invalid Date'){return ''}
 </script>
 
 一、Date对象是js获取时间一个对象，可以通过Date.prototype添加Date对象的属性和方法

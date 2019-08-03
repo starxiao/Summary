@@ -224,3 +224,20 @@ localStorage vs sessionStorage vs cookies vs session
 	session存在于文件，内存中。
 
 	session经常用于用户验证。
+
+4. localStorage && cookie 跨域
+
+	4.1 cookie跨域存在问题是因为浏览器存在同源策略，不同域名下的cookie、localStorage之间不能随意访问。
+
+	4.2 解决cookie跨域的办法
+
+		4.2.1 设置path='/'，在同域名下的不同路径可以使用。
+
+		4.2.2 设置domain的主域名，比如www.baidu.com，和m.baidu.com共用域名就需设置domain="baidu.com"
+
+		4.2.3 jsonp，a.com想访问b.com的域名。就需要在a.com发送一个jsonp请求到b.com，callback的js将b.com的cookie写入到a.com
+		callback=document.cookie="b.com" 
+
+		4.2.4 cors在ajax请求的时候添加Access-Control-Allow-Credentials:true,在服务端设置Access-Control-Allow-Origin: a.com。不能设置*,必须要是一个域名。
+
+

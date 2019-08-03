@@ -181,6 +181,11 @@ git clone git@10.0.1.15:huodong.500.com.git huodong.500.com
 
 	4. git checkout dev 然后加备份代码覆盖当前的文件，再进行对比和提交。
 
+15. git Hooks（钩子）
+
+	15.1 git 能在特定的重要动作发生触发自定义shell脚本。客户端钩子在提交和合并操作时调用，服务器端钩子在接收被推送的提交操作时调用。
+
+	15.2 git hook都被存再git目录下的的hooks子目录中。例如./git/hooks/pre-commit.sample
 
 
 

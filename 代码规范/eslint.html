@@ -1,0 +1,101 @@
+ESLint
+
+1. 定义
+
+	ESLint的作用主要为了检查代码有没有错误和代码规范的问题，ESLint也存在修复代码问题的功能的选项--fix。
+
+2. 配置
+
+	npm install eslint --save-dev || yarn add eslint --dev (yarn安装eslint有可能不成功)
+
+	window 下node_modules\.bin\eslint --init
+
+	init之后有.eslintrc的文件，里面就是包含eslint所有的配置
+
+	node_modules\.bin\eslint src\pages\index.vue
+
+	npm install eslint -g 可全局执行 eslint index.js
+
+	eslint --init
+
+
+
+3. init
+
+	init的时候有三种情况可选择
+	1. eslint 问答模式 	2. 默认大厂模式  	3. 根据当前代码自动生成
+
+	默认选择问答模式
+
+
+4. 配置文件
+
+	{
+	    "env": {                               --> 指代码运行的环境
+	        "browser": true,
+	        "commonjs": true,
+	        "es6": true
+	    },
+	    "extends": "eslint:recommended",      -->  ESLint 的推荐规则配置，就是前面打勾了的 https://eslint.org/docs/rules/
+	    "plugins": [                          -->  ESLint的插件
+	        "react",
+	        "html"
+	    ],
+	    "rules": {                            --> 自定义的规则，可覆盖默认eslint推荐的规则
+	        "indent": [
+	            "error",
+	            4
+	        ],
+	        "linebreak-style": [
+	            "error",
+	            "windows"
+	        ],
+	        "quotes": [
+	            "error",
+	            "single"
+	        ],
+	        "semi": [
+	            "error",
+	            "always"
+	        ]
+	    }
+	}
+
+5. eslint 规则
+
+	https://eslint.org/docs/rules/
+
+
+6. 如何在提交之前使用eslint检查代码呢
+
+	6.1 使用husky 插件 或者pre-commit，他们都在git commit || git push 之前执行相关的操作
+
+	6.2 npm install husky -D || yarn add husky --dev
+
+	6.3 在package.json
+
+		{
+			"script":{
+				"precommit": "eslint src/pages/index.vue"
+			}
+		}
+
+	配置完成之后只要每次git commit 代码都会执行eslint src/pages/index.vue 该命令行
+
+7. 如何只检查本次提交所修改的文件
+
+	7.1 使用lint-staged插件staged就是git add 提交到暂存区的概念。
+
+	7.2 npm install lint-staged || yarn add lint-staged --dev
+
+	7.3 在package.json
+	{
+		"lint-staged": {
+		    "*.js": [
+		      "eslint --ext .js,.vue src --fix",
+		      "git add"
+		    ]
+  		},
+	}
+
+	表示在匹配所有的js文件都执行命令行
