@@ -1,0 +1,74 @@
+
+H5与APP交互原理
+
+1. 基于WebView UI(也就是使用H5页面)，通过JSBridge完成H5与Native的双向通讯，从而赋予H5一定程度的原生能力。例如微信JS-SDK
+
+2. 基于Native UI(React-Native/Weex)，在赋予H5原生API能力的基础上，通过JSBridge将js解析成虚拟节点树传递到Native并使用原生渲染
+
+3. 小程序方案，通过更加定制化的JSBridge,使用双WebView双线程的模式隔离JS逻辑与UI渲染加强了H5与Native混合程度，提高了页面性能及开发体验
+
+
+Hybrid技术原理
+
+	Hybrid App的本质就是在原生的APP中，使用WebView作为容器直接承载Web页面。所以核心点就是Native端和H5端之间的双向通讯层，
+	其实就是跨语言的通讯方案，来完成Native(Java/Object-c)与JavaScript的通讯，这个方案就是JSBridge。而实现JSBridge的关键就是WebView
+
+
+	1. JavaScript调用原生Native接口方式
+
+		(1) API注入方式： 原理就是通过WebView,Native获取到JavaScript上下文环境，并在上面export一个对象，使js可以直接调用。
+
+			比如H5获取APP的version： 在APP打开一个新的WebView时，会将包含APP的version信息的js对象注入到H5页面的window对象上。
+
+			H5页面直接通过该对象即可获取APP的version。 ESApp.getInfo().version
+
+		(2) 拦截方式： WebView中的prompt/console/alert拦截，还有就是WebView URL Scheme 跳转拦截（用的比较多的方式）
+
+			URL拦截方案
+
+				1. 实现原理：在WebView中发出的网络请求，客户端都能进行监听和捕获
+
+				2. 协议的定制： 需要制定一套URL Scheme规则，通常我们的请求会带有对应的协议开头，例如: http://www.baidu.com 或者 rabbit://login
+
+					rabbit协议只是一种规则，不同的业务可以制定不同的协议
+
+					一般不要使用location.href = rabbit://login，因为自身机制的问题会将同时并发多次的请求合并为一次，导致协议被忽略、通常是在js创建iframe发送请求的方式
+
+					考虑到安全性，防止被第三方调用，会在APP内设置域名白名单。
+
+				3. 协议的拦截：当APP解析到请求URL头为制定的协议时，便会解析参数，对相关功能的调用。
+
+				4. 协议回调： 协议本质是发送请求，是一个异步过程，所以我们需要处理对应的回调机制，采用的是JS的监听事件方式。
+
+	2. Native 调用Javascript接口方式
+
+		Native可以通过WebViewAPI直接执行JS代码
+
+			IOS
+			webview.stringByEvaluatingJavaScriptFromString("alert('NativeCall')")
+
+			Android
+			webView.loadUrl("javascript:JSBridge.trigger('NativeCall')")
+
+
+	3. JSBridge的接入
+
+		JS部分：需要在JS环境注入bridge的代码，包含协议的拼装、发送、参数等等
+
+		Native： 在APP中实现URL拦截与解析、环境信息的注入。
+
+		通用做法是将这两部分封装一个Native SDK,由客户端统一引入，在客户端初始化一个WebView页面时，将两部分代码注入到这个WebView中
+
+		因为注入的过程是一个异步的行为，H5很难知道调用的时候，所以需要在页面中添加window.addEventListenner('bridgeReady',function(){})在回调函数中调用
+
+
+	4. App嵌入H5的方式
+
+		1.在线H5，这是最常见的一种方式。我们只需要将H5代码部署到服务器上，只要把对应的 URL地址 给到客户端，用 WebView 打开该URL，即可嵌入
+
+			好处：独立性强，可随时改动、资源压力在服务器上不影响APP包体积
+			缺点： 离线无法打开、网络慢时，首屏加载也慢
+		
+		2. 内置包H5，这是一种本地化的嵌入方式，我们需要将代码进行打包后下发到客户端，并由客户端直接解压到本地储存中。通常我们运用在一些比较大和比较重要的模块上。
+
+			好处与上面相反。
