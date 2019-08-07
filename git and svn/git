@@ -187,6 +187,15 @@ git clone git@10.0.1.15:huodong.500.com.git huodong.500.com
 
 	15.2 git hook都被存再git目录下的的hooks子目录中。例如./git/hooks/pre-commit.sample
 
+16. git rebase (合并多次提交)
 
+	git rebase -i HEAD~2
 
+	pick 02e9cf6 测试代码还原    --pick 就是使用这次的commit信息
+	squash 9015481 测试代码还原  --squash 是这个commit会被合并到前一个commit
+	fixup 9015484 测试代码还原   --fixup 类似squash但是不会保存commit信息
+
+	编辑框的显示的提交顺序是先commit的显示到最前
+
+	所以rebase是将后commit的合并到前一个commit上去。
 
