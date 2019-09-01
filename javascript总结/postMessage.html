@@ -1,0 +1,49 @@
+一、定义
+
+    window.postMessage方法可以实现跨源通信。（就是跨域脚本访问传递数据）
+
+二、用法
+
+    targetWindow.postMessage(data, targetOrigin, transfer)
+
+    targetWindow: 目标窗口的引用，可以是
+
+        const targetWindow = window.open('http://www.xiaoxx.com');
+
+        也可以是iframe的引用
+
+        const targetWindow = document.querySelector('iframe').contentWindow;
+
+    data: 发送给目标窗口的数据，基本数据类型都可以传递，字符串或者对象等等
+
+    targetOrigin: 通过窗口的origin属性来指定哪些窗口能接收到消息事件，
+    其值可以是字符串"*"（表示无限制）或者是targetWindow的url(包括协议、域名、端口)
+
+    transfer: 可选，随同message一起传递的Transferable 对象
+
+三、监听postMessage事件
+
+    window.addEventListener('message', function(event){
+
+    }, false);
+
+    event的属性有
+
+    data: originWindow传递过来的数据
+
+    origin: 调用postMessage窗口发送窗口的origin。origin包括协议+'://' + 域名 + ':' + 端口
+
+    source: 发送消息的窗口的对象引用
+
+四、安全
+
+    1. 如果不接受其他网站message,就没必要为message事件添加事件监听器
+
+    2. 接收message的event.orgin做判断
+        
+    const origin = event.origin  ! === '你想的targetWindow'
+    if(orgin !== 'http://www.xiaoxx.com'){
+        return;
+    }
+
+    3. 在postMessage数据的origin不能指定*,要指定origin。
