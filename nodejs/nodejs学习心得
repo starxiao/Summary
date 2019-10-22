@@ -3,8 +3,29 @@ nodejs 学习心得
 
 
 
-1. nodejs 不是一门语言也不是框架，而是基于google v8 引擎的JavaScript 运行环境，结合Libuv扩展了javascript io/fs的特性
+一、定义
 
-2. 事件驱动(event-driven),非阻塞I/O模型
+	1. nodejs 不是一门语言也不是框架，而是基于google v8 引擎的JavaScript 运行环境，结合Libuv扩展了javascript io/fs的特性
 
+二、特点
+	
+	1. 异步I/O
+
+	2. 事件驱动(event-driven)
+
+	3. 单线程
+
+三、应用场景
+
+	1. I/O密集型
+
+		I/O密集型的优势主要是NODE利用事件循环的处理能力，而不是启动每一个线程为每一个请求服务，占用资源少。
+
+	2. CPU密集型
+
+		因为单线程的原因，常时间的计算
+
+	3. 前后端编程语言统一
+
+	
 

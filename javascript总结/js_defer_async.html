@@ -1,0 +1,25 @@
+js_defer_async
+
+一、js加载顺序和执行的区别
+
+	1. <script type="text/javascript" src="index.js"></script> 浏览器会立即加载并执行该脚本，会阻塞后续文档元素(html)的解析。也就是说不等待后续载入的文档元素，读到就加载并执行
+
+	2. <script type="text/javascript" src="index.js" defer></script>
+	加载后续文档元素的过程和加载index.js的过程是并行的，但index.js的执行要在所有元素解析完成（之后），
+	也就是在DOMContentLoaded事件触发（之前）完成。
+
+	3. <script type="text/javascript" src="index.js" async></script>
+	加载后续文档元素的过程和加载、执行index.js的过程是并行的。
+
+	<script></script>    html解析 -> 加载和执行（阻塞的后续的HTML解析）
+	<script async></script>  html解析 -> 加载(加载和后续HTML解析是并行的) -> 执行(执行js阻塞了后续HTML解析)
+	<script defer></script> html解析 -> 加载(加载和后续HTML解析是并行的) -> 执行(执行时要在所有元素解析之后，所以不会阻塞后续HTML解析)
+
+
+二、总结
+
+	1. defer 和 async 在网络读取（下载）这块儿是一样的，都是异步的（相较于 HTML 解析）
+
+	2. 它俩的差别在于脚本下载完之后何时执行，显然 defer 是最接近我们对于应用脚本加载和执行的要求的
+
+	3.关于 defer，此图未尽之处在于它是按照加载顺序执行脚本的，这一点要善加利用

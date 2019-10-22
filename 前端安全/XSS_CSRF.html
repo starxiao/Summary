@@ -1,0 +1,106 @@
+XSS_CSRF
+
+一、XSS (Cross-Site-Script)
+
+	XSS(跨站脚本攻击)是一种代码注入攻击，攻击者在目标网站上注入恶意脚本，使之在用户的浏览器上运行。
+	利用这些脚本获取到用户信息。
+
+二、XSS的分类
+
+	1. 恶意代码存储到数据
+
+		攻击者利用输入内容将恶意代码输入并保存到数据库
+
+		用户正常访问网站，服务器将恶意代码输出并拼接到HTML上输出到浏览器
+
+		用户浏览器接受后就马上执行恶意代码
+
+		攻击者就能将用户的信息数据发送到攻击者网站，伪造用户操作
+
+	2. 恶意代码组装在url上
+
+		攻击者构造出包含恶意代码的url，并发在论坛上。
+
+		用户点击后服务器将恶意代码取出拼接到HTML上输出到浏览器
+
+		用户浏览器接受后就马上执行恶意代码
+
+		攻击者就能将用户的信息数据发送到攻击者网站，伪造用户操作
+
+三、XSS防范
+
+	1. 防止 JavaScript 执行时，执行恶意代码
+
+		1. 纯前端渲染，不包含任何业务数据
+
+		2. 在输出HTML时，进行必要的转义，过滤到< > script 
+
+		3. innerHTML的时候尽量小心，使用Vue/React的v-html
+
+		4. 避免将数据拼接到onclick、a标签的herf上
+
+		5. 输入内容的长度控制
+
+	2. Content Security Policy
+
+		1. 禁止加载不同域名的的代码
+
+
+	3. HTTP-only Cookie 
+
+		禁止 JavaScript 读取某些敏感 Cookie，攻击者完成 XSS 注入后也无法窃取此 Cookie
+
+	4. 验证码
+
+
+四、CSRF (跨站请求伪造)Cross-site request forgery
+
+	1. CSRF->攻击者诱导用户进入第三方网站，向攻击网站发送跨站请求，伪造成已登录过的用户进行用户操作。
+
+	2. 攻击流程
+
+		2.1 用户登录a.com并保存cookie
+
+		2.2 用户被诱导进入了b.com 
+
+		2.3 b.com 使用a.com保存的cookie信息对a.com进行用户信息操作
+
+
+	3. 攻击类型
+
+		GET类型
+
+		<img src="http://bank.com?act=moneny"/>
+
+		POST类型
+
+		<form id="form" action="http://bank.com?act=moneny" method="post"></form>
+
+		<script type="text/javascript">document.querySelector('form').submit()</script>
+
+	4. CSRF的特点
+
+		4.1 第三方网站伪造请求
+
+		4.2 只是携带cookie，而不是读取
+
+	5. 防护
+
+		5.1 同源策略：通过判断请求源的origin和referrer来判断是否为同源
+
+
+		5.2 CSRF TOken
+
+			用户登录后服务器将随机生成一个加密字符串存于session内。
+
+			服务并将该加密字符串返回给用户，用户之后的每次请求都需要携带该token给服务器验证。
+
+		5.3 Samesite Cookie属性 http新属性
+
+			Set-Cookie: user=a123132 Samesite=Strict;
+
+			假如b.com 设置了如上cookie，其他任何第三方网站访问b.com时都不会携带该cookie到b.com
+
+			Set-Cookie: user=a123132 Samesite=Lax;
+
+			表示宽松限制，当网站是打开了新页面且是个GET请求则可被携带到服务器

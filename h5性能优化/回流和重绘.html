@@ -1,0 +1,49 @@
+回流和重绘
+
+一、reflow(回流)
+	
+	浏览器为了重新渲染部分和整个页面，重新计算页面元素的位置和几何结构的进程叫做reflow。通俗的说是
+	当页面元素改变的时候，将会影响文档内容或结构或是元素位置，此过程称为reflow
+
+	回流是导致DOM脚本执行效率低的关键因素，页面的一个节点如果发生了回流，那么它的子节点和父节点都会重新渲染。
+
+二、什么时候会导致reflow
+
+	1. 改变窗口大小
+	2. 改变字体大小
+	3. 添加/删除位置相关的样式	
+	4. input内容改变
+	5. 激活伪类
+	6. 操作class属性
+	7. 脚本操作DOM
+	8. 计算DOM属性 offsetTop, offsetLeft, offsetWidth, offsetHeight
+		scrollTop/Left/Width/Height
+		clientTop/Left/Width/Height
+		IE中的 getComputedStyle(), 或 currentStyle
+	9. 设置改变节点位置的样式(width,height,padding) 与px 相关。
+
+		width / height / padding / margin / display / border-width /position /font-size 
+		
+
+
+三、减少reflow对性能的影响
+	
+	1. 尽量不要直接修改DOM的样式，预先定好classname,通过改变classname去改变样式。
+
+	2. 尽量不要修改影响范围比较大的DOM
+
+	3. 为动画元素添加absolute/fixed，这样不会影响到其他元素
+
+	4. 尽量修改的DOM节点是最低层级的节点
+
+四、repait(重绘)
+	
+	repait是在一个元素的外观改变时，但没有改变布局的情况下发生的。比如visibility/background。
+
+	通俗来说，就是当各种盒子的位置、大小以及其他属性，例如颜色、字体都确定下来后，浏览器便把这些元素都按照各自的特性绘制一遍，于是页面的内容出现了，这个过程叫做repaint。
+
+	常见的改变元素的style的样式
+
+	color / border-style / visibility /border-radius / backgorund 
+
+

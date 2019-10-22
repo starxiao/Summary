@@ -17,20 +17,20 @@ TCP/IP
 		
 		client                                                             server
 
-	'hello world'                                   应用层               'hello world'
+	'hello world'                                    应用层               'hello world'
 
 	'hello world' + TCP首部                          传输层               解析TCP包
 
 	'hello world' + TCP首部 + IP包                   网络层               解析IP包
 
-	'hello world' + TCP首部 + IP包 + 以太网包首部     链路层               解析以太网包
+	'hello world' + TCP首部 + IP包 + 以太网包首部    物理层               解析以太网包
 
 
 3. port
 
 	3.1 port 端口号
 		链路层和IP中的地址是指MAC地址和IP地址。MAC地址来标识不同的计算机，IP地址用来识别网络主机和路由器。
-		而端口号就是失败同一个计算机上的不同应用。
+		而端口号就是识别同一个计算机上的不同应用。
 
 	3.2 源IP + 目标IP + 传输协议 + 源端口 + 目标端口 + 数据来识别一个应用。
 
@@ -45,6 +45,8 @@ TCP/IP
  		TCP是面向有连接的通信传输，面向连接是指在数据通信之前做好端到端的确认。
 
  		三次握手是指TCP建立连接的时客户端和服务器端总共要发送三个包以确认连接的建立。
+
+ 		SYN(同步序列号)是TCP/IP建立连接时使用的握手信号，ACK是应答信号，通过SYN+ACK以确认消息。
 
 
  				client                           server
