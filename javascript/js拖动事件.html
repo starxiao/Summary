@@ -1,0 +1,110 @@
+一、drag事件是PC浏览器实现拖动html元素的一种方案
+
+二、主要触发事件
+
+    drag: 当拖动元素时或选中的文本时触发。
+
+    dragstart: 当用户开始拖动一个元素或选中文本触发。
+
+    dragenter: 当拖动的元素到一个可释放目标时触发。
+
+    dragleave: 当拖动的元素离开一个可释放目标时触发。
+
+    dragover: 当元素或选中的文本被拖到一个可释放目标上时触发
+
+    drop: 拖动的元素释放到目标元素上时触发。
+
+    dragend: 拖拽操作结束时触发。
+
+三、主要代码
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>drag</title>
+    <style>
+        .drag-target-box {
+            width: 200px;
+            height: 20px;
+            background: blueviolet;
+            margin-bottom: 10px;
+            padding: 10px;
+        }
+        .drag-item {
+            width: 200px;
+            height: 20px;
+            text-align: center;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="drag-target-box">
+        <div class="drag-item" draggable="true">拖拽的元素</div>
+    </div>
+    <div class="drag-target-box"></div>
+    <div class="drag-target-box"></div>
+    <div class="drag-target-box"></div>
+</body>
+<script>
+    initDrag();
+    function initDrag() {
+        let eles = document.querySelectorAll('.drag-target-box');
+        let dragedElement = null;
+        Array.from(eles).forEach(ele => {
+            ele.addEventListener('drag', (e) => {
+            }, false);
+
+            ele.addEventListener('dragstart', (e) => {
+                console.log('start');
+                dragedElement = e.target;
+                event.target.style.opacity = .5;
+                console.log(dragedElement);
+            }, false);
+
+            ele.addEventListener('dragend', (e) => {
+                console.log('end')
+                e.target.style.opacity = '';
+            },false);
+
+            ele.addEventListener('dragenter', (e) => {
+                console.log('enter');
+                e.target.style.background = 'red';
+            });
+
+            ele.addEventListener('dragleave', (e) => {
+                console.log('leave');
+                e.target.style.background = '';
+            });
+
+            ele.addEventListener('dragover', (e) => {
+                console.log('over');
+                e.preventDefault();
+            }, false);
+
+            ele.addEventListener('drop', (e) => {
+                console.log('drop');
+                let targetElement = e.target;
+                console.log(targetElement);
+                console.log(dragedElement);
+                if(targetElement.className.indexOf('drag-target-box') > -1) {
+                    targetElement.style.background = '';
+                    dragedElement.parentNode.removeChild(dragedElement); 
+                    targetElement.appendChild(dragedElement);
+                }
+            }, false);
+        });
+    }
+</script>
+</html>
+
+四、主要事项
+
+    1、拖动元素要添加draggable="true"
+
+    2、触发drag的事件要区分origin、target。比如originElement触发dragstart事件，而targetElement触发drop事件。
+    设置ele.addEventListener时要区分不同的元素。
+
+    3、drop事件的触发前提要设置dragover事件
