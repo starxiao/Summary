@@ -1,0 +1,86 @@
+es2015 定义一个对象的新属性、或者修改一个属性，并返回这个对象。
+
+Object.defineProperty(obj, key, descrpitor);
+
+<script>
+    let obj = {};
+    Object.defineProperty(obj, key, {
+        value: 'value',
+        writable: true,
+        enumerable: true,
+        configurable: true
+    });
+</script>
+
+
+descrpitor 表示的属性描述符有两种形式：数据描述符和存取描述符。
+
+两者共有以下两种键值
+
+    configurable: 默认为false, 当值为true时，该属性其他描述符才能被改变(已定义的依据生效),并且才能使用delete删除符
+
+    enumerable: 默认为false, 当值为true时, 该对象属性值才能被for in 等枚举，in操作符依据生效。直接赋值的方式创建对象的属性，则 enumerable 为 true
+
+数据描述符
+
+    value: 'xiaoxx', 定义属性对应的值，没定义时值为undefined
+
+    writable: 默认为false，当值为true时，定义的value值才能被改变
+
+存取描述符
+
+    get: 给属性提供get方法，当没有return值时，返回undefined
+
+    set: 给属性提供set方法，该方法将接受唯一参数，并将该参数的新值分配给该属性，默认为undefined。将赋值表达式右侧的值当做参数传入 sette
+
+一个对象数据描述符和存取描述符不能共存。
+
+监控数据改变
+
+    <span class="text">1</span>
+    <button class="btn"></button>
+
+    <script>
+        var obj = {
+            value: 1
+        };
+
+        var value = obj.value;
+
+        Object.defineProperty(obj, 'value', {
+            get() {
+                console.log('触发获取值操作');
+                return value;
+            },
+            set(newValue) {
+                console.log('触发设置值操作');
+                value = newValue;
+                document.querySelector('.text').value = newValue;
+            }
+        });
+
+        document.querySelector('.btn').addEventListener('click', function(){
+            obj.value += 1;
+        });
+
+        封装一个watch函数
+
+        function watch(obj, name, callback) {
+            var value = obj.name;
+            Object.defineProperty(obj, name, {
+                get() {
+                    return value;
+                },
+                set(newValue) {
+                    value = newValue;
+                    callback && callback(newValue);
+                }
+            })
+        }
+
+        watch(obj, 'value', (newValue) => {
+            document.querySelector('.text').innerHTML = newValue;
+        })
+    </script>
+
+

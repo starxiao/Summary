@@ -52,13 +52,13 @@ handler ===> 表示拦截行为,也是一个对象
  			}
  		});
 
- 		p.name -> 'xiaoxx';
- 		p.age -> 'property age not in';
+ 		p.name  //'xiaoxx';
+ 		p.age  //'property age not in';
  	</script>
 
  3. get() --> 实例  
  	<script type="text/javascript">
- 		利用proxy 实现生成dom
+ 		//利用proxy 实现生成dom
  		const dom = new Proxy({},{
  			get(target,key){
  				return function(attrs, ...children){
@@ -87,7 +87,7 @@ handler ===> 表示拦截行为,也是一个对象
 
  	4. Set() 实例
  	<script type="text/javascript">
-		1. 对象属性值符合要求
+		//1. 对象属性值符合要求
 
 		var validator = new Proxy({},{
 			set(target,key,value){
@@ -102,4 +102,45 @@ handler ===> 表示拦截行为,也是一个对象
 				target[key] = value;
 			}
 		})
- 	</script>
+	 </script>
+	 
+	 5. watch 数据监控
+	 <span class="text"></span>
+	 <button class="btn"></button>
+	 <script>
+		function watch(obj, callback) {
+			let proxy = new Proxy(obj, {
+				get(target, key) {
+					return target[key];
+				},
+				set(target, key, newValue) {
+					target[key] = newValue;
+					callback && callback(key, newValue);
+				}
+			});
+
+			return proxy;
+		}
+
+		var obj = {
+			value: 1
+		};
+
+		let proxyObj = watch(obj, (key, newValue) => {
+			if(key === 'value') {
+				document.querySelector('.text').innerHTML = newValue;
+			}
+		});
+
+		document.querySelector('.btn').addEventListener('click', () => {
+			proxyObj.value += 1;
+		})
+	 </script>
+
+	6. proxy 与defineProperty的区别
+
+		1. proxy 可以监听多种操作，比如 in、delete、函数apply等等操作， 而defineProperty只能监控get,set。
+
+		2. proxy需要改变代理对象值才能触发监控，而defineProperty只需改变原值即可。
+		 
+	 

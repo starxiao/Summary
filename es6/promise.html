@@ -5,11 +5,9 @@ promise  --- 抽象异步处理对象以及对其进行各种操作的组件。
 1.基本操作
 <script type="text/javascript">
 	var promise = new Promise(function(resolve,reject){
-
 		//异步处理
 		//处理结束后调用resolve 或reject
-
-	})
+	});
 
 	promise.then(function(val){
 		//success
@@ -28,20 +26,25 @@ promise  --- 抽象异步处理对象以及对其进行各种操作的组件。
 	});
 </script>
 
-
 2.promise 会返回三种状态 
+	
+	fulfilled --- 已成功
+	rejected --- 已失败
+	pending  --- 进行中
 
-	resolved --- 异步成功返回
-	rejected --- 异步失败返回
-	pending  --- promise 初始化的状态
-
-promise对象的状态，从Pending转换为Fulfilled或Rejected之后， 这个promise对象的状态就不会再发生任何变化。
+promise对象的状态，从pending转换为fulfilled或rejected之后， 这个promise对象的状态就不会再发生任何变化。
 
 也就是说，Promise与Event等不同，在.then 后执行的函数可以肯定地说只会被<strong>调用一次</strong>。
 
-另外，Fulfilled和Rejected这两个中的任一状态都可以表示为Settled(不变的)。
+另外，fulfilled和rejected这两个中的任一状态都可以表示为Settled(不变的)。
 
-3. then方法里面的操作是异步的
+promise的缺点
+	1、无法取消promise，一旦新建后就会立即执行promise内的代码，无法中途取消。
+	2、promise内部抛出的异常错误，如果不设置回调函数(也catch函数)，将不会反应到外部（不会中断代码执行）。
+	3、promise的状态为pending的时候，无法知道进程，即不知道是刚开始，还是即将结束。
+
+3. then方法里面的操作是异步的,then可包含两个参数，一个是resolve,另外一个是reject，这两个参数只会执行一个。
+   事件队列的当前运行完成之前，then里面的回调函数永远不会被调用
 
 <script type="text/javascript">
 	var promise = new Promise(function(resolve){
@@ -53,9 +56,15 @@ promise对象的状态，从Pending转换为Fulfilled或Rejected之后， 这个
 	});
 	console.log('outer promise');
 
-	inner promise  -- 1
-	outer promise  -- 2
-	34             -- 3
+	promise.then(resolve => {
+		console.log(resolve);
+	}, reject => {
+		console.log(reject);
+	})
+
+	//inner promise  -- 1
+	//outer promise  -- 2
+	//34             -- 3
 </script>
 
 4. promise.catch   -> 指定发生错误时的回调函数
@@ -83,3 +92,21 @@ promise对象的状态，从Pending转换为Fulfilled或Rejected之后， 这个
 						 // 只会捕获异步操作里面发生的错误
 		})
 	</script>
+
+5.  promise.all -> promise.all用于将多个promise实例包装一个新的promise实例。
+
+	const p = Promise.all([p1, p2, p3]);
+
+	1. p的状态由p1, p2, p3共同决定，只有当p1, p2, p3的状态都为fulfiled时，p的状态才为fulfiled，
+	并且将p1，p2, p3的值组成数组传递给p.then回调函数。
+
+	2. 当p1, p2, p3任一状态为rejected时，第一个rejected的实例返回的值传递给p.catch回调函数。
+
+	3. 当p1实例自己定义的catch函数，那将不会触发p.catch函数
+
+6. promise.race
+
+	const p = Promise.race([p1, p2, p3]);
+
+	p的状态就是p1, p2, p3第一个状态改变的那个实例的状态
+

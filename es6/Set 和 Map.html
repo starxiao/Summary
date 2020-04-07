@@ -20,6 +20,20 @@ Set 和 Map
 
 		字符串去重
 		[...new Set('abcdab')].join(',') -> a,b,c,d
+
+		取数组的并集
+
+		Array.from(new Set([1,2,3,4].concat([4,5,6,7])));
+
+		数组的交集与差集
+
+		let a = new Set([1,2,3]);
+		let b = new Set([2,3,4]);
+
+		console.log(Array.from(new Set([...a].filter(x => b.has(x))))); a与b的交集
+
+		console.log(Array.from(new Set([...a].filter(x => !b.has(x))))); a与b的差集
+		
 	</script>
 
 	2. Set实例的属性、方法

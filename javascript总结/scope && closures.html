@@ -8,9 +8,9 @@ scope && closures
 
 	定义： 程序中的一段代码再执行之前会经历的三个步骤统称为编译
 
-	1.1 分词/词法分析，将字符串组成的代码语句提取成若干个代码块组成词法单元。比如var a = 1; 提成 var、a、= 、2、；
+	1.1 分词/词法分析，将字符串组成的代码语句提取成若干个代码块组成词法单元。比如var a = 1; 提成 var、a、= 、1、；
 
-	1.2 解析/语法分析，将词法单元数组转换成一个由元素逐级嵌套所组成的程序语法树称为抽象语法树（AST）。比如var a = 1; 使用var声明了一个值为2的a变量	
+	1.2 解析/语法分析，将词法单元数组转换成一个由元素逐级嵌套所组成的程序语法树称为抽象语法树（AST）。比如var a = 1; 使用var声明了一个值为1的a变量	
 
 	1.3 代码生成，将AST转为可执行代码的过程。这个过程包括将AST转成机器指令和分配内存等等操作。
 
@@ -40,16 +40,16 @@ scope && closures
 	<script type="text/javascript">
 		(function(){
 			var i = 0;
-			console.log(i);   -> 0  立即执行函数将i隐藏起来了
+			console.log(i);  // -> 0  立即执行函数将i隐藏起来了
 		})();
-		console.log(i);     -> 无法引用立即执行函数里的i, 报错
+		console.log(i);     //-> 无法引用立即执行函数里的i, 报错
 	</script>
 
 	4.4 块作用域
 	<script type="text/javascript">
 		const temp = true;
 		if(temp){
-			let bar = '1';                --> let为变量绑定了所在的任意作用域中，通常是{  ... }内部
+			let bar = '1';              //  --> let为变量绑定了所在的任意作用域中，通常是{  ... }内部
 			console.log(bar);
 		}
 		console.log(bar);
@@ -76,9 +76,9 @@ scope && closures
 	<script type="text/javascript">
 		a = 2;
 		var a;
-		console.log(a);    a -> 2 
+		console.log(a);    //a -> 2 
 
-		console.log(a);    a -> undefined
+		console.log(a);    //a -> undefined
 		var a = 2;
 		相当于下面操作
 		var a;
@@ -86,8 +86,8 @@ scope && closures
 		a = 2;
 		所以a为undefined
 
-		foo();    -> TypeError
-		var foo = function(){           ->函数和变量会被提升，但是函数表达式不会被提升
+		foo();   // -> TypeError
+		var foo = function(){          // ->函数和变量会被提升，但是函数表达式不会被提升
 			console.log(1);
 		}
 	</script>
@@ -107,7 +107,7 @@ scope && closures
 			console.log(2);
 		}
 
-		最终输出是1；
+		//最终输出是1；
 	</script>
 
 6. 闭包
@@ -128,7 +128,7 @@ scope && closures
 		var baz = foo();
 		baz();      a --> 2
 
-		baz函数执行的时候，实际上是在执行bar函数，然而执行bar是在全局作用域，而依然能访问到foo函数内部作用域的a，这就产生了闭包。
+		//baz函数执行的时候，实际上是在执行bar函数，然而执行bar是在全局作用域，而依然能访问到foo函数内部作用域的a，这就产生了闭包。
 
 
 		function a(){
@@ -142,7 +142,7 @@ scope && closures
 		}
 
 		function c(fn){
-			fn && fn();   在c函数作用域内依然调用到了a函数内的变量，这就是闭包
+			fn && fn();   //在c函数作用域内依然调用到了a函数内的变量，这就是闭包
 		}
 
 		function wait(time){
@@ -173,7 +173,7 @@ scope && closures
 			})(i);
 		}
 
-		立即执行函数为每次循环j创造了作用域，所以每隔1秒后输出： 0,1,2,3,4
+		//立即执行函数为每次循环j创造了作用域，所以每隔1秒后输出： 0,1,2,3,4
 	</script>
 
 	6.3 闭包产生模块

@@ -18,17 +18,17 @@ this
 
 	<script type="text/javascript">
 		function a(){
-			console.log('a');    调用栈: 全局 -> a 
+			console.log('a');    //调用栈: 全局 -> a 
 			b();
 		}
 
 		function b(){
-			console.log('b');   调用栈： 全局 -> a -> b
+			console.log('b');   //调用栈： 全局 -> a -> b
 			c();
 		}
 
 		function c(){
-			console.log('c');    调用栈: a -> b -> c    忽略了全局
+			console.log('c');    //调用栈: a -> b -> c    忽略了全局
 		}
 
 		a();
@@ -36,7 +36,7 @@ this
 	
 3. 绑定规则
 
-	3.1 默认绑定： 独立函数调用,直接使用不带任何修饰的函数引用进行调用的，因此只能使用默认绑定，如果是在严格模式下 use strict
+	3.1 默认绑定：独立函数调用,直接使用不带任何修饰的函数引用进行调用的，因此只能使用默认绑定，如果是在严格模式下 use strict
 	
 	<script type="text/javascript">
 		var a = 1;
@@ -48,7 +48,7 @@ this
 		b();
 	</script>
 
-	3.2 隐式绑定，调用的位置是否有上下文对象，或者是否被某个对象包含
+	3.2 隐式绑定，调用的位置是否有上下文对象，或者是否被某个对象包含,会把函数的this绑定到这个上下文对象。
 	
 	<script type="text/javascript">
 		function foo(){
@@ -62,7 +62,7 @@ this
 
 		obj.foo();
 
-		foo函数被obj包含了，所以里面的this指向了obj，对象属性引用链中最后一层会影响调用位置。
+		//foo函数被obj包含了，所以里面的this指向了obj，对象属性引用链中最后一层会影响调用位置。
 
 		var a = 'global';
 		function foo(){
@@ -76,7 +76,7 @@ this
 
 		var fun = obj.foo;
 
-		fun();    -> fun是obj.foo的引用，引用了foo函数本身，所以fun是默认绑定  'global'
+		fun();    //-> fun是obj.foo的引用，引用了foo函数本身，所以fun是默认绑定  'global'
 
 		var a = 'global';
 
@@ -113,16 +113,16 @@ this
 			}
 
 			var obj = {a: 1};
-			bar(2);       -> 3
+			bar(2);      // -> 3
 
 			function fun(){
 				console.log(this.a);
 			}
 			var obj = {a: '111'};
 			var bar = fun.bind(obj);
-			bar();   -> '111'
+			bar();   //-> '111'
 
-			bind(..) 会返回一个硬绑定的新函数，它会把参数设置为 this 的上下文并调用原始函数
+			bind() //会返回一个硬绑定的新函数，它会把参数设置为 this 的上下文并调用原始函数
 		</script>
 
 	3.4 new 绑定
@@ -144,7 +144,23 @@ this
 			}
 
 			var bar = new Foo(2);
-			console.log(bar.a);    -> 2
+			console.log(bar.a);    //-> 2
+
+			//实现new
+
+			function create() {
+				let obj = Object.assign({});
+
+				let Constructor = [].shift.call(arguments);
+
+				obj.__proto__ = Constructor.prototype;
+
+				let res = Constructor.apply(obj, arguments);
+
+				return res instanceof Object ? res : obj;
+			}
+
+
 		</script>
 
 	3.5 绑定规则优先级
@@ -153,7 +169,7 @@ this
 
 4 箭头函数this
 	
-	箭头函数只跟其定义的作用域有关，无法进行绑定。
+	箭头函数只跟其函数定义的作用域（上下文环境）有关，无法进行绑定。
 
 
 

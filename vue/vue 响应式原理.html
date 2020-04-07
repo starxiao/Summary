@@ -81,7 +81,7 @@ vue 响应式原理
 
 	5.1 computed方法会监听当前依赖值的变化，当依赖值变化的时候会重新执行该方法
 
-	5.2 computed方法常用来返回stote里面的state。
+	5.2 computed方法常用来返回store里面的state。
 
 	<h1>{{dataUser}}</h1>
 	<h2>{{$store.state.user}}</h2>
@@ -100,10 +100,10 @@ vue 响应式原理
 			}
 		}
 
-		1. dataUser不会与state.user进行绑定，而computedUser会，也就是当state.user变化的时候
+		//1. dataUser不会与state.user进行绑定，而computedUser会，也就是当state.user变化的时候
 		h1的值不会改变，h2和h3会改变
 
-		2. 当obj.user改变的时候，h4也会改变
+		//2. 当obj.user改变的时候，h4也会改变
 	</script>
 
 6. watch

@@ -16,14 +16,14 @@ javascript 原型以及原型链
 	原型对象: 每个构造函数(其实就是每个函数)都拥有的一个属性并且其值是一个对象，用来实现原型继承。也就是使用构造函数生成的实例对象的[[prototype]]指向的值
 
 	<script type="text/javascript">
-		因为每个对象都是由构造函数Object()生成的实例对象,所以该对象的原型指向了Object函数的原型对象(Object.prototype)
+		//因为每个对象都是由构造函数Object()生成的实例对象,所以该对象的原型指向了Object函数的原型对象(Object.prototype)
 
 		var obj = {a: 1};
 		console.log(Object.prototype);
 		console.log(obj.__proto__ === Object.prototype);
 	</script>
 
-	构造函数: 用来初始化新创建的对象的函数就是构造函数，也就是使用new操作符实例化了的那个函数。
+	构造函数: 用来初始化新创建对象的函数就是构造函数，也就是使用new操作符实例化了的那个函数。
 
 	<script type="text/javascript">
 		function Fn(){}
@@ -31,11 +31,11 @@ javascript 原型以及原型链
 		var a = new Fn();
 		console.log(Fn.prototype);
 		console.log(fn.prototype);
-		Fn -> 构造函数
-		fn -> 普通函数  
+		Fn //-> 构造函数
+		fn //-> 普通函数  
 
-		其实JavaScript约定用来初始化新创建对象的函数都是首字母大写，称其为构造函数。
-		其实每个函数就是构造函数，从根本上构造函数跟普通函数没有区别，普通函数也具有prototype原型对象
+		//其实JavaScript约定用来初始化新创建对象的函数都是首字母大写，称其为构造函数。
+		//其实每个函数就是构造函数，从根本上构造函数跟普通函数没有区别，普通函数也具有prototype原型对象
 	</script>
 
 	constructor: 原型对象有一个constructor属性，指向了该原型对象对应的构造函数。因为实例对象继承了原型对象的属性，所以实例对象也拥有constructor属性。
@@ -51,7 +51,7 @@ javascript 原型以及原型链
 	<script type="text/javascript">
 		function Fn(){}
 		var obj = new Fn();
-		obj -> 实例对象
+		obj //-> 实例对象
 
 		var object = {};
 		object的构造函数是Object()
@@ -63,9 +63,9 @@ javascript 原型以及原型链
 	<script type="text/javascript">
 		function Fn(){}
 		var obj = new Fn();
-		obj.__proto__ -> Fn.prototype
+		obj.__proto__ //-> Fn.prototype
 
-		Fn.prototype.__proto__ -> Object.prototype
+		Fn.prototype.__proto__ //-> Object.prototype
 
 		Object.prototype.__proto__ === null;
 	</script>
