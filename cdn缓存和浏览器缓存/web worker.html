@@ -1,0 +1,67 @@
+
+web worker 运行在后台的javascript
+
+1、定义
+    web worker的作用就是利用计算机的多核机制为JavaScript创造多线程环境。允许主线程创建worker线程，将一些任务
+    分配给后者运行，worker线程在后台运行，和主线程之间互不干扰。等到worker线程执行完任务后再将结果返回给主线程。
+
+2、特点
+    1. worker线程一旦建立，就会马上执行，所以不要过度创建多个worker线程，使用完需要关闭。
+
+    2. 同源限制，分配给worker线程运行的脚本文件，必须与主线程的脚本文件同源。
+
+    3. DOM限制，worker线程无法访问window、document、parent对象，可以使用navigator、location对象。
+
+    4. 通信联系，worker线程和主线程之间在不同的上下文环境，需要通过postmessage完成通信。
+
+    5. 脚本限制不能使用alert，但可以使用ajax,不能使用file://本地文件。
+
+3. 用法
+
+    <script>
+        if(typeof Worker === 'undefined') {
+            return;
+        }
+        let worker = new Worker('worker.js');         //worker.js 里面的内容就是worker线程要执行的任务
+        worker.postMessage('this is main');       //主线程通过postMessage像worker线程发送消息
+
+        worker.terminate();     //worker线程关闭
+        //主线程接收消息
+        worker.onmessage = (e) => {
+            console.log(e.data);
+        }
+
+        worker.onerror = (err) => {
+            console.log(err);
+        };
+
+        worker.addEventListener('error', err => {
+            console.log(err);
+        })
+
+        //worker.js
+        console.log('this is worker');
+        this.postMessage('this is worker');   // worker线程向主线程发送的消息
+        this.addEventListener('message', (e) => {
+            console.log(e.data);               //worker线程接收主线程发过来的消息
+        });
+
+        this.onmessage = (e) => {
+            console.log(e.data);
+        }
+
+        this.close(); //worker线程关闭
+
+        importScripts('script1.js');    //worker线程加载脚本
+
+    </script>
+
+    4. 数据通信
+        主线程和子线程之间是传值而不是传地址，通过字符串的序列化的方式
+
+    5. 实例
+
+        ajax轮询
+
+        worker里面创建worker
+
