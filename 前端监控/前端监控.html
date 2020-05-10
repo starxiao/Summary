@@ -94,11 +94,11 @@
     domRenderTime = 0,
     loadTime = 0;
 
-dnsTime = timing.domainLookupEnd - timing.domainLookupStart;
-tcpTime = timing.connectEnd - timing.connectStart;
-firstPaintTime = timing.responseStart - start;
-domRenderTime = timing.domContentLoadedEventEnd - start;
-loadTime = timing.loadEventEnd - start;
+    dnsTime = timing.domainLookupEnd - timing.domainLookupStart;
+    tcpTime = timing.connectEnd - timing.connectStart;
+    firstPaintTime = timing.responseStart - start;
+    domRenderTime = timing.domContentLoadedEventEnd - start;
+    loadTime = timing.loadEventEnd - start;
 
 console.log('DNS解析时间:', dnsTime, 
             '\nTCP建立时间:', tcpTime, 

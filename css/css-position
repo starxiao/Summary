@@ -29,7 +29,7 @@ position: static/relative/absolute/fixed/sticky/inherit 其中static(静态定�
 4. fixed:
 
 	(1) 脱离正常的文档流
-	(2)fixed是根据窗口为原点进行偏移定位，就不会根据滚动条的滚动而偏移。
+	(2) fixed是根据窗口为原点(body)进行偏移定位，就不会根据滚动条的滚动而偏移。
 
 5. sticky:
 

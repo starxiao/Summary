@@ -21,6 +21,9 @@ beforeMount ============> mounted  (this.$nextTick DOM render end)
 
 		(data has change)
 beforeUpdate ===========> updated
+		
+		(<keep-alive></keep-alive> 组件内切换的时候触发)
+activated   ===========> deactivated
 
 			beforeCreate ==> created ==> beforeMount ==> mounted ==> beforeDestroy ==> destroyed
 

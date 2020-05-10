@@ -1,0 +1,26 @@
+VUE MVVM原理理解及实现
+
+    一、什么是MVVM
+        MVVM 其实就是Model-View-ViewModel
+
+        Model: 模型层，负责将处理业务逻辑以及和服务器进行交互。
+        View: 视图层，负责将数据模型转化成UI展示，即为HTML页面。
+        ViewModel: 视图模型层，用来连接Model和View,是Model与View通信的桥梁。
+
+        View层和Model层并没有直接联系，而是通过ViewModel层进行交互。 
+        ViewModel层通过双向数据绑定将View层和Model层连接了起来，使得View层和Model层的同步工作完全是自动的。
+
+    一、双向数据绑定
+    当用户更新视图的时候，同时也更新的数据，反之亦然。
+
+    二、原理
+    
+    基于数据劫持的发布订阅模式。
+
+    1、解析器Compile解析模板中的Directive(指令)，收集指令所依赖的方法和数据，等待数据变化然后进行渲染。
+
+    2、Observer利用Proxy或Object.defineProperty生成的Observer对对象属性的劫持，在属性变化后通知订阅者。
+    
+    3、Watcher属于Observer和Compile的桥梁，从Observer监听到的数据变化通知更新视图，视图改变的的时候更新数据绑定函数。
+
+    

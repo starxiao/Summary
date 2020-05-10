@@ -38,7 +38,55 @@ route={
 }
 
 
+导航守卫
 
+	Router的全局钩子
+	beforeEach: (to, from, next) => {
+		to:    即将渲染的route对象
+		from:  上次离开的route对象
+		next:  钩子管道
+
+		next()  -> 需要执行route才会更新
+	}
+
+	beforeResolve: () => {}
+
+	afterEach: (to, from) => {}
+
+	route钩子
+
+	routes = [
+		{
+			path: '/foo/:id',
+			name: foo,
+			component: Foo,
+			beforeEnter: (to, from, next) => {
+				next() -> 必须要调用
+			}
+		}
+	]
+
+	组件内钩子
+
+	beforeRouteEnter(to, from, next) => {
+
+		//无法获取this对象
+		//next 方法必须执行
+		next(vm => {
+			vm  => 组件内this对象
+		});
+	}
+
+	beforeRouteUpdate(to, from, next) => {
+		能获取this对象
+		//next 方法必须执行
+	}
+	监听url地址search参数变化的方法可以用beforeRouteUpdate或者watch '$route'对象
+
+	beforeRouteLeave(to, from, next) => {
+		能获取this对象
+		//next 方法必须要执行
+	}
 
 
 
