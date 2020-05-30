@@ -234,12 +234,12 @@ function nextOrder_1(root, array = []) {
     }
 }
 
-let tree = new Tree();
+// let tree = new Tree();
 
-tree.insert(10);
-tree.insert(5);
-tree.insert(18);
-tree.insert(15);
+// tree.insert(10);
+// tree.insert(5);
+// tree.insert(18);
+// tree.insert(15);
 
 // console.log(tree.root);
 // let array = [];
@@ -273,4 +273,52 @@ function revertTree(pre, mid) {
     return node;
 }
 
-console.log(revertTree([1,2,4,7,3,5,6,8], [4,7,2,1,5,3,8,6]));
+// console.log(revertTree([1,2,4,7,3,5,6,8], [4,7,2,1,5,3,8,6]));
+
+
+//二叉搜素树找到第k小的值，其实就是排序
+function kNode(root, k) {
+    let array = [];
+    middleSort(root, array);
+    console.log(array);
+    if(k > 0 && k < array.length) {
+        return array[k - 1];
+    }
+
+    return null;
+}
+
+function middleSort(node, array) {
+    if(node) {
+        middleSort(node.left, array);
+        array.push(node.data);
+        middleSort(node.right, array);
+    }
+}
+
+// let tree = new Tree();
+// tree.insert(5);
+// tree.insert(3);
+// tree.insert(7);
+// tree.insert(2);
+// tree.insert(4);
+// tree.insert(6);
+// tree.insert(8);
+// console.log(tree);
+// console.log(kNode(tree.root, 3));
+
+
+//一颗二叉树的最大深度等于左子树深度和右子树深度的最大值+1
+
+function TreeDepth(root) {
+    return !root ? 0 : Math.max(TreeDepth(root.left), TreeDepth(root.right)) + 1;
+}
+
+let tree = new Tree();
+tree.insert(3);
+tree.insert(9);
+tree.insert(20);
+tree.insert(7);
+
+console.log(tree);
+console.log(TreeDepth(tree.root));

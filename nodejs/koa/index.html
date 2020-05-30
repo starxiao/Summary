@@ -1,0 +1,115 @@
+koa
+一、定义
+    koa是一种简单好用的nodejs web框架，它具有简洁、自由度高、优雅的特点。所有的功能都通过插件实现。
+
+二、功能
+    1、搭建web服务
+    2、提供中间层API服务。
+
+三、用法
+
+    1、搭建web服务 
+        <script>
+            const koa = require('koa');
+            const app = new koa();
+            
+            app.use(async ctx => {
+                ctx.body = 'hello world!';
+            });
+
+            app.listen(3000);
+        </script>
+
+    2、Context(上下文对象)
+
+        ctx.req (node的request对象)
+
+        ctx.res (node的response对象)
+
+        ctx.request (koa的request对象)
+
+        ctx.response (koa的response对象)
+
+        ctx.state (推荐的命名空间，用于通过中间件传递信息和你的前端视图)
+
+        ctx.cookies.get(name, [options])
+
+        ctx.cookies.set(name, value, [options])
+
+        ctx.throw(status, msg, data); 用于抛出一个错误
+
+    四、koa项目搭建
+
+    五、源码解析
+
+        1、 初始化
+            
+            const koa = require('koa');
+            const app = new koa();
+
+            实例化的时候koa做了两件事
+
+            1. 继承Emitter,具备处理异步事件能力
+            2. 创建实例有三个实例的属性被初始化，分别是context、request、response。使用Object.create()实现继承。
+
+        2、 app.use(async (ctx, next) => {
+            
+            });
+
+            判断use的函数是否为generator函数，是的话就把generator函数转化程async
+
+            传入app.use都会被push到middleware数组中。
+
+        3、koa-compose和洋葱式调用
+            function compose(middleware) {
+                return function (ctx, next) {
+                    function dispatch(i) {
+                        if (i >= middleware.length) {
+                            return Promise.resolve()
+                        }
+                        let curMiddleware = middleware[i]
+                        return curMiddleware(ctx, dispatch.bind(null, i + 1))
+                    }
+                    return dispatch(0)
+                }
+            }
+            
+            function mid1(ctx, next) {
+                console.log('mid1 before')
+                next()
+                console.log('mid1 after')
+            }
+            function mid2(ctx, next) {
+                console.log('mid2 before')
+                next()
+                console.log('mid2 after')
+            }
+            function mid3(ctx, next) {
+                console.log('mid3 before')
+                next()
+                console.log('mid3 after')
+            }
+            
+            const fn = compose([mid1, mid2, mid3])
+            fn({})
+
+        4、单一context原则
+
+        每一个http请求，koa都会创建一个context并共享给所有的全局中间件使用，当所有的中间件执行完后，会将所有的数据统一交给res进行返回。
+        所以，在每个中间件中我们才能取得req的数据进行处理，最后ctx再把要返回的body给res进行返回
+
+        createContext(req, res) {
+            const context = Object.create(this.context);
+        }
+
+        5、异步函数的统一错误处理机制
+
+        onerror(err) {
+            this.app.emit('error', err, this);
+        }
+        这里的this.app是对application的引用，当context.js调用onerror时，其实是触发application实例的error事件 。
+        该事件是基于“Application类继承自EventEmitter”这一事实。
+
+        6、委托模式
+            ctx.body === ctx.response.body
+            delegate(proto, 'request')

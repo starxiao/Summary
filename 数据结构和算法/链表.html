@@ -1,0 +1,76 @@
+链表
+
+一、定义
+
+    用一组任意存储的单元来存储线性表的数据元素，一个对象存储着本身的值和下一个元素的地址。
+
+二、特点
+    
+    需要遍历才能查询到元素，查询慢。
+
+    插入元素只需断开连接重新赋值，插入快。
+
+三、数据形式
+
+    function ListNode(x) {
+        this.val = x;
+        this.next = null;
+    }
+ 
+四、操作链表
+
+    1、遍历链表
+    function sortLinkedList(head) {
+        const array = [];
+
+        while(head) {
+            array.unshift(head.val);
+            head = head.next
+        }
+        
+        return array;
+    }
+
+    2、反转链表
+
+    思路：
+        1、以链表的head为基准点。
+        2、将基准点的下一个节点挪到头部作为头节点。
+        3、当基准点的next为null时，说明已经是最后一个节点了。
+
+    function reverseList(head) {
+        let currentNode = null;
+        let headNode = head;
+
+        while(head && head.next) {
+            currentNode = head.next;
+            head.next = currentNode.next;
+            currentNode.next = headNode;
+            headNode = currentNode;
+        }
+        
+        return headNode;
+    }
+
+
+    3. 输出该链表中倒数第k个结点
+
+    function findNode(head, k) {
+        if(!head || !k) {
+            return null;
+        }
+
+        let front = head;
+        let behind = head;
+        let index = 1;
+
+        while(font.next) {
+            index++;
+            front = front.next;
+            if(index > k) {
+                behind = behind.next;
+            }
+        }
+
+        return (k <= index) && behind;
+    }

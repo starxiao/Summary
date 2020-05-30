@@ -1,0 +1,28 @@
+一、盒模型
+
+    1. 盒模型分类W3C标准盒模型和IE盒模型。
+    2. 通过box-sizing: content-box (W3C标准盒模型) | border-box (IE盒模型)
+
+二、W3C标准盒模型
+
+    1. 元素的width和height只包含content，不包含padding和border。即等于content
+
+三、IE盒模型
+
+    1. 元素的width和height包含content、padding、border。即等于content+padding+border
+    当设置元素的width:100px、padding:10px、border: 5px时，此时content的width即为70px
+
+四、获取元素的width的js方法
+
+    let ele = document.querySelector('.box');
+
+    ele.style.width:   '100px'   -> 只能获取元素的内联样式
+
+    ele.clientWidth:  100     ->获取元素的内容宽度，当盒模型为W3C时等于width，当盒模型为IE模型时等于width-padding-border
+
+    ele.offsetWidth:  130      ->获取元素的content+padding+border,不包含元素的margin。当盒模型为IE盒模型时等于width
+
+    window.getComputedStyle(ele).width : 100px  -> 获取元素计算过的样式，包含内联样式和外部文件样式。
+
+    ele.getBoundingClientRect().width:  130 -> 获取元素的占据的空间,也是得到渲染后的宽和高，不包含元素的margin。当盒模型为IE盒模型时等于width
+

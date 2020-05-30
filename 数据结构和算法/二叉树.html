@@ -36,3 +36,52 @@
     左子树的右节点和右子树的左节点相同。
 
     右子树的左节点和左子树的右节点相同。
+
+    node1.value === node2.value
+
+    node1.left === node2.right
+
+    node1.right === node2.left
+
+五、二叉搜素树
+
+    定义：左节点比根节点小的，右节点比根节点大的。
+
+六、二叉树的最大深度
+    
+    二叉树的深度为根节点到最远叶子节点的最长路径上的节点数
+
+    思路：
+    一颗二叉树的最大深度等于左子树深度和右子树深度的最大值+1
+
+    function TreeDepth(root) {
+        return !root ? 0 : Math.max(TreeDepth(root.left), TreeDepth(root.right)) + 1;
+    }
+
+七、二叉树的最小深度
+
+    最小深度是从根节点到最近叶子节点的最短路径上的节点数量。
+
+    思路：
+
+    左右子树都不为空，左子树最小深度和右子树最小深度的最小值+1；
+    左子树为空，右子树最小深度+1
+    右子树为空，左子树最小深度+1；
+
+    function minDepth(root) {
+        if(!root) {
+            return 0;
+        }
+
+        if(!root.left) {
+            return minDepth(root.right) + 1;
+        }
+
+        if(!root.right) {
+            return minDepth(root.left) + 1;
+        }
+
+        return Math.min(minDepth(root.left), minDepth(root.right)) + 1;
+    }
+
+八、平衡二叉树：每个子树的深度之差不超过1

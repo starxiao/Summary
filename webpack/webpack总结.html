@@ -1,0 +1,75 @@
+webpack
+
+    一、定义
+        webpack是一个前端打包工具，将前端资源js、css、image等各种资源打包为一个个模块形成依赖关系图按需加载。
+    
+    二、构建作用
+
+        代码转换：将TypeScript/es6编译成Javscript,将scss编译成css。
+
+        文件优化：压缩javascript、css、HTML代码，压缩合并图片。
+
+        代码分割：提取多个页面的公共代码，按模块异步加载代码。
+
+        持续缓存和版本控制：根据代码源的变更生成hash文件名。
+
+        自动刷新：webpack-dev-server 监听本地文件的改变，自动构建编译，实时刷新浏览器。
+
+        自动发布：编译打包代码传输给发布系统。
+
+
+
+    三、核心概念
+
+        entry: 模块入口。
+
+        output: 打包代码输出结果。
+
+        loader: 模块转换器。
+
+        plugin: 扩展插件，更多的功能。
+
+    四、编译流程
+
+        1. 初始化参数
+
+        2. 初始化编译器
+
+        3. 确定入口
+
+        4. 编译模块
+
+        5. 形成依赖关系图
+
+        6. 根据配置输出资源
+
+    五、性能优化
+
+        1. 根据环境形成不同的配置文件，比如开发环境，生产环境。
+
+        2. 设置mode以告诉webpack使用相应模式的内置优化。
+
+        3. 缩小文件的搜素范围：
+
+            精确匹配test: /\.js$/,
+            use: [
+                'thread-loader'   -> 开启单独的woker池独自
+                'cache-loader',   -> 对性能开销大的进行缓存
+                'babel-loader'
+            ]
+            include: path.resolve('src') -> 只对src目录下代码进行转换
+
+        4. 配置resolve.modules
+            resolve: {
+                modules: path.resolve(__dirname, 'node_modules')
+            }
+        
+        5. 优化resolve.alias配置
+
+            alias:{
+                '@': path.resolve(__dirname, 'src')
+            }
+
+        6. resolve.noParse
+
+        7. 使用

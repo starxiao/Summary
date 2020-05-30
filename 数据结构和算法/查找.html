@@ -1,0 +1,29 @@
+查找算法：
+
+    二分法查找
+
+    0. 数组从小到大排序
+
+    1. 取 mid = Math.floor((start + end) / 2) 的中间值
+
+    2. 判断data是否大于mid，如果是则递归循环 start = mid + 1, end = end。
+
+    3. 判断data是否小于mid，如果是则递归循环 start = 0, end = mid - 1。
+
+    4. data等于mid,直接返回当前index。
+
+    function binarySearch(data, array, start, end) {
+        if(!data || !array) {
+            retrun -1;
+        }
+
+        let mid = Math.floor((start + end) / 2);
+
+        if(data > array[mid]) {
+            return binarySearch(data, array, mid + 1, end);
+        }else if(data < array[mid]) {
+            return binarySearch(data, array, start, mid - 1);
+        }else {
+            return mid;
+        }
+    }
