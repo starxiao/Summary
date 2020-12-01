@@ -2,13 +2,11 @@
 <html>
 <body>
 <div id="app">
-	<span class="text">{{text}}</span>
+	<span class="text" @click="onClick">{{text}}</span>
 
 	<div class="container">
-		
+		<div class="box" v-for="(val, key) in list" :key="key">{{val}}</div>
 	</div>
-
-	
 </div>
 <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/vue"></script>
 <script type="text/javascript">
@@ -16,12 +14,22 @@
 	const app = new Vue({
 		data: function(){
 			return {
+				text: 'click',
 				msg: 'hello vue',
 				isread: true,
+				list: [1, 2, 3]
 			}
 		},
 		mounted: function(){
 			console.log(this.msg);
+		},
+		methods: {
+			onClick() {
+				// this.$set(this.list, 0, 111);
+				this.list.length = 2;
+				// this.list[1] = 2222;
+				// this.list.push(4);
+			}
 		}
 	}).$mount('#app');
 
@@ -30,15 +38,6 @@
 	app.$data.msg = '23423';
 
 	this.text = 123;
-</script>
-<script>
-	const index = 123;
-	console.log(index);
-	function foo(){
-		const index = 'hello';
-		console.log(index);
-	}
-	foo();
 </script>
 </body>
 </html>

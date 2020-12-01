@@ -12,11 +12,14 @@
 
 HEAD GET POST
 
-http的头信息不超过
-Accept  Accept-Language Content-Language Last-Event-ID  
+http的头信息head不超过
+Accept  Accept-Language Content-Language  Content-Type
+Width DPR Download Save-Data Viewport-Width Last-Event-ID
 
-Content-Type: 只限三个值 application/x-www-form-urlencoded
-multipart/form-data text/plain
+Content-Type: 只限三个值:
+application/x-www-form-urlencoded
+multipart/form-data
+text/plain
 
 
 简单请求的流程
@@ -31,7 +34,7 @@ Origin: http://huodong.500.com
 Referer: http://huodong.500.com/2018/wcjk/touch.php
 
 
-reponse header
+reponse header  
 
 Access-Control-Allow-Credentials: true
 Access-Control-Allow-Origin: http://huodong.500.com

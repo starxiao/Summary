@@ -16,7 +16,7 @@ new Vue 发生了什么
 
 	模板编译过程
 
-	template -> compiler -> render 
+	template -> compiler -> render -> vnode -> patch(create, diff, patch) -> DOM
 
 	compiler: 字符串template parse -> ast树 -> optimize 标记静态节点 -> 生成代码 generate code
 

@@ -41,9 +41,13 @@ A域名与B域名存在跨域：
 
 四、跨域解决方案
 	
-	1. iframe + form  实现跨域无刷新提交POST    (只解决主域相同，子域不同的跨域问题)
+	1. iframe + form  实现跨域无刷新提交POST    (只解决主域相同，子域不同的跨域问题,因为不同域名下的iframe不能访问)
+	
+	document.domain = '500.com';
+	
+	如果两个窗口一级域名相同，只是二级域名不同，那么设置上一节介绍的document.domain属性，就可以规避同源政策，拿到DOM。
 
-	原理就是form提交数据的时候，先提交到iframe，再由iframe提交到服务。在iframe返回到数据后执行回调函数
+	原理就是form提交数据的时候，先提交到iframe，再由iframe提交到服务。在iframe返回到数据后执行回调函数。
 
 	<form action="http://ets.500.com/submi" target="uploadiframe" method="post">
 		<input id="uploadfm">
@@ -90,7 +94,7 @@ A域名与B域名存在跨域：
 		}
 		在服务端 如 php
 
-		$jsonp = $_GET['jsonp']  --获取回调函数名
+		$jsonp = $_GET['callback']  --获取回调函数名
 		$data = array('username'=>'xiaoxx','password'=>'123');
 
 		header('Content-type:application/x-javascipt')  -- 设置http头表示返回js脚本

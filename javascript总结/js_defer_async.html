@@ -9,7 +9,7 @@ js_defer_async
 	也就是在DOMContentLoaded事件触发（之前）完成。
 
 	3. <script type="text/javascript" src="index.js" async></script>
-	加载后续文档元素的过程和加载、执行index.js的过程是并行的。
+	加载后续文档元素过程和加载、执行index.js的过程是并行的。
 
 	<script></script>    html解析 -> 加载和执行（阻塞的后续的HTML解析）
 	<script async></script>  html解析 -> 加载(加载和后续HTML解析是并行的) -> 执行(执行js阻塞了后续HTML解析)

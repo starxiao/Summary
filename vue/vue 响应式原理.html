@@ -8,11 +8,88 @@ vue 响应式原理
 
 	2.1 利用了Object.defineProperty设置getter、setter方法
 
-	2.2 getter方法：收集了该属性在哪些地方使用，也就是依赖收集。
+	2.2 get属性：收集了该属性在哪些地方使用，也就是依赖收集。
 
-	2.3 setter方法：当数据更新的时候，找到这些依赖，然后进行修改，也就是派发更新。
+	2.3 set属性：当数据更新的时候，找到这些依赖，然后进行修改，也就是派发更新。
 
-	2.4 派发更新：将更新的数据放到一个队列中，发生在下一tick。所以数据更新到反应到DOM节点上市一个异步过程，更新之后会触发Vue.nextTick函数。
+	<script>
+		function defineReactive(obj, key, val) {
+			if(!(key in obj)) {
+				return;
+			}
+
+			val = obj[key];
+			Object.defineProperty(obj, key, {
+				get: () => {
+
+					//收集依赖
+					return val;
+				},
+				set: (newVal) => {
+					//派发更新
+					val = newVal;
+				},
+			});
+		}
+	</script>
+
+		数组响应式原理
+				
+		设置数组的下标和修改数组的长度是不能触发响应式的，(arr.length = 2; arr[0] = 123;)
+		因为Object.defineProperty无法监听数组的的length属性，Vue考虑到性能问题没有监听数组下标。
+
+		数组的响应式方法：push,pop,shfit,unshfit,splice,sort,reverse
+
+		数组响应式方法的原理
+
+			Vue将数组的原型指向了重写的数组方法，重写的数组方法首先会继承了Array,保证了原有的功能。
+			并且对push,shfit,splice添加的新元素设置响应式，最后调用ob.dep.notify做派发更新。
+
+	2.3 依赖收集：Vue初始化渲染Watcher的时候，会调用updateComponent => 执行_render函数 => 
+		会生成虚拟Vnode调用vm的data数据 => 触发响应式对象的getter => getter收集了调用的函数subs。
+
+	2.4 派发更新：
+		当设置响应对象的值时会触发setter => dp.target.notify() => 将收集的watcher调用update => 
+		将watcher放到一个队列里面，在nextTick后执行 => 
+
+	queueWatcher是从id从小到大排序的：
+
+		原因：
+			1、组件的更新由父到子，创建组件的过程是由父到子的，所以执行也是先父后子
+			2、用户自定的watcher要优于渲染watcher,因为用户自定义的watcher先于创建。
+			3、子组件在父组件的watcher时候被销毁，则watcher的也不应该执行。
+
+	queueWatcher遍历的时候都会重新计算length,因为在watcher执行的时候可能会添加新的watcher。
+
+	将更新的数据放到一个队列中，发生在下一tick。所以数据更新反应到DOM节点上是一个异步过程，更新之后会触发Vue.nextTick函数。
+
+
+	2.5 nextTick函数
+
+	常见的 macro task 有 setTimeout、MessageChannel、postMessage、setImmediate；常见的 micro task 有 MutationObsever 和 Promise.then。
+
+	nextTick封装了两个变量分别对应MacroTask和microTask任务，
+	
+	MacroTask分别判断是否支持setImmediate => MessageChannel => setTimeout。
+
+	microTask则判断是否支持promise => MacroTask。
+
+	保证在同一个 tick 内多次执行 nextTick，不会开启多个异步任务，而把这些异步任务都压成一个同步任务，在下一个 tick 执行完毕
+
+	2.6 set函数设置数组或对象为响应式
+
+		this.$set(obj, key, val);
+
+	首先判断obj是否为array，如果是array则通过splice设置响应式。
+
+	再判断key已经在obj响应式对象里面了，如果在则返回
+	
+	再判断obj是否为响应式对象，不是则返回。
+
+	再通过defineReactive(ob.value, key, val)添加新的响应式对象。
+
+	最后通过ob.de.notify()派发更新
+
 
 3. data、props
 
@@ -83,6 +160,8 @@ vue 响应式原理
 
 	5.2 computed方法常用来返回store里面的state。
 
+	5.3 computed属性是基于它们的响应式依赖进行缓存的，只在相关响应式依赖发生改变时它们才会重新求值
+
 	<h1>{{dataUser}}</h1>
 	<h2>{{$store.state.user}}</h2>
 	<h3>{{computedUser}}</h3>
@@ -101,9 +180,27 @@ vue 响应式原理
 		}
 
 		//1. dataUser不会与state.user进行绑定，而computedUser会，也就是当state.user变化的时候
-		h1的值不会改变，h2和h3会改变
+		//h1的值不会改变，h2和h3会改变
 
 		//2. 当obj.user改变的时候，h4也会改变
 	</script>
 
+	5.4 computed 存在get和set属性
+	<script>
+		computed: {
+			name: {
+				get: function() {
+					return this.firstName + this.secondName;
+				},
+				set: function(value) {
+					var name = value.split[' '];
+					this.firstName = name[0];
+					this.secondName = name[1];
+				}
+			}
+		}
+	</script>
+
 6. watch
+
+	当你有一些数据需要随着其它数据变动而变动时就需要使用watch

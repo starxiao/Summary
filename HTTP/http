@@ -100,6 +100,10 @@ http
 
 		4.2.3 通用首部字段（HTTP/1.1）
 
+			Referer                                  当前请求页面的来源页面的地址
+
+			User-Agent                               客户端信息
+
 			Conntent-Type                            数据传输格式
 
 			Cache-Control                            控制缓存行为

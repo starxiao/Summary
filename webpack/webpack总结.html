@@ -53,7 +53,7 @@ webpack
 
             精确匹配test: /\.js$/,
             use: [
-                'thread-loader'   -> 开启单独的woker池独自
+                'thread-loader'   -> 开启单独的worker池
                 'cache-loader',   -> 对性能开销大的进行缓存
                 'babel-loader'
             ]
@@ -72,4 +72,4 @@ webpack
 
         6. resolve.noParse
 
-        7. 使用
+        7. loader匹配js、css使用happy-Pack开启多线程

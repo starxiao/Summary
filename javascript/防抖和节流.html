@@ -2,7 +2,7 @@
 
 1. 定义
 
-	函数防抖(debounce): 函数只有在过完一段时间后并且在该段时间内不被一直触发调用的情况下才会被执行一次。
+	函数防抖(debounce): 函数只有在过完一段时间后并且在该段时间内一直触发调用的情况下才会被执行一次。
 
 	函数节流(throttle)： 函数在规定时间内定时执行一次
 
@@ -108,4 +108,30 @@
 	            }
 	        }
 	    }
+	</script>
+
+	<script>
+		function debounce(fn, time) {
+			let timer = null;
+			
+			return function() {
+				clearTimeout(timer);
+				timer = setTimeout(() => {
+					fn.apply(this,arguments);
+				}, time);
+			}
+		}
+
+		function throttle(fn, time) {
+			let timer;
+			return function() {
+				if(timer) { 
+					return ;
+				}
+				timer = setTimeout(function(){
+					fn.apply(this, arguments);
+					timer = null;
+				}, time);
+			}
+		}
 	</script>

@@ -1,0 +1,45 @@
+
+回溯算法思想：
+
+    在某一步有n个可能的选项，该步骤可看作树中一个节点。
+    节点每个选项看成节点连线，到达它的n个子节点。
+    叶节点对应终结状态。
+    叶节点满足约束条件，则为一个可行的解决方案。
+    叶节点不满足约束条件，回溯到上一个节点，并尝试其他叶子节点。
+    节点所有子节点均不满足条件，再回溯到上一个节点。
+    所有状态均不能满足条件，问题无解。
+
+题目
+
+    1.  输入一个abc字符串，按字典序打印出该字符中字符的所有队列。
+        输入abc,输出abc,acb,bac,bca,cab,cba。
+
+    思路：使用回溯法
+
+    function Permutation(str) {
+        const result = [];
+        if(str) {
+            let queue = str.split(',');
+            PermutationCore(queue, result);
+        }
+
+        result.sort();
+        return [... new Set(result)];
+    }
+
+    function PermutationCore(queue, result, temp='', current='') {
+        current += temp;
+
+        if(queue.length === 0) {
+            result.push(current);
+            return;
+        }
+
+        for(let i = 0; i < queue.length; i++) {
+            temp = queue.shift();
+
+            PermutationCore(queue, result, temp, current);
+
+            queue.push(temp);
+        }
+    }

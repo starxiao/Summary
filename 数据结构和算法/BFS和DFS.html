@@ -1,0 +1,58 @@
+
+广度优先搜索(BFS)
+
+在打印第一行时，将左孩子节点和右孩子节点存入一个队列里
+队列元素出队列打印，同时分别将左孩子节点和右孩子节点存入队列
+这样打印二叉树的顺序就是每行从左到右打印
+
+
+function BreathFirstSearch(root) {
+    let result = [];
+    let queue = [];
+
+    if(root) {
+        queue.push(root);
+
+        while(queue.length > 0) {
+            let current = queue.shift();
+
+            if(current.left) {
+                queue.push(current.left);
+            }
+
+            if(current.right) {
+                queue.push(current.right);
+            }
+
+            result.push(current.val);
+        }
+    }
+    return result;
+}
+
+
+DFS
+取跟节点为目标节点，开始遍历
+1.左孩子入栈 -> 直至左孩子为空的节点
+2.节点出栈 -> 访问该节点
+3.以右孩子为目标节点，再依次执行1、2、3
+
+function DepthFisrtSearch(root) {
+    let result = [];
+    let stack = [];
+
+    let current = root;
+
+    while(current || stack.length > 0) {
+        while(current) {
+            stack.push(current);
+            current = current.left;
+        }
+
+        current = stack.pop();
+        result.push(current.val);
+        current = current.right;
+    }
+
+    return result;
+}

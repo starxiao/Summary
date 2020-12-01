@@ -247,6 +247,82 @@ webpack 总结
 			}
 		}
 
+	13. postcss + postcss-loader + autoprefix 添加css兼容前缀
+		rules: [
+			{
+				test: /\.css$/,
+				exclude: /node_modules/,
+				use: [
+					{
+						loader: env.prod ? MiniCssExtractPlugin.loader : 'vue-style-loader'
+					},
+					{
+						loader: 'css-loader',
+						options: {
+							importLoaders: 1,
+							esModule: false
+						}
+					},
+					{
+						loader: 'postcss-loader',
+						options: {
+							postcssOptions: {
+								plugins: [require('autoprefixer')()]
+							}
+						}
+					}
+				]
+			}
+		]
+		
+		.browserslistrc 文件
+
+		# Browsers that we support
+
+		last 5 version
+		> 1%
+		not ie <= 8
+
+		通过postcss-loader加上autoprefixer插件处理css自动添加前缀。
+		autoprefixer会根据Browserslist表配置的浏览器。
+
+	14. babel-loader + @babel/preset-env + babel-polyfill + core-js + .browserslistrc 将es6语法转义es2015兼容ie等浏览器
+		{
+			test: /\.js$/,
+			exclude: /node_modules/,
+			use: {
+				loader: 'babel-loader',
+				options: {
+					presets: [
+						[
+							'@babel/preset-env',
+							{
+								useBuiltIns: 'usage',
+								corejs: {
+									version: 3,
+								}
+							}
+						]
+					]
+				}
+			}
+		},
+		
+		useBuiltIns: 'usage' 传递给 @babel/preset-env，这样它会根据源代码中出现的语言特性自动检测需要的 polyfill。
+
+		这确保了最终包里 polyfill 数量的最小化.然而，这也意味着如果其中一个依赖需要特殊的 polyfill(比如插件vuex,axios需要依赖iterator或者Array.includes)，默认情况下 Babel 无法将其检测出来。(在ie浏览器还是会报错)
+
+
+		useBuiltIns: 'entry', 在webpack的打包的入口文件../src/index.js文件的最顶部引入 import 'babel-polyfill'
+
+		.browserslistrc 文件
+
+		# Browsers that we support
+
+		last 5 version
+		> 1%
+		not ie <= 8
+		
 
 2. webpack 模块打包原理
 

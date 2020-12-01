@@ -1,1 +1,83 @@
-移动自适应
+移动端适配方案
+
+一、css3 media 媒体查询
+
+    @media screen and (max-width: 320px) {
+        
+    }
+
+    @media screen and (max-width: 375px){
+        ....适配iphone6/7/8的css样式
+    }
+
+二、flexible方案
+
+    1. 概念定义
+
+        物理像素：又称为设备像素，它是显示设备中一个最微小的物理部件。
+
+        CSS像素：CSS像素是一个抽像的单位，主要使用在浏览器上，用来精确度量Web页面上的内容。一般情况之下，CSS像素称为与设备无关的像素(device-independent pixel)，简称DIPs。
+
+        屏幕宽度：一个设备表面上像素的数量，
+
+        设备像素比：设备像素比简称dpr,其定义了物理像素和CSS像素的对应关系
+
+        dpr = 物理像素 / CSS像素
+
+    2. meta标签
+
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+
+    代码以显示网页的屏幕宽度定义了视窗宽度。网页的比例和最大比例被设置为100%。
+
+    3. rem标签
+
+        rem时相对于html根元素font-size来计算的。
+
+    4.flexible的实质
+        执行这个JS后，会在<html>元素上增加一个data-dpr属性，以及一个font-size样式。
+        JS会根据不同的设备添加不同的data-dpr值，比如说2或者3，同时会给html加上对应的font-size的值，比如说75px。
+        动态改写<meta>标签
+        给<html>元素添加data-dpr属性，并且动态改写data-dpr的值
+        给<html>元素添加font-size属性，并且动态改写font-size的值
+
+三、rem布局方案
+
+    1. rem单位：rem是一个只相对于根元素的font-size来确定的单位，默认html元素的font-size值为12px。
+    
+    2. 通过rem来实现适配：rem单位是相对于根元素html的fon-size来决定大小的，根元素的font-size相当于提供了一个基准，
+       当页面宽度发生变化时，只需要改变根元素font-size的值，那么以rem为的单位的元素的大小也会响应着变化。
+    
+    首先需要动态设置html根元素font-size的值
+
+    <script>
+        let docEle = document.documentElement;
+        let dpr = window.devicePixelRatio || 1;
+        //根据屏幕的跨度动态设置fontSize。
+        //3.75数值也可以是10。因为UI的稿的宽度是750px，以苹果6/7/8为主的屏幕刚好是375px，1rem刚好=100px方便转化和计算。
+        //以750px设计稿为例，某个div的宽度为112px，那么最终生成的rem数值为：112px/(clientWidth/3.75*2) = 0.56rem; 因为设计稿750px，屏幕宽度为375px,dpr为2
+        //设置页面的最小宽度(320)和最大宽度(768)
+        let width = docEle.clientWidth;
+        width = width < 320 ? 320 : width > 768 ? 768 : width;
+        docEle.style.fontSize = docEle.clientWidth / 3.75;
+
+        //设置html的data-dpr属性，主要留作css hack作用，比如设置字体大小
+        docEle.setAttribute('data-dpr', dpr);
+        
+        //监听屏幕宽度的变化实时更新
+        window.addEventListener('resize',() => {
+            docEle.style.fontSize = docEle.clientWidth / 3.75;
+        });
+
+
+    </script>
+
+四、vw
+
+vw 是视口宽度的1/100，用 vw 来做自适应再合适不过了。
+
+比如如果你的设计图是 750px 的宽度。 对于 75px 的元素就可以设置为 10vw。 这样在宽度为 375px 的手机上的表现就是37.5px。
+
+当然，如果我们把每个 px 标注都手动转换的话，那也是很大的工作量，
+
+postcss-px-to-viewport可以自动帮你转换为 vw。 你只需要在配置时指定设计图宽度就可以了.
